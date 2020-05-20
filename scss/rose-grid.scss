@@ -1,0 +1,49 @@
+.split-page
+{
+	display:flex;
+	flex-wrap:wrap;
+	@include snap-down-from('md')
+	{
+		> div 
+		{
+			position:relative;
+			width:100%;
+		}
+	}
+	&-half
+	{
+		width:50%;
+	}
+	&-quarter
+	{
+		width:25%;
+		&-x3 // three quarters
+		{
+			width:75%;
+		}
+	}
+	&-third
+	{
+		width:33%;
+		&-x2 // two thirds
+		{
+			width:66%;
+		}
+	}
+	&-fifth
+	{
+		width:20%;
+		&-x2 // two fifths
+		{
+			width:40%;
+		}
+		&-x3 // three fifths
+		{
+			width:60%;
+		}
+		&-x4 // four fifths
+		{
+			width:80%;
+		}
+	}
+}

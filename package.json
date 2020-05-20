@@ -1,0 +1,25 @@
+{
+  "name": "rose-utils",
+  "version": "1.0.0",
+  "description": "Front end css and js framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adyrose/rose-utils.git"
+  },
+  "keywords": [
+    "js",
+    "css",
+    "responsive",
+    "framework"
+  ],
+  "author": "Ady Rose",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adyrose/rose-utils/issues"
+  },
+  "homepage": "https://github.com/adyrose/rose-utils#readme"
+}

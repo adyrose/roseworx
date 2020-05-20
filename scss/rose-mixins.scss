@@ -1,0 +1,47 @@
+@mixin flex-center
+{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+
+@mixin absolute-center
+{
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+}
+
+@mixin full-screen
+{
+	position:absolute;
+	top:0px;
+	right:0px;
+	left:0px;
+	bottom:0px;
+	height:100%;
+	width:100%;
+}
+
+@mixin snap-down-from($breakpoint) {
+	@if map-has-key($breakpoints, $breakpoint) {
+		@media (max-width: map-get($breakpoints, $breakpoint)) {
+			@content;
+		}
+	}
+	@else {
+		@warn "`#{$breakpoint} is not a valid breakpoint. Available breakpoints are: #{map-keys($breakpoints)}`"
+	}
+}
+
+@mixin snap-up-from($breakpoint) {
+	@if map-has-key($breakpoints, $breakpoint) {
+		@media (min-width: map-get($breakpoints, $breakpoint)) {
+			@content;
+		}
+	}
+	@else {
+		@warn "`#{$breakpoint} is not a valid breakpoint. Available breakpoints are: #{map-keys($breakpoints)}`"
+	}
+}

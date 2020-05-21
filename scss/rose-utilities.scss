@@ -1,24 +1,53 @@
-.u-flex-center
+.ru-flex-center
 {
 	@include flex-center;
 }
 
-.u-absolute-center
+.ru-absolute-center
 {
 	@include absolute-center;
 }
 
-.u-full-screen
+.ru-full-screen
 {
 	@include full-screen;
 }
 
-.u-background
+.ru-text-center
 {
-	//all variable colors
+	text-align:center;
 }
 
-.u-color
+.ru-background
 {
 	//all variable colors
+	&-grey
+	{
+		background-color:$grey;
+	}
+	&-dark-grey
+	{
+		background-color:$dark-grey;
+	}
+	&-white
+	{
+		background-color:white;
+	}
+}
+
+.ru-color
+{
+	//all variable colors
+	&-grey
+	{
+		color:$grey;
+	}
+	&-dark-grey
+	{
+		color:$dark-grey;
+	}
+	&-white
+	{
+		color:$white;
+	}
 }

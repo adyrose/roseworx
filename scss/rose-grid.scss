@@ -1,7 +1,43 @@
-.split-page
+.r-split-page
 {
 	display:flex;
 	flex-wrap:wrap;
+	&.end-vertically
+	{
+		align-items: flex-end;
+	}
+	&.center-vertically
+	{
+		align-items: center;
+	}
+	&.center
+	{
+		justify-content:center;
+	}
+	&.space-between
+	{
+		justify-content: space-between;
+	}
+	&.space-around
+	{
+		justify-content: space-around;
+	}
+	&.non-fluid
+	{
+		@include snap-up-from('md')
+		{
+			max-width: map-get($breakpoints, 'md');
+			margin:auto;
+		}
+		@include snap-up-from('lg')
+		{
+			max-width: map-get($breakpoints, 'lg');
+		}
+		@include snap-up-from('xl')
+		{
+			max-width: map-get($breakpoints, 'xl');
+		}
+	}
 	@include snap-down-from('md')
 	{
 		> div 
@@ -9,6 +45,14 @@
 			position:relative;
 			width:100%;
 		}
+	}
+	> div > *
+	{
+		padding:$grid-item-padding;
+	}
+	&-full
+	{
+		width:100%;
 	}
 	&-half
 	{
@@ -24,10 +68,10 @@
 	}
 	&-third
 	{
-		width:33%;
+		flex:1;
 		&-x2 // two thirds
 		{
-			width:66%;
+			flex:2;
 		}
 	}
 	&-fifth

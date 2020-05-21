@@ -1,7 +1,7 @@
 //color palette
-$grey: #ebebeb;
-$dark-grey: #333333;
-
+$grey: #ebebeb !default;
+$dark-grey: #333333 !default;
+$white: #FFFFFF !default;
 
 //breakpoints
 $breakpoints: (
@@ -13,3 +13,6 @@ $breakpoints: (
 ) !default;
 
 //font
+
+//grid
+$grid-item-padding:15px;

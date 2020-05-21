@@ -1,4 +1,4 @@
-rose-utils.adyrose.co.uk
+roseworx.adyrose.co.uk
 require('rose-utils'); for everything
 
 npm package
@@ -20,11 +20,15 @@ Documentation
 Import your own variables in SCSS before importing rose-utils to overide varibales
 after md breakpoint everything is full width by default
 
-// Rose Spacing (margin)
-.rs-m-sm, .rs-m-md, .rs-m-lg, .rs-m-no, .rs-m-l-no, .rs-m-r-no, .rs-m-t-no, .rs-m-b-no .rs-m-l-sm, .rs-m-r-sm, .rs-m-t-sm, .rs-m-b-sm, .rs-m-l-md, .rs-m-r-md, .rs-m-t-md, .rs-m-b-md, .rs-m-l-lg, .rs-m-r-lg, .rs-m-t-lg, .rs-m-b-lg
+// RoseWorx Spacing (margin)
+.rwxs-m-sm, .rwxs-m-md, .rwxs-m-lg, .rwxs-m-no, .rwxs-m-l-no, .rwxs-m-r-no, .rwxs-m-t-no, .rwxs-m-b-no .rwxs-m-l-sm, .rwxs-m-r-sm, .rwxs-m-t-sm, .rwxs-m-b-sm, .rwxs-m-l-md, .rwxs-m-r-md, .rwxs-m-t-md, .rwxs-m-b-md, .rwxs-m-l-lg, .rwxs-m-r-lg, .rwxs-m-t-lg, .rwxs-m-b-lg
 
-// Rose Spacing (padding)
-.rs-p-sm, .rs-p-md, .rs-p-lg, .rs-p-no, .rs-p-l-no, .rs-p-r-no, .rs-p-t-no, .rs-p-b-no .rs-p-l-sm, .rs-p-r-sm, .rs-p-t-sm, .rs-p-b-sm, .rs-p-l-md, .rs-p-r-md, .rs-p-t-md, .rs-p-b-md, .rs-p-l-lg, .rs-p-r-lg, .rs-p-t-lg, .rs-p-b-lg
+// RoseWorx Spacing (padding)
+.rwxs-p-sm, .rwxs-p-md, .rwxs-p-lg, .rwxs-p-no, .rwxs-p-l-no, .rwxs-p-r-no, .rwxs-p-t-no, .rwxs-p-b-no .rwxs-p-l-sm, .rwxs-p-r-sm, .rwxs-p-t-sm, .rwxs-p-b-sm, .rwxs-p-l-md, .rwxs-p-r-md, .rwxs-p-t-md, .rwxs-p-b-md, .rwxs-p-l-lg, .rwxs-p-r-lg, .rwxs-p-t-lg, .rwxs-p-b-lg
 
-//Rose Font
-.rf-light, .rf-normal, .rf-bold, .rf-extra-bold
+// RoseWorx Font
+.rwxf-light, .rwxf-normal, .rwxf-bold, .rwxf-extra-bold
+
+// RoseWorx Utilities
+//.rwxu
+

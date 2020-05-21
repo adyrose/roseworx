@@ -1,5 +1,5 @@
 {
-  "name": "rose-utils",
+  "name": "roseworx",
   "version": "1.0.0",
   "description": "Front end css and js framework",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adyrose/rose-utils.git"
+    "url": "git+https://github.com/adyrose/roseworx.git"
   },
   "keywords": [
     "js",
@@ -19,7 +19,7 @@
   "author": "Ady Rose",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/adyrose/rose-utils/issues"
+    "url": "https://github.com/adyrose/roseworx/issues"
   },
-  "homepage": "https://github.com/adyrose/rose-utils#readme"
+  "homepage": "https://github.com/adyrose/roseworx#readme"
 }

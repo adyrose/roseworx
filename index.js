@@ -1,1 +1,1 @@
-require('./js/entry.js');
+require('./js/roseworx.js');

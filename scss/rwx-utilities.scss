@@ -1,24 +1,24 @@
-.ru-flex-center
+.rwxu-flex-center
 {
 	@include flex-center;
 }
 
-.ru-absolute-center
+.rwxu-absolute-center
 {
 	@include absolute-center;
 }
 
-.ru-full-screen
+.rwxu-full-screen
 {
 	@include full-screen;
 }
 
-.ru-text-center
+.rwxu-text-center
 {
 	text-align:center;
 }
 
-.ru-background
+.rwxu-background
 {
 	//all variable colors
 	&-grey
@@ -35,7 +35,7 @@
 	}
 }
 
-.ru-color
+.rwxu-color
 {
 	//all variable colors
 	&-grey

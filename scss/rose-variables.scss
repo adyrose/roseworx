@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+
 //color palette
 $grey: #ebebeb !default;
 $dark-grey: #333333 !default;
@@ -15,4 +17,20 @@ $breakpoints: (
 //font
 
 //grid
-$grid-item-padding:15px;
+$grid-item-padding:15px !default;
+
+//spacings
+$small-spacing: 1rem !default;
+$medium-spacing: 2rem !default;
+$large-spacing: 3rem !default;
+
+//type
+$font-size-base: 0.95rem !default;
+$h1-size: $font-size-base * 1.6 !default;
+$h2-size: $font-size-base * 1.5 !default;
+$h3-size: $font-size-base * 1.4 !default;
+$h4-size: $font-size-base * 1.3 !default;
+$h5-size: $font-size-base * 1.2 !default;
+$h6-size: $font-size-base * 1.1 !default;
+$font-base: 'Roboto Mono', monospace !default;
+//$font-heading

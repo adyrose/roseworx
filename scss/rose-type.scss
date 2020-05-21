@@ -1,36 +1,48 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
-
-$font-base: 'Roboto Mono', monospace !default;
-
 body {
 	font-family: $font-base;
 }
 
 .h1, h1 {
-  
+  font-size: $h1-size;
+  @extend .rf-bold;
 }
 
 .h2, h2 {
-  
+  font-size: $h2-size;
+  @extend .rf-bold;
 }
 
 .h3, h3 {
-  
+  font-size: $h3-size;
+  @extend .rf-bold;
 }
 
 .h4, h4 {
-  
+  font-size: $h4-size;
+  @extend .rf-bold;
 }
 
 .h5, h5 {
-  
+  font-size: $h5-size;
+  @extend .rf-bold;
 }
 
 .h6, h6 {
-  
+  font-size: $h6-size;
+  @extend .rf-bold;
 }
 
-p
+p, strong, span, li
 {
-	
+	font-size: $font-size-base;	
+}
+
+$weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
+
+@each $selector, $weight in $weights
+{
+	.rf-#{$selector}
+	{
+		font-weight: $weight;
+	}
 }

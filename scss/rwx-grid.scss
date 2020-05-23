@@ -1,14 +1,14 @@
 $grid-classes:
-  "full" "width" 100%,
-  "half" "width" 50%,
-  "third" "flex" 1,
-  "third-x2" "flex" 2,
-  "quarter" "width" 25%,
-  "quarter-x3" "width" 75%,
-  "fifth" "width" 20%,
-  "fifth-x2" "width" 40%,
-  "fifth-x3" "width" 60%,
-  "fifth-x4" "width" 80%;
+  "full" 100%,
+  "half" 50%,
+  "third" 33.33%,
+  "third-x2" 66.66%,
+  "quarter" 25%,
+  "quarter-x3" 75%,
+  "fifth" 20%,
+  "fifth-x2" 40%,
+  "fifth-x3" 60%,
+  "fifth-x4" 80%;
 
 .rwx-split
 {
@@ -62,11 +62,11 @@ $grid-classes:
 	{
 		padding:$grid-item-padding;
 	}
-	@each $selector, $property, $value in $grid-classes
+	@each $selector, $value in $grid-classes
 	{
 		&-#{$selector}
 		{
-			#{$property}: #{$value};
+			width: #{$value};
 		}
 	}
 }

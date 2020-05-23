@@ -17,37 +17,3 @@
 {
 	text-align:center;
 }
-
-.rwxu-background
-{
-	//all variable colors
-	&-grey
-	{
-		background-color:$grey;
-	}
-	&-dark-grey
-	{
-		background-color:$dark-grey;
-	}
-	&-white
-	{
-		background-color:white;
-	}
-}
-
-.rwxu-color
-{
-	//all variable colors
-	&-grey
-	{
-		color:$grey;
-	}
-	&-dark-grey
-	{
-		color:$dark-grey;
-	}
-	&-white
-	{
-		color:$white;
-	}
-}

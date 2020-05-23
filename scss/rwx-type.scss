@@ -2,34 +2,16 @@ body {
 	font-family: $font-base;
 }
 
-.h1, h1 {
-  font-size: $h1-size;
-  @extend .rf-bold;
-}
+$headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5": $h5-size, "h6": $h6-size);
 
-.h2, h2 {
-  font-size: $h2-size;
-  @extend .rf-bold;
-}
-
-.h3, h3 {
-  font-size: $h3-size;
-  @extend .rf-bold;
-}
-
-.h4, h4 {
-  font-size: $h4-size;
-  @extend .rf-bold;
-}
-
-.h5, h5 {
-  font-size: $h5-size;
-  @extend .rf-bold;
-}
-
-.h6, h6 {
-  font-size: $h6-size;
-  @extend .rf-bold;
+@each $selector, $size in $headings
+{
+  .#{$selector}, #{$selector}
+  {
+    font-size: $size;
+    @extend .rwxf-bold;
+    font-family: $font-heading;
+  }
 }
 
 p, strong, span, li
@@ -41,7 +23,7 @@ $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
 
 @each $selector, $weight in $weights
 {
-	.rf-#{$selector}
+	.rwxf-#{$selector}
 	{
 		font-weight: $weight;
 	}

@@ -1,0 +1,17 @@
+$colors: ('black':$black, 
+					'grey':$grey, 
+					'dark-grey':$dark-grey, 
+					'white':$white, 
+					'orange':$orange);
+
+@each $selector, $color in $colors
+{
+	.rwxc-background-#{$selector}
+	{
+		background-color:$color;
+	}
+	.rwxc-color-#{$selector}
+	{
+		color:$color;
+	}
+}

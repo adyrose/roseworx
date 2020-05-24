@@ -12,8 +12,6 @@ $grid-classes:
 
 .rwx-split
 {
-	display:flex;
-	flex-wrap:wrap;
 	&.end-vertically
 	{
 		align-items: flex-end;
@@ -58,9 +56,12 @@ $grid-classes:
 			width:100%;
 		}
 	}
+	display:flex;
+	flex-wrap:wrap;
 	> div > *
 	{
-		padding:$grid-item-padding;
+		padding-left:$grid-item-gutter;
+		padding-right:$grid-item-gutter;
 	}
 	@each $selector, $value in $grid-classes
 	{

@@ -1,5 +1,7 @@
 body {
 	font-family: $font-base;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
 }
 
 $headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5": $h5-size, "h6": $h6-size);
@@ -11,12 +13,31 @@ $headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5"
     font-size: $size;
     @extend .rwxf-bold;
     font-family: $font-heading;
+    margin-bottom: 0.6rem;
+    line-height: $size + 0.55rem;
   }
 }
 
-p, strong, span, li
+p, strong, span
 {
-	font-size: $font-size-base;	
+  margin-bottom:0.9rem;
+}
+
+ul
+{
+  li
+  {
+    margin-bottom:0.75rem;
+    display:flex;
+    &:before
+    {
+      content:"-";
+      width:20px;
+      text-align:center;
+      flex-grow:0;
+      flex-shrink:0;
+    }
+  }
 }
 
 $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);

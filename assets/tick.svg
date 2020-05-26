@@ -1,0 +1,5 @@
+<svg>
+	<symbol id="tick" viewBox="0 0 20 20">
+		<polyline points='2,12 7,17 18,4' fill='none' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' />
+	</symbol>
+</svg>

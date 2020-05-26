@@ -2,7 +2,7 @@
   "name": "roseworx",
   "version": "1.0.0",
   "description": "Front end css and js framework",
-  "main": "index.js",
+  "main": "js/roseworx.js",
   "scripts": {
     "test": "test"
   },

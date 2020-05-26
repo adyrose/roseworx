@@ -13,12 +13,15 @@ scroll animation factory with scroll utilities
 zopaque levels and opaque in keyframes
 flex slider?
 react components ?
+forms - svg tickbox animation
 
 
 
 Documentation
 Import your own variables in SCSS before importing rose-utils to overide varibales
 after md breakpoint everything is full width by default
+
+// HELPER CLASSES
 
 // RoseWorx Spacing (margin)
 .rwxs-m-sm, .rwxs-m-md, .rwxs-m-lg, .rwxs-m-no, .rwxs-m-l-no, .rwxs-m-r-no, .rwxs-m-t-no, .rwxs-m-b-no .rwxs-m-l-sm, .rwxs-m-r-sm, .rwxs-m-t-sm, .rwxs-m-b-sm, .rwxs-m-l-md, .rwxs-m-r-md, .rwxs-m-t-md, .rwxs-m-b-md, .rwxs-m-l-lg, .rwxs-m-r-lg, .rwxs-m-t-lg, .rwxs-m-b-lg
@@ -32,3 +35,5 @@ after md breakpoint everything is full width by default
 // RoseWorx Utilities
 //.rwxu
 
+// RoseWorx Forms
+// importing the scss only gets forms styles, import Form in JS and put [rsx-form] attribute to a html form for the js

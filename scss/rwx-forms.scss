@@ -1,0 +1,150 @@
+.rwx-form
+{
+	position:relative;
+	overflow:hidden;
+	&-item
+	{
+		&.rwx-checkbox, &.rwx-toggle
+		{
+			input[type="checkbox"]
+			{
+				position:absolute;
+				top:-200px;
+				&:focus + label
+				{
+					&:after
+					{
+						box-shadow: 0 0 0.3rem 0.1rem $form-theme-focus-color;
+					}
+				}
+			}
+			label
+			{
+				cursor:pointer;
+				position:relative;
+				&:after, &:before
+				{
+					content:"";
+				}
+				&:after
+				{
+					margin-top:10px;
+					display:block;
+				}
+				&:before
+				{
+					position:absolute;
+				}
+			}
+		}
+
+		&.rwx-checkbox
+		{
+			input[type="checkbox"]
+			{
+				&:checked + label
+				{
+					&:before
+					{
+						opacity:1;
+						transition: opacity 1s ease;
+					}
+				}
+			}
+			label
+			{
+				&:after
+				{
+					width: $form-item-size;
+					height: $form-item-size;
+					border: 1px solid $form-theme-color-secondary;	
+				}
+				&:before
+				{
+					background-image: url("data:image/svg+xml, <svg viewBox='0 0 20 20' stroke='%23333' fill='none' xmlns='http://www.w3.org/2000/svg'><polyline points='2,12 7,17 18,4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /></svg>");
+					bottom:$form-item-size/4;
+					left:$form-item-size/4;
+					width:$form-item-size/2;
+					height:$form-item-size/2;
+					opacity:0;
+					transition: opacity 0.5s ease;
+				}
+			}
+		}
+
+		&.rwx-toggle
+		{
+			input[type="checkbox"]
+			{
+				&:checked + label
+				{
+					&:before
+					{
+						left:$form-item-size;
+						background-color: $form-theme-color-base;
+						transition: all 0.5s ease;
+					}
+				}
+			}
+			label
+			{
+				&:after
+				{
+					width:$form-item-size*2;
+					height:$form-item-size;
+					background-color: transparent;
+					border:1px solid $form-theme-color-secondary;
+					border-radius:$form-item-size/2;
+				}
+				&:before
+				{
+					bottom:0px;
+					left:0px;
+					height:$form-item-size;
+					width:$form-item-size;
+					border-radius:$form-item-size/2;
+					background-color: $form-theme-color-secondary;
+					transition: all 0.5s ease;
+				}
+			}
+		}
+
+		display:flex;
+		flex-direction:column;
+		margin-bottom:20px;
+		label
+		{
+			color:$form-theme-color-base;
+			display:block;
+			margin-bottom:10px;
+			order:1;
+		}
+		input
+		{
+			order:2;
+			color: $form-theme-color-base;
+			padding-left:15px;
+			min-height:$form-item-size;
+			width:100%;
+			border:1px solid $form-theme-color-secondary;
+			font: inherit;
+			&:focus
+			{
+				outline:none;
+				box-shadow: 0 0 0.3rem 0.1rem $form-theme-focus-color;
+			}
+		}
+		&.valid input
+		{
+			border: 1px solid $light-green;
+		}
+		&.invalid input
+		{
+			border: 1px solid $red;
+		}
+		.invalid-message
+		{
+			color: $red;
+		}
+	}
+}

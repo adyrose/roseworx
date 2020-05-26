@@ -1,1 +1,1 @@
-require('./js/roseworx.js');
+module.exports = require('./js/roseworx.js');

@@ -53,3 +53,9 @@ $font-heading: 'Josefin Sans', sans-serif !default;
 //fast-out
 $fast-in: cubic-bezier(.09,1.08,.74,.95);
 //base
+
+//form themes
+$form-theme-color-base: $dark-grey;
+$form-theme-color-secondary: $grey;
+$form-theme-focus-color: $turquoise;
+$form-item-size: 50px;

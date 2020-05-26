@@ -20,6 +20,7 @@ forms - svg tickbox animation
 Documentation
 Import your own variables in SCSS before importing rose-utils to overide varibales
 after md breakpoint everything is full width by default
+add .preload class to the body and import {rwxPreload} from 'roseworx' and new rwxPreload() - this removes the problem of css animations runnning on page load
 
 // HELPER CLASSES
 

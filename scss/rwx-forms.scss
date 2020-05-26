@@ -47,7 +47,7 @@
 					&:before
 					{
 						opacity:1;
-						transition: opacity 1s ease;
+						transition: opacity 1s $transition-base;
 					}
 				}
 			}
@@ -67,7 +67,7 @@
 					width:$form-item-size/2;
 					height:$form-item-size/2;
 					opacity:0;
-					transition: opacity 0.5s ease;
+					transition: opacity 0.5s $transition-base;
 				}
 			}
 		}
@@ -82,7 +82,7 @@
 					{
 						left:$form-item-size;
 						background-color: $form-theme-color-base;
-						transition: all 0.5s ease;
+						transition: all 0.5s $transition-base;
 					}
 				}
 			}
@@ -104,7 +104,7 @@
 					width:$form-item-size;
 					border-radius:$form-item-size/2;
 					background-color: $form-theme-color-secondary;
-					transition: all 0.5s ease;
+					transition: all 0.5s $transition-base;
 				}
 			}
 		}

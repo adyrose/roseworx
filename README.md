@@ -24,13 +24,19 @@ Documentation
 Import your own variables in SCSS before importing rose-utils to overide varibales
 after md breakpoint everything is full width by default
 add .preload class to the body and import {rwxPreload} from 'roseworx' and new rwxPreload() - this removes the problem of css animations runnning on page load
+//import * as rwx from 'roseworx';
+//new rwx.Test2();
+
+//import Test2 from 'roseworx/js/components/Test2';
+//new Test2();
 
 
 //RoseWorx SkrollX
 Scroll animation library for parallax scrolling animations
 import {SkrollX} from 'roseworx' new SkrollX(trigger) - trigger is the distance from the bottom of the screen which when scrolled - triggers the animation.
-// give any element [rsw-skrlx] attribute and either .rwxsx-start-left, .rwxsx-start-right, .rwxsx-start-top, .rwxsx-start-bottom
-
+// give any element [rwx-skrlx] attribute and either .rwxsx-start-left, .rwxsx-start-right, .rwxsx-start-top, .rwxsx-start-bottom
+// for a delay use data-rwxsx-delay="ms"
+// calculations will be done on page load so if content is above the current scroll when the page loads, it will animate in
 
 // HELPER CLASSES
 

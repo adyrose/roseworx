@@ -14,11 +14,10 @@ export default class rwxSkrollX {
 	}
 	calculateScroll()
 	{
-		console.log("hi");
 		this.elements.map((el)=>{
 			if(el.classList.contains(this.doneFlag)){return;}
 			let t = el.getBoundingClientRect().top;
-			if(t<this.trigger || el.hasAttribute('data-rwxsx-init'))
+			if(t<this.trigger)
 			{
 				if(el.hasAttribute('data-rwxsx-delay'))
 				{

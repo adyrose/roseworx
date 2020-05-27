@@ -1,0 +1,33 @@
+@import '../rwx-variables';
+.rwxsx
+{
+	&-end
+	{
+		transform: translate(0, 0) !important;
+		opacity: 1 !important;
+		transition: all 0.63s $transition-slow-in;
+	}
+	&-start
+	{
+		&-left, &-right, &-top, &-bottom
+		{
+			opacity:0;
+		}
+		&-left
+		{
+			transform: translate(-30%, 0);
+		}
+		&-right
+		{
+			transform: translate(30%, 0);
+		}
+		&-top
+		{
+			transform: translate(0, -30%);
+		}
+		&-bottom
+		{
+			transform: translate(0, 30%);
+		}
+	}
+}

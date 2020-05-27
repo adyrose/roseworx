@@ -1,2 +1,10 @@
-const rwxPreload = ()=>{window.addEventListener('load', ()=>{document.body.classList.contains('preload') && document.body.classList.remove('preload');});}
-export default rwxPreload;
+export default class rwxPreload {
+	constructor()
+	{
+		window.addEventListener('load', ()=>{
+			setTimeout(()=>{
+				document.body.classList.contains('preload') && document.body.classList.remove('preload');
+			}, 300);
+		});
+	}
+}

@@ -50,8 +50,8 @@ $font-base: 'Roboto Mono', monospace !default;
 $font-heading: 'Josefin Sans', sans-serif !default;
 
 //animation-easings
-//fast-out
-$transition-fast-in: cubic-bezier(.09,1.08,.74,.95);
+$transition-slow-in: cubic-bezier(.09,1.08,.74,.95); 
+$transition-fast-in: cubic-bezier(1,.15,.72,.81); 
 $transition-base: cubic-bezier(.11,.82,.63,.94);
 
 //form themes

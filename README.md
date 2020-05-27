@@ -16,11 +16,21 @@ react components ?
 forms - svg tickbox animation
 
 
+Bugs
+JS include everything even for named export/import
+
 
 Documentation
 Import your own variables in SCSS before importing rose-utils to overide varibales
 after md breakpoint everything is full width by default
 add .preload class to the body and import {rwxPreload} from 'roseworx' and new rwxPreload() - this removes the problem of css animations runnning on page load
+
+
+//RoseWorx SkrollX
+Scroll animation library for parallax scrolling animations
+import {SkrollX} from 'roseworx' new SkrollX(trigger) - trigger is the distance from the bottom of the screen which when scrolled - triggers the animation.
+// give any element [rsw-skrlx] attribute and either .rwxsx-start-left, .rwxsx-start-right, .rwxsx-start-top, .rwxsx-start-bottom
+
 
 // HELPER CLASSES
 
@@ -36,5 +46,5 @@ add .preload class to the body and import {rwxPreload} from 'roseworx' and new r
 // RoseWorx Utilities
 //.rwxu
 
-// RoseWorx Forms
+// RoseWorx Forms ??
 // importing the scss only gets forms styles, import Form in JS and put [rsx-form] attribute to a html form for the js

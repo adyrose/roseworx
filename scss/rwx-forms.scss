@@ -1,3 +1,9 @@
+
+@function safeHexForSvg($color)
+{
+  @return '%23' + str-slice('#{$color}', 2, -1)
+}
+
 .rwx-form
 {
 	position:relative;
@@ -61,7 +67,7 @@
 				}
 				&:before
 				{
-					background-image: url("data:image/svg+xml, <svg viewBox='0 0 20 20' stroke='%23333' fill='none' xmlns='http://www.w3.org/2000/svg'><polyline points='2,12 7,17 18,4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /></svg>");
+					background-image: url("data:image/svg+xml, <svg viewBox='0 0 20 20' stroke='#{safeHexForSvg($form-theme-color-base)}' fill='none' xmlns='http://www.w3.org/2000/svg'><polyline points='2,12 7,17 18,4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /></svg>");
 					bottom:$form-item-size/4;
 					left:$form-item-size/4;
 					width:$form-item-size/2;
@@ -109,6 +115,44 @@
 			}
 		}
 
+		&.rwx-select
+		{
+			select
+			{
+				background-color:$white;
+				padding-right:$form-item-size;
+				cursor:pointer;
+			}
+			position:relative;
+			label
+			{
+				&:after, &:before
+				{
+					content:"";
+					position:absolute;
+				}
+				&:after
+				{
+					bottom:1px;
+					right:1px;
+					height:$form-item-size - 2px;
+					width:$form-item-size - 2px;
+					z-index:1;
+					background-color:$white;
+				}
+				&:before
+				{
+					right: $form-item-size / 4;
+					bottom: $form-item-size / 4;
+					height:$form-item-size / 2;
+					width:$form-item-size / 2;
+					z-index:2;
+					content:"";
+					background-image: url("data:image/svg+xml, <svg viewBox='0 0 40 40' stroke='#{safeHexForSvg($form-theme-color-base)}' fill='none' xmlns='http://www.w3.org/2000/svg'><polyline points='2,6 16,6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,14 16,14' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,24 16,24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,32 16,32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='24,14 37,14 31,5 24,14 37,14' stroke-width='2px' /><polyline points='24,24 37,24 31,33 24,24 37,24' stroke-width='2px' /></svg>");
+				}
+			}
+		}
+
 		display:flex;
 		flex-direction:column;
 		margin-bottom:20px;
@@ -119,7 +163,7 @@
 			margin-bottom:10px;
 			order:1;
 		}
-		input
+		input, select
 		{
 			order:2;
 			color: $form-theme-color-base;

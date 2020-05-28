@@ -9,7 +9,6 @@ all components from innovation and strip out fruit machine to own repo and use a
 set up how to develop this with HMR and demoing each component
 add particle countup and picture grid component
 add everything from utilities repo and delete
-scroll animation factory with scroll utilities
 zopaque levels and opaque in keyframes
 flex slider?
 react components ?
@@ -26,9 +25,9 @@ after md breakpoint everything is full width by default
 add .preload class to the body and import {rwxPreload} from 'roseworx' and new rwxPreload() - this removes the problem of css animations runnning on page load
 //import * as rwx from 'roseworx';
 //new rwx.Test2();
-
 //import Test2 from 'roseworx/js/components/Test2';
 //new Test2();
+mixin provided for changing link color @include change-link-color($white); - useful for having links in navigations which dont follow the general rule for <a> tags in normal content. For example .navigation ul li {@include change-link-color($white);} will change all <a> tags and the underline color to white in each .navigation ul li
 
 
 //RoseWorx SkrollX

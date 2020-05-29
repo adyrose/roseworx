@@ -12,8 +12,6 @@ add everything from utilities repo and delete
 zopaque levels and opaque in keyframes
 flex slider?
 react components ?
-forms - svg tickbox animation
-
 
 Bugs
 JS include everything even for named export/import
@@ -33,6 +31,7 @@ mixin provided for changing link color @include change-link-color($white); - use
 //RoseWorx SkrollX
 Scroll animation library for parallax scrolling animations
 import {SkrollX} from 'roseworx' new SkrollX(trigger) - trigger is the distance from the bottom of the screen which when scrolled - triggers the animation.
+p.small
 // give any element [rwx-skrlx] attribute and either .rwxsx-start-left, .rwxsx-start-right, .rwxsx-start-top, .rwxsx-start-bottom
 // for a delay use data-rwxsx-delay="ms"
 // calculations will be done on page load so if content is above the current scroll when the page loads, it will animate in
@@ -46,7 +45,7 @@ import {SkrollX} from 'roseworx' new SkrollX(trigger) - trigger is the distance 
 .rwxs-p-sm, .rwxs-p-md, .rwxs-p-lg, .rwxs-p-no, .rwxs-p-l-no, .rwxs-p-r-no, .rwxs-p-t-no, .rwxs-p-b-no .rwxs-p-l-sm, .rwxs-p-r-sm, .rwxs-p-t-sm, .rwxs-p-b-sm, .rwxs-p-l-md, .rwxs-p-r-md, .rwxs-p-t-md, .rwxs-p-b-md, .rwxs-p-l-lg, .rwxs-p-r-lg, .rwxs-p-t-lg, .rwxs-p-b-lg
 
 // RoseWorx Font
-.rwxf-light, .rwxf-normal, .rwxf-bold, .rwxf-extra-bold
+.rwxf-light, .rwxf-normal, .rwxf-bold, .rwxf-extra-bold, .rwxf-small
 
 // RoseWorx Utilities
 //.rwxu

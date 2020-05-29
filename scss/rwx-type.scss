@@ -22,6 +22,15 @@ $headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5"
 p, strong, span
 {
   margin-bottom:0.9rem;
+  &.small
+  {
+    @extend .rwxf-small;
+  }
+}
+
+sup
+{
+  @extend .rwxf-small;
 }
 
 a
@@ -81,4 +90,9 @@ $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
 	{
 		font-weight: $weight;
 	}
+}
+
+.rwxf-small
+{
+  font-size:$font-size-small;
 }

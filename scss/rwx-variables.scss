@@ -33,11 +33,12 @@ $breakpoints: (
 $grid-item-gutter:15px !default;
 
 //spacings
-$small-spacing: 1rem !default;
-$medium-spacing: 2rem !default;
-$large-spacing: 3rem !default;
+$small-spacing: 1.5rem !default;
+$medium-spacing: 3rem !default;
+$large-spacing: 4.5rem !default;
 
 //type
+$font-size-small: 0.8rem !default;
 $font-size-base: 0.95rem !default;
 $line-height-base: 1.6rem !default;
 $h1-size: $font-size-base * 3 !default;
@@ -56,8 +57,15 @@ $transition-slow-in: cubic-bezier(.09,1.08,.74,.95);
 $transition-fast-in: cubic-bezier(1,.15,.72,.81); 
 $transition-base: cubic-bezier(.11,.82,.63,.94);
 
-//form themes
+//tables
+$table-line-color-base: $grey;
+$table-line-color-secondary: $dark-grey;
+$table-theme-color-base: $light-blue;
+
+//forms
 $form-theme-color-base: $dark-grey !default;
 $form-theme-color-secondary: $grey !default;
 $form-theme-focus-color: $turquoise !default;
 $form-item-size: 50px !default;
+$form-valid-color: $green;
+$form-invalid-color: $red;

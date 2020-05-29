@@ -10,6 +10,60 @@
 	overflow:hidden;
 	&-item
 	{
+		display:flex;
+		flex-direction:column;
+		margin-bottom:20px;
+		label
+		{
+			color:$form-theme-color-base;
+			display:block;
+			margin-bottom:10px;
+			order:1;
+		}
+		input, select, textarea
+		{
+			order:2;
+			color: $form-theme-color-base;
+			padding-left:15px;
+			min-height:$form-item-size;
+			width:100%;
+			border:1px solid $form-theme-color-secondary;
+			font: inherit;
+			&:focus
+			{
+				outline:none;
+				box-shadow: 0 0 0.3rem 0.1rem $form-theme-focus-color;
+			}
+		}
+
+		&[required]
+		{
+			position:relative;
+			&:after
+			{
+				content:"*";
+				position:absolute;
+				right:0px;
+				top:0px;
+			}
+		}
+		&.valid input
+		{
+			border: 1px solid $form-valid-color;
+		}
+		&.invalid input
+		{
+			border: 1px solid $form-invalid-color;
+		}
+		.invalid-message
+		{
+			color: $red;
+			order: 3;
+			margin-top:5px;
+			font-size: $font-size-small;
+		}
+
+
 		&.rwx-checkbox, &.rwx-toggle
 		{
 			input[type="checkbox"]
@@ -151,44 +205,6 @@
 					background-image: url("data:image/svg+xml, <svg viewBox='0 0 40 40' stroke='#{safeHexForSvg($form-theme-color-base)}' fill='none' xmlns='http://www.w3.org/2000/svg'><polyline points='2,6 16,6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,14 16,14' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,24 16,24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,32 16,32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='24,14 37,14 31,5 24,14 37,14' stroke-width='2px' /><polyline points='24,24 37,24 31,33 24,24 37,24' stroke-width='2px' /></svg>");
 				}
 			}
-		}
-
-		display:flex;
-		flex-direction:column;
-		margin-bottom:20px;
-		label
-		{
-			color:$form-theme-color-base;
-			display:block;
-			margin-bottom:10px;
-			order:1;
-		}
-		input, select
-		{
-			order:2;
-			color: $form-theme-color-base;
-			padding-left:15px;
-			min-height:$form-item-size;
-			width:100%;
-			border:1px solid $form-theme-color-secondary;
-			font: inherit;
-			&:focus
-			{
-				outline:none;
-				box-shadow: 0 0 0.3rem 0.1rem $form-theme-focus-color;
-			}
-		}
-		&.valid input
-		{
-			border: 1px solid $light-green;
-		}
-		&.invalid input
-		{
-			border: 1px solid $red;
-		}
-		.invalid-message
-		{
-			color: $red;
 		}
 	}
 }

@@ -28,6 +28,7 @@
 			min-height:$form-item-size;
 			width:100%;
 			border:1px solid $form-theme-color-secondary;
+			transition: 0.5s border $transition-base;
 			font: inherit;
 			&:focus
 			{
@@ -47,13 +48,41 @@
 				top:0px;
 			}
 		}
-		&.valid input
+		&.valid
 		{
-			border: 1px solid $form-valid-color;
+			input, select, textarea
+			{
+				transition: 0.5s border $transition-base;
+				border: 1px solid $form-valid-color;
+			}
+			&.rwx-checkbox, &.rwx-toggle
+			{
+				label:after
+				{
+					transition: 0.5s border $transition-base;
+					border: 1px solid $form-valid-color;
+				}
+			}
 		}
-		&.invalid input
+		&.invalid
 		{
-			border: 1px solid $form-invalid-color;
+			input, select, textarea
+			{
+				transition: 0.5s border $transition-base;
+				border: 1px solid $form-invalid-color;
+			}
+			.invalid-message
+			{
+				display:block;
+			}
+			&.rwx-checkbox, &.rwx-toggle
+			{
+				label:after
+				{
+					transition: 0.5s border $transition-base;
+					border: 1px solid $form-invalid-color;
+				}
+			}
 		}
 		.invalid-message
 		{
@@ -61,6 +90,7 @@
 			order: 3;
 			margin-top:5px;
 			font-size: $font-size-small;
+			display:none;
 		}
 
 
@@ -69,12 +99,15 @@
 			input[type="checkbox"]
 			{
 				position:absolute;
-				top:-200px;
+				width:1px;
+				left:-10px;
 				&:focus + label
 				{
 					&:after
 					{
+						transition: 0.5s border $transition-base;
 						box-shadow: 0 0 0.3rem 0.1rem $form-theme-focus-color;
+						border:1px solid $form-theme-color-secondary;
 					}
 				}
 			}
@@ -90,6 +123,7 @@
 				{
 					margin-top:10px;
 					display:block;
+					border:1px solid $form-theme-color-secondary;
 				}
 				&:before
 				{
@@ -117,7 +151,6 @@
 				{
 					width: $form-item-size;
 					height: $form-item-size;
-					border: 1px solid $form-theme-color-secondary;	
 				}
 				&:before
 				{
@@ -153,7 +186,6 @@
 					width:$form-item-size*2;
 					height:$form-item-size;
 					background-color: transparent;
-					border:1px solid $form-theme-color-secondary;
 					border-radius:$form-item-size/2;
 				}
 				&:before

@@ -33,7 +33,7 @@ sup
   @extend .rwxf-small;
 }
 
-a
+a:not(.no-decoration)
 {
   text-shadow: 0px 1px $font-link-color;
   text-decoration:none;

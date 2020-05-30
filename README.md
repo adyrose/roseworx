@@ -12,6 +12,7 @@ add everything from utilities repo and delete
 zopaque levels and opaque in keyframes
 flex slider?
 react components ?
+get the ID generation method into helpers also from mps-app
 
 Bugs
 JS include everything even for named export/import
@@ -26,7 +27,8 @@ add .preload class to the body and import {rwxPreload} from 'roseworx' and new r
 //import Test2 from 'roseworx/js/components/Test2';
 //new Test2();
 mixin provided for changing link color @include change-link-color($white); - useful for having links in navigations which dont follow the general rule for <a> tags in normal content. For example .navigation ul li {@include change-link-color($white);} will change all <a> tags and the underline color to white in each .navigation ul li
-
+a.no-decoration for normal type
+a rwx-table-data can be an a tag with no-decoration class and highlightable to become a linkf
 
 //RoseWorx SkrollX
 Scroll animation library for parallax scrolling animations
@@ -51,4 +53,21 @@ p.small
 //.rwxu
 
 // RoseWorx Forms ??
-// importing the scss only gets forms styles, import Form in JS and put [rsx-form] attribute to a html form for the js
+// importing the scss only gets forms styles, import rwxForms in JS, const forms = new rwxForms() and put [rsx-form] attribute on a html form for the js - it is possible to have a custom submit function for a form instead of doing a normal form submit. just save the rwxForms instantiator as a var XXX and call XXX.customSubmitFn with the ID of the form as the first parameter (form must have an ID attribute) and a function as the second attribute -> the customSubmitFn will get called with a parameter - an array of objects with each form fields value. a forms submit button will remain invalid untill all fields are valid
+if fields are required
+{
+	for an input to be valid - has to have a string length > 0 
+	if type is email needs to be valid email
+	for select to be valid it needs a value of string length ? 0 (TIP to have a placeholder, set an option with value="" which means if someone selects the placeholder the field wont be valid)
+	checkbox and toggle need to be TRUE
+}
+else
+{
+	all fields are considered valid as they are not required
+}
+
+form needs ONE button with type submit which will have disabled property until all fields are valid
+Once all the input fields in a form element are considered valid the button will loose the disabled property
+
+add <p class="invalid-message">Invalid Field</p> after the label to provide invalid field feedback when the field is invalid
+

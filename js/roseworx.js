@@ -1,4 +1,3 @@
-import rwxSkrollX from './components/rwxSkrollX';
-import rwxPreload from './helpers/rwxPreload';
+import rwxForms from './core/rwxForms';
 
-export {rwxPreload, rwxSkrollX};
+export {rwxForms};

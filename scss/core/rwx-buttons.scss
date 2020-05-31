@@ -1,4 +1,73 @@
-.rwx-button
+@mixin button($color)
 {
-	
+	&:not(:disabled)
+	{
+		color: $color;
+		border: 1px solid $color;
+		box-shadow: 2px 2px $color;
+		background-color:white;
+		&:hover, &:focus
+		{
+			background-color:$color;
+			box-shadow:none;
+			border: 1px solid $color;
+			color:$white;
+		}
+	}	
+	&:disabled
+	{
+		background-color: rgba($color, 0.3);
+	}
+}
+
+@mixin invertedButton($color)
+{
+	&:not(:disabled)
+	{
+		background-color:$color;
+		box-shadow:none;
+		border: 1px solid $color;
+		color:$white;
+		&:hover, &:focus
+		{
+			color: $color;
+			border: 1px solid $color;
+			box-shadow: 2px 2px $color;
+			background-color:white;
+		}
+	}
+	&:disabled
+	{
+		background-color: rgba($color, 0.3);
+	}		
+}
+
+.rwx-button, button
+{
+	min-height:$button-size;
+	padding:1rem 2rem 1rem 2rem;
+	transition: all 0.7s $transition-base;
+	@extend .h5;
+	cursor:pointer;
+	&:hover, &:focus
+	{
+		outline:none;
+		transition: all 1s $transition-base;
+	}
+	@include button($button-primary-color);
+	&.--inverted
+	{
+		@include invertedButton($turquoise);	
+	}
+	@each $selector, $color in $colors
+	{
+		&.--#{$selector}
+		{
+			@include button($color);
+			&.--inverted
+			{
+				@include invertedButton($color);
+			}
+		}
+	}
 }

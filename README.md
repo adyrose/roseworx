@@ -38,7 +38,29 @@ p.small
 // for a delay use data-rwxsx-delay="ms"
 // calculations will be done on page load so if content is above the current scroll when the page loads, it will animate in
 
+
+// Colors
+
+'black':$black, 
+'grey':$grey, 
+'dark-grey':$dark-grey, 
+'white':$white, 
+'orange':$orange,
+'red': $red,
+'blue': $blue,
+'light-blue': $light-blue,
+'green': $green,
+'light-green': $light-green,
+'turquoise': $turquoise,
+'yellow': $yellow,
+'purple': $purple,
+'pink': $pink,
+'brown': $brown
+
 // HELPER CLASSES
+
+// RoseWorx Buttons
+default button color and style is set with $button-primary-color $button-color-secondary variables but included in the framework are color modifers to easily switch a button style inline to a different named color. E.G <button class="--red"></button>
 
 // RoseWorx Spacing (margin)
 .rwxs-m-sm, .rwxs-m-md, .rwxs-m-lg, .rwxs-m-no, .rwxs-m-l-no, .rwxs-m-r-no, .rwxs-m-t-no, .rwxs-m-b-no .rwxs-m-l-sm, .rwxs-m-r-sm, .rwxs-m-t-sm, .rwxs-m-b-sm, .rwxs-m-l-md, .rwxs-m-r-md, .rwxs-m-t-md, .rwxs-m-b-md, .rwxs-m-l-lg, .rwxs-m-r-lg, .rwxs-m-t-lg, .rwxs-m-b-lg
@@ -53,7 +75,7 @@ p.small
 //.rwxu
 
 // RoseWorx Forms ??
-// importing the scss only gets forms styles, import rwxForms in JS, const forms = new rwxForms() and put [rsx-form] attribute on a html form for the js - it is possible to have a custom submit function for a form instead of doing a normal form submit. just save the rwxForms instantiator as a var XXX and call XXX.customSubmitFn with the ID of the form as the first parameter (form must have an ID attribute) and a function as the second attribute -> the customSubmitFn will get called with a parameter - an array of objects with each form fields value. a forms submit button will remain invalid untill all fields are valid
+// importing the scss only gets forms styles, import rwxForms in JS, const forms = new rwxForms() and put [rsx-form] attribute on a html form for the js - it is possible to have a custom submit function for a form instead of doing a normal form submit. just save the rwxForms instantiator as a var XXX and call XXX.customSubmitFn with the ID of the form as the first parameter (form must have an ID attribute) and a function as the second attribute -> the customSubmitFn will get called with a parameter - an array of objects with each form fields value in the format [{fieldname: fieldvalue}]. a forms submit button will remain invalid untill all fields are valid
 if fields are required
 {
 	for an input to be valid - has to have a string length > 0 

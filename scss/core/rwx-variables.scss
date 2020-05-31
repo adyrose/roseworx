@@ -18,6 +18,23 @@ $purple: #731773 !default;
 $pink: #ff33cc !default;
 $brown: #9a3300 !default;
 
+$colors: ('black':$black, 
+					'grey':$grey, 
+					'dark-grey':$dark-grey, 
+					'white':$white, 
+					'orange':$orange,
+					'red': $red,
+					'blue': $blue,
+					'light-blue': $light-blue,
+					'green': $green,
+					'light-green': $light-green,
+					'turquoise': $turquoise,
+					'yellow': $yellow,
+					'purple': $purple,
+					'pink': $pink,
+					'brown': $brown
+					);
+
 //breakpoints
 $breakpoints: (
 	mini: 480px,
@@ -58,14 +75,16 @@ $transition-fast-in: cubic-bezier(1,.15,.72,.81);
 $transition-base: cubic-bezier(.11,.82,.63,.94);
 
 //tables
-$table-line-color-base: $grey;
-$table-line-color-secondary: $dark-grey;
-$table-theme-color-base: $light-blue;
+$table-line-color-base: $grey !default;
+$table-line-color-secondary: $dark-grey !default;
+$table-theme-color-base: $light-blue !default;
 
 //forms
 $form-theme-color-base: $dark-grey !default;
 $form-theme-color-secondary: $grey !default;
 $form-theme-focus-color: $turquoise !default;
 $form-item-size: 50px !default;
-$form-valid-color: $dark-grey;
-$form-invalid-color: $red;
+$form-valid-color: $dark-grey !default;
+$form-invalid-color: $red !default;
+$button-size: 50px !default;
+$button-primary-color: $turquoise !default;

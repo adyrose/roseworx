@@ -1,20 +1,3 @@
-$colors: ('black':$black, 
-					'grey':$grey, 
-					'dark-grey':$dark-grey, 
-					'white':$white, 
-					'orange':$orange,
-					'red': $red,
-					'blue': $blue,
-					'light-blue': $light-blue,
-					'green': $green,
-					'light-green': $light-green,
-					'turquoise': $turquoise,
-					'yellow': $yellow,
-					'purple': $purple,
-					'pink': $pink,
-					'brown': $brown
-					);
-
 @each $selector, $color in $colors
 {
 	.rwxc-background-#{$selector}

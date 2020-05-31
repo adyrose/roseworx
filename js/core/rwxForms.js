@@ -16,9 +16,9 @@ class rwxForms {
 
 	customSubmitFn(id, submitFunction)
 	{
-		if(this.internalMap[id])
+		if(this.internalMap && this.internalMap[id])
 		{
-			this.internalMap[id].customSubmit = submitFunction
+			this.internalMap[id].customSubmit = submitFunction;
 		}
 	}
 }
@@ -28,7 +28,7 @@ class rwxForm {
 	{
 		//input select textarea
 		const inputs = [...formEl.querySelectorAll("input"), ...formEl.querySelectorAll('textarea'), ...formEl.querySelectorAll('select')];
-		this.submitButton = formEl.querySelector("input[type='submit']");
+		const submitButton = formEl.querySelector("button[type='submit']");
 
 		//do final check on submit all fields are valid to stop front end changing the disabled property in inspector
 
@@ -48,21 +48,37 @@ class rwxForm {
 			el.addEventListener(validEvent, (e)=>{
 				const isValid = el.type == "checkbox" ? this.validCheckbox(el, el.checked) : this.validInput(el, el.value);
 				this.validEls[this.getUniqueAttribute(el)] = isValid;
-				this.isFormValid();
-			})
+				if(submitButton)submitButton.disabled = !this.isFormValid();
+			});
+			return;
 		});
 
+		if(submitButton)submitButton.disabled = !this.isFormValid();
+
 		formEl.addEventListener('submit', (ev)=>{
+			if(!this.isFormValid())
+			{
+				ev.preventDefault();
+				return;
+			}
 			if(this.customSubmit){
 				ev.preventDefault();
-				this.customSubmit({value1:"hi"});
+				const finalObject = {};
+				inputs.map((i)=>{
+					let name = i.getAttribute('name');
+					if(name){
+						finalObject[name] = i.type=="checkbox" ? i.checked : i.value;
+					}
+					return;
+				})
+				this.customSubmit(finalObject);
 			}
 		})
 	}
 
 	isFormValid()
 	{
-		console.log(Object.entries(this.validEls).every((ve)=>ve[1]===true));
+		return (Object.entries(this.validEls).every((ve)=>ve[1]===true));
 	}
 
 	getUniqueAttribute(el)

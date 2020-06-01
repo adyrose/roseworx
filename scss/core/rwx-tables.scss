@@ -3,6 +3,9 @@ $emphasis-line:	2px solid $table-line-color-secondary;
 
 .rwx-table
 {
+	max-height:200px;
+	overflow:auto;
+	position:relative;
 	&-data
 	{
 		display:flex;
@@ -19,6 +22,24 @@ $emphasis-line:	2px solid $table-line-color-secondary;
 			margin-bottom:0px;
 			padding: 0.8rem;
 			flex:1;
+		}
+
+		&.scroll
+		{
+			animation: stickyHeader 0.6s $transition-base;
+			left:0px;
+			width:100%;
+			position:absolute;
+			transition: background-color 0.5s $transition-base;
+			background-color:$white !important;
+			box-shadow: 0px 1px 5px $table-line-color-base;
+		}
+	}
+
+	&:not(.vertical) &-data
+	{
+		span
+		{
 			&:first-child
 			{
 				@extend .rwxf-bold;
@@ -26,15 +47,16 @@ $emphasis-line:	2px solid $table-line-color-secondary;
 		}
 	}
 
-	&.vertical
-	{
-		display:flex;
-	}
 	&.vertical &-data
 	{
-		border-top: $emphasis-line;
-		flex-direction:column;
-		flex:1;
+		&:first-child, &.scroll
+		{
+			span
+			{
+				@extend .rwxf-bold;
+				border-top: $emphasis-line;
+			}
+		}
 		span
 		{
 			border-top: $normal-line;
@@ -146,7 +168,10 @@ $emphasis-line:	2px solid $table-line-color-secondary;
 	{
 		&:nth-child(odd)
 		{
-			background-color: rgba($table-theme-color-base, 0.2);
+			span
+			{
+				background-color: rgba($table-theme-color-base, 0.2);
+			}
 		}
 	}
 
@@ -154,5 +179,19 @@ $emphasis-line:	2px solid $table-line-color-secondary;
 	{
 		overflow:auto;
 		position:relative;
+	}
+}
+
+@keyframes stickyHeader
+{
+	0%
+	{
+		transform: translateY(-100%);
+		opacity:0;
+	}
+	100%
+	{
+		transform: translateY(0);
+		opacity:1;
 	}
 }

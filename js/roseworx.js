@@ -1,3 +1,4 @@
 import rwxForms from './core/rwxForms';
+import rwxTables from './core/rwxTables';
 
-export {rwxForms};
+export {rwxForms, rwxTables};

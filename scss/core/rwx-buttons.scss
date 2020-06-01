@@ -44,10 +44,11 @@
 
 .rwx-button, button
 {
+	display:block;
 	min-height:$button-size;
-	padding:1rem 2rem 1rem 2rem;
+	padding:0.75rem 1.5rem 0.75rem 1.5rem;
 	transition: all 0.7s $transition-base;
-	@extend .h5;
+	@extend .h6;
 	cursor:pointer;
 	&:hover, &:focus
 	{

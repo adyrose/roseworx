@@ -29,6 +29,7 @@ add .preload class to the body and import {rwxPreload} from 'roseworx' and new r
 mixin provided for changing link color @include change-link-color($white); - useful for having links in navigations which dont follow the general rule for <a> tags in normal content. For example .navigation ul li {@include change-link-color($white);} will change all <a> tags and the underline color to white in each .navigation ul li
 a.no-decoration for normal type
 a rwx-table-data can be an a tag with no-decoration class and highlightable to become a linkf
+all JS modules need to be instantiated in docoument.load method
 
 //RoseWorx SkrollX
 Scroll animation library for parallax scrolling animations
@@ -60,7 +61,7 @@ p.small
 // HELPER CLASSES
 
 // RoseWorx Buttons
-default button color and style is set with $button-primary-color $button-color-secondary variables but included in the framework are color modifers to easily switch a button style inline to a different named color. E.G <button class="--red"></button>
+default button color and style is set with $button-primary-color $button-color-secondary variables but included in the framework are color modifers to easily switch a button style inline to a different named color. E.G <button class="--red"></button>. Give any element a class rwx-button + modifer to receive button styles e.g <a class="rwx-button"></a>
 
 // RoseWorx Spacing (margin)
 .rwxs-m-sm, .rwxs-m-md, .rwxs-m-lg, .rwxs-m-no, .rwxs-m-l-no, .rwxs-m-r-no, .rwxs-m-t-no, .rwxs-m-b-no .rwxs-m-l-sm, .rwxs-m-r-sm, .rwxs-m-t-sm, .rwxs-m-b-sm, .rwxs-m-l-md, .rwxs-m-r-md, .rwxs-m-t-md, .rwxs-m-b-md, .rwxs-m-l-lg, .rwxs-m-r-lg, .rwxs-m-t-lg, .rwxs-m-b-lg
@@ -92,4 +93,8 @@ form needs ONE button with type submit which will have disabled property until a
 Once all the input fields in a form element are considered valid the button will loose the disabled property
 
 add <p class="invalid-message">Invalid Field</p> after the label to provide invalid field feedback when the field is invalid
+
+//RoseWorx tables
+by default, the first span in every .rwx-table-data becomes a table heading UNLESS you specify .vertical on the .rwx-table in which all the spans in the first .rwx-table-data will become a heading. If you specify .dual-headings, both will become hedings.
+tables work by default without js. if you include the js module, tables will become more advanced and have sticky headers on scroll and a mist gradient in mobile to identify to users that it can be scrolled.
 

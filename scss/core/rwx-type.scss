@@ -33,6 +33,12 @@ sup
   @extend .rwxf-small;
 }
 
+a.no-decoration
+{
+  color:$font-color-base;
+  
+}
+
 a:not(.no-decoration):not(.rwx-button)
 {
   text-shadow: 0px 1px $font-link-color;

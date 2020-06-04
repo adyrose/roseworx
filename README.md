@@ -75,6 +75,9 @@ default button color and style is set with $button-primary-color $button-color-s
 // RoseWorx Utilities
 //.rwxu
 
+// RoseWorx Themes
+To make things easier for consistent colors you can style the entire framework of components using the 2 SCSS variables $theme-color-base and $theme-color-secondary and things like forms and tables will then use the base and secondary colors in these variables. You can of course then still overide individual color variables for components if they need to be different (e.g $form-color-base or $table-color-secondary)
+
 // RoseWorx Forms ??
 // importing the scss only gets forms styles, import rwxForms in JS, const forms = new rwxForms() and put [rsx-form] attribute on a html form for the js - it is possible to have a custom submit function for a form instead of doing a normal form submit. just save the rwxForms instantiator as a var XXX and call XXX.customSubmitFn with the ID of the form as the first parameter (form must have an ID attribute) and a function as the second attribute -> the customSubmitFn will get called with a parameter - an array of objects with each form fields value in the format [{fieldname: fieldvalue}]. a forms submit button will remain invalid untill all fields are valid
 if fields are required
@@ -95,6 +98,6 @@ Once all the input fields in a form element are considered valid the button will
 add <p class="invalid-message">Invalid Field</p> after the label to provide invalid field feedback when the field is invalid
 
 //RoseWorx tables
-by default, the first span in every .rwx-table-data becomes a table heading UNLESS you specify .vertical on the .rwx-table in which all the spans in the first .rwx-table-data will become a heading. If you specify .dual-headings, both will become hedings.
-tables work by default without js. if you include the js module, tables will become more advanced and have sticky headers on scroll and a mist gradient in mobile to identify to users that it can be scrolled.
+by default, the first span in every .rwx-table-data becomes a header. If .vertical is specified on .rwx-table, all spans in the first .rwx-table-data will be used a aheader. If .dualheadings is present on .rwx-table then both will be used.
+tables work by default without js. if you import rwxTables from 'roseworx' and new rwxTables()- tables with the [rwx-table] attribute become more advanced and have sticky headers on scroll and a mist gradient in mobile to identify to users that it can be scrolled. Note putting this attribute limits the height of the tables to $table-height-limit and the width of the cells to $table-cell-width-limit in breakpoint md and below or the table would never be scrolllable therefore you would never see the sticky headers.
 

@@ -55,10 +55,10 @@
 		outline:none;
 		transition: all 1s $transition-base;
 	}
-	@include button($button-primary-color);
+	@include button($button-color-base);
 	&.--inverted
 	{
-		@include invertedButton($turquoise);	
+		@include invertedButton($button-color-base);	
 	}
 	@each $selector, $color in $colors
 	{

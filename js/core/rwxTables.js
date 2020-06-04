@@ -5,124 +5,168 @@ class rwxTables {
 		//sticky gradient
 		const tables = [...document.querySelectorAll('[rwx-table]')];
 		tables.map((t)=>{
-
-			if(t.classList.contains('dual-headings')){return;}
+			const dual = t.classList.contains('dual-headings');
 			const vertical = t.classList.contains('vertical');
-
-			// const toStick = vertical ? [...t.querySelectorAll('.rwx-table-data:first-child span')] : [...t.querySelectorAll('.rwx-table-data span:first-child')];
-			// const toMargin = vertical ? [...t.querySelectorAll('.rwx-table-data:nth-child(2) span')] : [...t.querySelectorAll('.rwx-table-data span:nth-child(2)')];
-
-			// const heights = [];
-			// const widths = [];
-			// const tMeasurements = t.getBoundingClientRect();
-			// let topMax, leftMax;
-
-			// toStick.map((ts, index)=>{
-			// 	let measurements = ts.getBoundingClientRect();
-			// 	let left = measurements.left;
-			// 	vertical && console.log(left);
-
-			// 	if(index==0)
-			// 	{
-			// 		//if rwx-table has padding to the left or top need to factor it in to the scroll (e.g direct child of grid it gets padding left and right)
-			// 		leftMax = (measurements.left - tMeasurements.left); 
-			// 		topMax =(measurements.top - tMeasurements.top);
-			// 	}
-			// 	vertical ? heights.push(measurements.height) : widths.push(measurements.width);
-
-			// 	if(vertical)
-			// 	{
-			// 		//ts.style.left = measurements.left + "px";
-			// 	}
-			// 	else
-			// 	{
-			// 		ts.parentNode.style.height = measurements.height + "px";
-			// 		ts.style.width = measurements.width + "px";					
-			// 	}
-
-			// 	ts.style.top = vertical ? topMax : (measurements.top-tMeasurements.top)+"px";
-
-			// 	//ts.style.position = "absolute";
-			// 	return;
-			// });
-
-			// const max = vertical ? Math.max( ...heights ) : Math.max(...widths);
-
-			// vertical && toStick.map((ts)=>ts.style.height = max+"px");
-			// toMargin.map((tm)=>{
-			// 	if(vertical)
-			// 	{
-			// 		tm.style.marginTop = max-2+"px";
-			// 	}
-			// 	else
-			// 	{
-			// 		tm.style.marginLeft = max + "px";
-			// 	}
-			// 	return;
-			// });
-
+			const verticalLine = t.classList.contains('vertical-line');
+			let stick;
 			if(vertical)
-				{
-				const stick = new rwxVerticalStickyTableHeader(t);
-				t.addEventListener('scroll', ()=>{
-					stick.update();
-				})
+			{
+				stick = new rwxVerticalStickyTableHeader(t, 30);
 			}
+			else if(dual)
+			{
+				stick = new rwxDualStickyTableHeader(t, 30, verticalLine);
+			}
+			else
+			{
+				stick = new rwxHorizontalStickyTableHeader(t, 30);
+			}
+
+			t.addEventListener('scroll', ()=>{
+				stick.update();
+			});
 
 			return;
 		})
 	}
+}
 
+class rwxDualStickyTableHeader
+{
+	constructor(t, scrollBoundary, isVerticalLine)
+	{
+		this.table = t;
+		this.isVerticalLine = isVerticalLine;
+		this.stick = new rwxVerticalStickyTableHeader(t, scrollBoundary);
+		this.stick2 = new rwxHorizontalStickyTableHeader(t, scrollBoundary);
+	}
+
+	createMask()
+	{
+		let mask = document.createElement('span');
+		mask.classList.add('scroll');
+		mask.classList.add(this.isVerticalLine ? 'scroll-mask-vertical':'scroll-mask')
+		mask.style.height = this.stick2.getHeight() + "px";
+		mask.style.width = this.stick.getWidth() + "px";
+		this.mask = mask;
+		this.table.appendChild(mask);
+		this.maskCreated = true;
+	}
+
+	destroyMask()
+	{
+		this.table.removeChild(this.mask);
+		this.maskCreated = false;
+	}
+
+	update()
+	{
+		this.stick.update();
+		this.stick2.update();
+
+		if(this.stick.headerStuck && this.stick2.headerStuck)
+		{
+			if(!this.maskCreated){this.createMask();}
+			else
+			{
+				if(this.stick.headerStuck)
+				{
+					this.mask.style.left = this.table.scrollLeft + "px";
+				}
+				if(this.stick2.headerStuck)
+				{
+					this.mask.style.top = this.table.scrollTop + "px";
+				}
+			}
+		}
+		else
+		{
+			if(this.maskCreated)this.destroyMask();
+		}
+	}
 }
 
 class rwxVerticalStickyTableHeader
 {
-	constructor(tableEl)
+	constructor(tableEl, scrollBoundary)
 	{
-		this.headerStuck = false;
-		this.topMin = 0; // needs to factor in padding top by getting top of header clone and top of table and minusing
-		this.boundary = (10+this.topMin);
 		this.table = tableEl;
-		this.headerEl = tableEl.querySelector('.rwx-table-data:first-child');
-		this.stuckElement = false;
-		// tableEl.addEventListener('scroll', ()=>{
-		// 	if(t.scrollTop > this.boundary){
-		// 		if(!this.headerStuck){this.makeHeaderSticky(); this.headerStuck = true;}
-		// 		else{this.stuckElement.style.top = t.scrollTop + "px"}
-		// 	}
-		// 	else{
-		// 		if(this.headerStuck){this.makeHeaderNormal(); this.headerStuck = false;}
-		// 		{this.stuckElement.style.top = this.topMin + "px"}
-		// 	};
+		this.tableBoundaries = this.table.getBoundingClientRect();
+		this.stuckElements = [];
+		this.headerStuck = false;
+		this.headerEls = [...tableEl.querySelectorAll('.rwx-table-data')];
+		this.leftMin = this.headerEls[0].getBoundingClientRect().left - this.tableBoundaries.left;
+		this.boundary = (scrollBoundary+this.leftMin);
+	}
 
-			// let param = vertical ? "scrollTop" : "scrollLeft";
-			// let direction = vertical ? 'top' : 'left';
-			// let boundary = vertical ? (10+topMax) : (10+leftMax);
-			// let max = vertical ? topMax : leftMax;
-			// toStick.map((ts)=>{
-			// 	if(t[param] > boundary){
-			// 		if(!this.headerStuck){this.makeHeaderSticky(); this.headerStuck = true;}
-			// 		ts.classList.add('scroll');
-			// 		ts.style[direction] = t[param] + "px";
-			// 	}
-			// 	else{
-			// 		if(this.headerStuck){this.makeHeaderNormal(); this.headerStuck = false;}
-			// 		ts.classList.remove('scroll');
-			// 		ts.style[direction] = max + "px";
-			// 	};
-			// });
-		//});
+	getWidth()
+	{
+		return this.headerEls[0].querySelector('span:first-child').getBoundingClientRect().width;
+	}
+
+	update()
+	{
+		if(this.table.scrollLeft > this.boundary)
+		{
+			!this.headerStuck && this.makeHeaderSticky();
+			if(this.stuckElements.length>0){this.stuckElements.map((se)=>{se.style.left = this.table.scrollLeft + "px"})}
+		}
+		else
+		{
+			this.headerStuck && this.makeHeaderNormal();
+		}
+	}
+
+	makeHeaderSticky()
+	{
+		this.stuckElements = [];
+		this.headerEls.map((h)=>{
+			let s = h.querySelector('span:first-child');
+			let c = s.cloneNode(true);
+			c.classList.add('scroll');
+			c.style.width = s.getBoundingClientRect().width + "px";
+			c.style.height = s.getBoundingClientRect().height + "px";
+			this.stuckElements.push(c);
+			h.appendChild(c);
+			return;
+		});
+		this.headerStuck = true;
+	}
+
+	makeHeaderNormal()
+	{
+		this.stuckElements.map((se,i)=>this.headerEls[i].removeChild(se));
+		this.headerStuck = false;
+	}
+}
+
+class rwxHorizontalStickyTableHeader
+{
+	constructor(tableEl, scrollBoundary)
+	{
+		this.table = tableEl;
+		this.tableBoundaries = this.table.getBoundingClientRect();
+		this.stuckElement = false;
+		this.headerStuck = false;
+		this.headerEl = tableEl.querySelector('.rwx-table-data:first-child');
+		this.topMin = this.headerEl.getBoundingClientRect().top - this.tableBoundaries.top;
+		this.boundary = (scrollBoundary+this.topMin);
+	}
+
+	getHeight()
+	{
+		return this.headerEl.getBoundingClientRect().height;
 	}
 
 	update()
 	{
 		if(this.table.scrollTop > this.boundary){
-			if(!this.headerStuck){this.makeHeaderSticky(); this.headerStuck = true;}
-			else{if(this.stuckElement)this.stuckElement.style.top = this.table.scrollTop + "px"}
+			!this.headerStuck && this.makeHeaderSticky();
+			if(this.stuckElement)this.stuckElement.style.top = this.table.scrollTop + "px"
 		}
-		else{
-			if(this.headerStuck){this.makeHeaderNormal(); this.headerStuck = false;}
-			{if(this.stuckElement)this.stuckElement.style.top = this.topMin + "px"}
+		else
+		{
+			this.headerStuck && this.makeHeaderNormal();
 		};
 	}
 
@@ -131,11 +175,14 @@ class rwxVerticalStickyTableHeader
 		this.stuckElement = this.headerEl.cloneNode(true);
 		this.table.appendChild(this.stuckElement);
 		this.stuckElement.classList.add('scroll');
+		this.stuckElement.style.width = this.headerEl.scrollWidth + "px";
+		this.headerStuck = true;
 	}
 
 	makeHeaderNormal()
 	{
 		this.table.removeChild(this.stuckElement);
+		this.headerStuck = false;
 	}
 }
 

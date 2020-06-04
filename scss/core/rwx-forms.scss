@@ -15,7 +15,7 @@
 		margin-bottom:20px;
 		label
 		{
-			color:$form-theme-color-base;
+			color:$form-color-base;
 			display:block;
 			margin-bottom:10px;
 			order:1;
@@ -23,17 +23,17 @@
 		input, select, textarea
 		{
 			order:2;
-			color: $form-theme-color-base;
+			color: $form-color-base;
 			padding-left:15px;
 			min-height:$form-item-size;
 			width:100%;
-			border:1px solid $form-theme-color-secondary;
+			border:1px solid $form-color-secondary;
 			transition: 0.5s border $transition-base;
 			font: inherit;
 			&:focus
 			{
 				outline:none;
-				box-shadow: 0 0 0.3rem 0.1rem $form-theme-focus-color;
+				box-shadow: 0 0 0.3rem 0.1rem $form-color-focus;
 			}
 		}
 
@@ -48,19 +48,34 @@
 				top:0px;
 			}
 		}
-		&.valid
+
+		&.valid, &.invalid
 		{
 			input, select, textarea
 			{
 				transition: 0.5s border $transition-base;
-				border: 1px solid $form-valid-color;
 			}
 			&.rwx-checkbox, &.rwx-toggle
 			{
 				label:after
 				{
 					transition: 0.5s border $transition-base;
-					border: 1px solid $form-valid-color;
+					border: 1px solid $form-color-invalid;
+				}
+			}
+		}
+
+		&.valid
+		{
+			input, select, textarea
+			{
+				border: 1px solid $form-color-valid;
+			}
+			&.rwx-checkbox, &.rwx-toggle
+			{
+				label:after
+				{
+					border: 1px solid $form-color-valid;
 				}
 			}
 		}
@@ -68,8 +83,7 @@
 		{
 			input, select, textarea
 			{
-				transition: 0.5s border $transition-base;
-				border: 1px solid $form-invalid-color;
+				border: 1px solid $form-color-invalid;
 			}
 			.invalid-message
 			{
@@ -79,8 +93,7 @@
 			{
 				label:after
 				{
-					transition: 0.5s border $transition-base;
-					border: 1px solid $form-invalid-color;
+					border: 1px solid $form-color-invalid;
 				}
 			}
 		}
@@ -106,8 +119,8 @@
 					&:after
 					{
 						transition: 0.5s border $transition-base;
-						box-shadow: 0 0 0.3rem 0.1rem $form-theme-focus-color;
-						border:1px solid $form-theme-color-secondary;
+						box-shadow: 0 0 0.3rem 0.1rem $form-color-focus;
+						border:1px solid $form-color-secondary;
 					}
 				}
 			}
@@ -123,7 +136,7 @@
 				{
 					margin-top:10px;
 					display:block;
-					border:1px solid $form-theme-color-secondary;
+					border:1px solid $form-color-secondary;
 				}
 				&:before
 				{
@@ -154,7 +167,7 @@
 				}
 				&:before
 				{
-					background-image: url("data:image/svg+xml, <svg viewBox='0 0 20 20' stroke='#{safeHexForSvg($form-theme-color-base)}' fill='none' xmlns='http://www.w3.org/2000/svg'><polyline points='2,12 7,17 18,4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /></svg>");
+					background-image: url("data:image/svg+xml, <svg viewBox='0 0 20 20' stroke='#{safeHexForSvg($form-color-base)}' fill='none' xmlns='http://www.w3.org/2000/svg'><polyline points='2,12 7,17 18,4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /></svg>");
 					bottom:$form-item-size/4;
 					left:$form-item-size/4;
 					width:$form-item-size/2;
@@ -174,7 +187,7 @@
 					&:before
 					{
 						left:$form-item-size;
-						background-color: $form-theme-color-base;
+						background-color: $form-color-base;
 						transition: all 0.5s $transition-base;
 					}
 				}
@@ -195,7 +208,7 @@
 					height:$form-item-size;
 					width:$form-item-size;
 					border-radius:$form-item-size/2;
-					background-color: $form-theme-color-secondary;
+					background-color: $form-color-secondary;
 					transition: all 0.5s $transition-base;
 				}
 			}
@@ -234,7 +247,7 @@
 					width:$form-item-size / 2;
 					z-index:2;
 					content:"";
-					background-image: url("data:image/svg+xml, <svg viewBox='0 0 40 40' stroke='#{safeHexForSvg($form-theme-color-base)}' fill='none' xmlns='http://www.w3.org/2000/svg'><polyline points='2,6 16,6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,14 16,14' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,24 16,24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,32 16,32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='24,14 37,14 31,5 24,14 37,14' stroke-width='2px' /><polyline points='24,24 37,24 31,33 24,24 37,24' stroke-width='2px' /></svg>");
+					background-image: url("data:image/svg+xml, <svg viewBox='0 0 40 40' stroke='#{safeHexForSvg($form-color-base)}' fill='none' xmlns='http://www.w3.org/2000/svg'><polyline points='2,6 16,6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,14 16,14' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,24 16,24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,32 16,32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='24,14 37,14 31,5 24,14 37,14' stroke-width='2px' /><polyline points='24,24 37,24 31,33 24,24 37,24' stroke-width='2px' /></svg>");
 				}
 			}
 		}

@@ -1,13 +1,14 @@
 class rwxTables {
 	constructor()
 	{
-		//sticky header correct direction
-		//sticky gradient
 		const tables = [...document.querySelectorAll('[rwx-table]')];
 		tables.map((t)=>{
 			const dual = t.classList.contains('dual-headings');
 			const vertical = t.classList.contains('vertical');
 			const verticalLine = t.classList.contains('vertical-line');
+			
+			let mist  = new rwxTableMist(t);
+
 			let stick;
 			if(vertical)
 			{
@@ -24,10 +25,46 @@ class rwxTables {
 
 			t.addEventListener('scroll', ()=>{
 				stick.update();
+				mist.update();
 			});
 
 			return;
 		})
+	}
+}
+
+class rwxTableMist
+{
+	constructor(t)
+	{
+		this.table = t;
+		if(t.scrollWidth > t.offsetWidth){
+			this.rightMist = document.createElement('div');
+			this.rightMist.classList.add('right-mist');
+			t.appendChild(this.rightMist);
+		}
+		if(t.scrollHeight > t.offsetHeight){
+			this.bottomMist = document.createElement('div');
+			this.bottomMist.classList.add('bottom-mist');
+			t.appendChild(this.bottomMist);
+		}
+	}
+
+	update()
+	{
+		if((this.table.scrollLeft + this.table.offsetWidth) < this.table.scrollWidth){
+			this.rightMist.style.display = "block"; 
+			this.rightMist.style.right = -this.table.scrollLeft + "px";
+			this.rightMist.style.height = this.table.scrollHeight + "px";
+		}
+		else{this.rightMist.style.display = "none";}
+
+		if((this.table.scrollTop + this.table.offsetHeight) < this.table.scrollHeight){
+			this.bottomMist.style.display = "block";
+			this.bottomMist.style.width = this.table.scrollWidth + "px";
+			this.bottomMist.style.bottom = -this.table.scrollTop+"px";
+		}
+		else{this.bottomMist.style.display = "none";}
 	}
 }
 

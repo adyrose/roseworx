@@ -52,19 +52,24 @@ class rwxTableMist
 
 	update()
 	{
-		if((this.table.scrollLeft + this.table.offsetWidth) < this.table.scrollWidth){
-			this.rightMist.style.display = "block"; 
-			this.rightMist.style.right = -this.table.scrollLeft + "px";
-			this.rightMist.style.height = this.table.scrollHeight + "px";
+		if(this.rightMist)
+		{
+			if((this.table.scrollLeft + this.table.offsetWidth) < this.table.scrollWidth){
+				this.rightMist.style.display = "block"; 
+				this.rightMist.style.right = -this.table.scrollLeft + "px";
+				this.rightMist.style.height = this.table.scrollHeight + "px";
+			}
+			else{this.rightMist.style.display = "none";}
 		}
-		else{this.rightMist.style.display = "none";}
-
-		if((this.table.scrollTop + this.table.offsetHeight) < this.table.scrollHeight){
-			this.bottomMist.style.display = "block";
-			this.bottomMist.style.width = this.table.scrollWidth + "px";
-			this.bottomMist.style.bottom = -this.table.scrollTop+"px";
+		if(this.bottomMist)
+		{
+			if((this.table.scrollTop + this.table.offsetHeight) < this.table.scrollHeight){
+				this.bottomMist.style.display = "block";
+				this.bottomMist.style.width = this.table.scrollWidth + "px";
+				this.bottomMist.style.bottom = -this.table.scrollTop+"px";
+			}
+			else{this.bottomMist.style.display = "none";}
 		}
-		else{this.bottomMist.style.display = "none";}
 	}
 }
 

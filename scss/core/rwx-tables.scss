@@ -1,6 +1,6 @@
 $normal-line : 1px solid $table-color-secondary;
 $emphasis-line:	2px solid $table-color-base;
-$mist-size: 60px;
+$mist-size: 50px;
 
 @mixin stuck {
 	@extend .rwxf-bold;
@@ -125,6 +125,35 @@ $mist-size: 60px;
 	&.dual-headings.vertical-line &-data:first-child span:first-child, &.dual-headings.vertical-line &-data.scroll span:first-child
 	{
 		border:none;
+	}
+
+	&.slanted:not(.vertical) &-data:first-child span, &.slanted.vertical &-data span:first-child
+	{
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: column;
+		justify-content:center;
+		max-height: 150px;
+		word-break: break-word;
+		border-top: 0;
+		writing-mode: vertical-rl;
+		&:before
+		{
+			content:"";
+			height:100%;
+			width:2px;
+			background-color:$table-color-base;
+		}
+	}
+
+	&.slanted:not(.vertical) &-data:first-child span
+	{
+		transform: rotate(-133deg) translate(25px, -25px);
+	}
+
+	&.slanted.vertical &-data span:first-child
+	{
+		transform: rotate(-113deg) translate(12px, 12px)
 	}
 
 	&.full-grid &-data

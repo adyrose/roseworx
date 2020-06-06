@@ -6,6 +6,7 @@ scss split page grid
 variables !default
 named exports + whole frameowkr imports, just grid, just components (component SCSS files might have dependencies on core), sass only, etc
 all components from innovation and strip out fruit machine to own repo and use as test case for this framework via npm and delete innovation repo
+gradient from product centre - get loading gradient thing.
 set up how to develop this with HMR and demoing each component
 add particle countup and picture grid component
 add everything from utilities repo and delete
@@ -80,12 +81,13 @@ To make things easier for consistent colors you can style the entire framework o
 
 // RoseWorx Forms ??
 // importing the scss only gets forms styles, import rwxForms in JS, const forms = new rwxForms() and put [rsx-form] attribute on a html form for the js - it is possible to have a custom submit function for a form instead of doing a normal form submit. just save the rwxForms instantiator as a var XXX and call XXX.customSubmitFn with the ID of the form as the first parameter (form must have an ID attribute) and a function as the second attribute -> the customSubmitFn will get called with a parameter - an array of objects with each form fields value in the format [{fieldname: fieldvalue}]. a forms submit button will remain invalid untill all fields are valid
+validation rules
 if fields are required
 {
 	for an input to be valid - has to have a string length > 0 
 	if type is email needs to be valid email
 	for select to be valid it needs a value of string length ? 0 (TIP to have a placeholder, set an option with value="" which means if someone selects the placeholder the field wont be valid)
-	checkbox and toggle need to be TRUE
+	checkbox and toggle need to be TRUE/CHECKED
 }
 else
 {
@@ -99,5 +101,5 @@ add <p class="invalid-message">Invalid Field</p> after the label to provide inva
 
 //RoseWorx tables
 by default, the first span in every .rwx-table-data becomes a header. If .vertical is specified on .rwx-table, all spans in the first .rwx-table-data will be used a aheader. If .dualheadings is present on .rwx-table then both will be used.
-tables work by default without js. if you import rwxTables from 'roseworx' and new rwxTables()- tables with the [rwx-table] attribute become more advanced and have sticky headers on scroll and a mist gradient in mobile to identify to users that it can be scrolled. Note putting this attribute limits the height of the tables to $table-height-limit and the width of the cells to $table-cell-width-limit in breakpoint md and below or the table would never be scrolllable therefore you would never see the sticky headers. Warning .slanted modifier does not work well with LONG table headers
+tables work by default without js. if you import rwxTables from 'roseworx' and new rwxTables()- tables with the [rwx-table] attribute become more advanced and have sticky headers on scroll and a mist gradient in mobile to identify to users that it can be scrolled. Note putting this attribute limits the height of the tables to $table-height-limit and the width of the cells to $table-cell-width-limit in breakpoint md and below or the table would never be scrolllable therefore you would never see the sticky headers. Warning .slanted modifier does not work well with LONG table headers. add rwx-table-no-mist attribute to [rwx-table] for no misting. Add [rwx-table-no-stick] to [rwx-table] for no sticky headers.
 

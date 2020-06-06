@@ -4,6 +4,18 @@
   @return '%23' + str-slice('#{$color}', 2, -1)
 }
 
+@mixin required
+{
+	position:relative;
+	&:after
+	{
+		content:"*";
+		position:absolute;
+		right:0px;
+		top:0px;
+	}
+}
+
 .rwx-form
 {
 	position:relative;
@@ -35,18 +47,19 @@
 				outline:none;
 				box-shadow: 0 0 0.3rem 0.1rem $form-color-focus;
 			}
+			&[readonly]
+			{
+				background-color: $form-color-secondary;
+			}
 		}
 
 		&.required
 		{
-			position:relative;
-			&:after
+			@include required;
+			label
 			{
-				content:"*";
-				position:absolute;
-				right:0px;
-				top:0px;
-			}
+				padding-right:20px;
+			}	
 		}
 
 		&.valid, &.invalid
@@ -107,13 +120,13 @@
 		}
 
 
-		&.rwx-checkbox, &.rwx-toggle
+		&.rwx-checkbox, &.rwx-toggle, &.rwx-radio
 		{
-			input[type="checkbox"]
+			input[type="checkbox"], input[type="radio"]
 			{
 				position:absolute;
 				width:1px;
-				left:-10px;
+				left:-$form-item-size;
 				&:focus + label
 				{
 					&:after
@@ -141,6 +154,43 @@
 				&:before
 				{
 					position:absolute;
+				}
+			}
+		}
+
+		&.rwx-radio
+		{
+			input[type="radio"]
+			{
+				&:checked + label
+				{
+					&:before
+					{
+						width: $form-item-size;
+						height: $form-item-size;
+						left:0;
+						bottom:0;
+						transition: all 0.5s $transition-base;
+					}
+				}
+			}
+			label
+			{
+				&:after
+				{
+					width: $form-item-size;
+					height: $form-item-size;
+					border-radius: $form-item-size/2;
+				}
+				&:before
+				{
+					width: 0;
+					height: 0;
+					border-radius: $form-item-size/2;
+					background-color: $form-color-base;
+					left:$form-item-size/2;
+					bottom:$form-item-size/2;
+					transition: all 0.5s $transition-base;
 				}
 			}
 		}
@@ -223,7 +273,7 @@
 				cursor:pointer;
 			}
 			position:relative;
-			label
+			select:not([multiple]) + label
 			{
 				&:after, &:before
 				{
@@ -250,6 +300,22 @@
 					background-image: url("data:image/svg+xml, <svg viewBox='0 0 40 40' stroke='#{safeHexForSvg($form-color-base)}' fill='none' xmlns='http://www.w3.org/2000/svg'><polyline points='2,6 16,6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,14 16,14' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,24 16,24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,32 16,32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='24,14 37,14 31,5 24,14 37,14' stroke-width='2px' /><polyline points='24,24 37,24 31,33 24,24 37,24' stroke-width='2px' /></svg>");
 				}
 			}
+		}
+	}
+	&-radio-group
+	{
+		p{color:$form-color-base;width:100%;}
+		display:flex;
+		flex-wrap:wrap;
+		justify-content: space-between;
+		align-items:center;
+		&.required
+		{
+			p{@include required;padding-right:20px;}
+		}
+		label
+		{
+			text-align:center;
 		}
 	}
 }

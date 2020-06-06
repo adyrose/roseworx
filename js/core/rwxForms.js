@@ -26,28 +26,22 @@ class rwxForms {
 class rwxForm {
 	constructor(formEl)
 	{
-		//input select textarea
 		const inputs = [...formEl.querySelectorAll("input"), ...formEl.querySelectorAll('textarea'), ...formEl.querySelectorAll('select')];
 		const submitButton = formEl.querySelector("button[type='submit']");
-
-		//do final check on submit all fields are valid to stop front end changing the disabled property in inspector
 
 		this.validEls = {};
 
 		[...inputs].map((el)=>{
-			const isValid = el.type == "checkbox" ? this.validCheckbox(el, el.checked) : this.validInput(el, el.value);
-			this.validEls[this.getUniqueAttribute(el)] = isValid;
-
+			this.determineValid(el);
 			this.touched(el);
 
 			el.addEventListener('blur', (e)=>{
 				el.type == "checkbox" ? this.addValidClass(this.validCheckbox(el, e.target.checked), el) : this.addValidClass(this.validInput(el, e.target.value), el);
 			});
 
-			const validEvent = el.type=="checkbox" || el.tagName=="SELECT" ? 'change' : 'keyup';
+			const validEvent = (el.type=="checkbox" || el.tagName=="SELECT" || el.type=="radio") ? 'change' : 'keyup';
 			el.addEventListener(validEvent, (e)=>{
-				const isValid = el.type == "checkbox" ? this.validCheckbox(el, el.checked) : this.validInput(el, el.value);
-				this.validEls[this.getUniqueAttribute(el)] = isValid;
+				this.determineValid(el);
 				if(submitButton)submitButton.disabled = !this.isFormValid();
 			});
 			return;
@@ -76,6 +70,15 @@ class rwxForm {
 		})
 	}
 
+	determineValid(el)
+	{
+		let isValid;
+		if(el.type == "checkbox"){isValid = this.validCheckbox(el, el.checked);}
+		else if(el.type == "radio"){isValid = this.validRadio(el, el.checked);}
+		else{isValid = this.validInput(el, el.value);}
+		this.validEls[this.getUniqueAttribute(el)] = isValid;
+	}
+
 	isFormValid()
 	{
 		return (Object.entries(this.validEls).every((ve)=>ve[1]===true));
@@ -83,6 +86,7 @@ class rwxForm {
 
 	getUniqueAttribute(el)
 	{
+		if(el.type=="radio" && el.parentNode.parentNode.classList.contains('rwx-form-radio-group')) return el.parentNode.parentNode.id;
 		return el.id || el.name;
 	}
 
@@ -110,6 +114,13 @@ class rwxForm {
 	isRequired(el)
 	{
 		return el.parentNode.classList.contains('required');
+	}
+
+	validRadio(el, value)
+	{
+		const required = this.isRequired(el);
+		const required2 = el.parentNode.parentNode.classList.contains('required');
+		return (required || required2) ? value==true : true;
 	}
 
 	validInput(el, value)

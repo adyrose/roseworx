@@ -6,26 +6,35 @@ class rwxTables {
 			const dual = t.classList.contains('dual-headings');
 			const vertical = t.classList.contains('vertical');
 			const verticalLine = t.classList.contains('vertical-line');
-			
-			let mist  = new rwxTableMist(t);
+			const noMist = t.hasAttribute('rwx-table-no-mist');
+			const noStick = t.hasAttribute('rwx-table-no-stick');
 
-			let stick;
-			if(vertical)
+			let mist, stick;
+
+			if(!noMist)
 			{
-				stick = new rwxVerticalStickyTableHeader(t, 30);
+				mist  = new rwxTableMist(t);
 			}
-			else if(dual)
+
+			if(!noStick)
 			{
-				stick = new rwxDualStickyTableHeader(t, 30, verticalLine);
-			}
-			else
-			{
-				stick = new rwxHorizontalStickyTableHeader(t, 30);
+				if(vertical)
+				{
+					stick = new rwxVerticalStickyTableHeader(t, 30);
+				}
+				else if(dual)
+				{
+					stick = new rwxDualStickyTableHeader(t, 30, verticalLine);
+				}
+				else
+				{
+					stick = new rwxHorizontalStickyTableHeader(t, 30);
+				}
 			}
 
 			t.addEventListener('scroll', ()=>{
-				stick.update();
-				mist.update();
+				!noStick && stick.update();
+				!noMist && mist.update();
 			});
 
 			return;
@@ -66,7 +75,7 @@ class rwxTableMist
 			if((this.table.scrollTop + this.table.offsetHeight) < this.table.scrollHeight){
 				this.bottomMist.style.display = "block";
 				this.bottomMist.style.width = this.table.scrollWidth + "px";
-				this.bottomMist.style.bottom = -this.table.scrollTop+"px";
+				this.bottomMist.style.bottom = -this.table.scrollTop + "px";
 			}
 			else{this.bottomMist.style.display = "none";}
 		}

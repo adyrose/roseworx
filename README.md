@@ -93,7 +93,10 @@ else
 {
 	all fields are considered valid as they are not required
 }
-
+	// forms.customSubmitFn('customSubmit', (values)=>{
+	// 	console.log("customSubmit");
+	// 	console.log(values);
+	// });
 form needs ONE button with type submit which will have disabled property until all fields are valid
 Once all the input fields in a form element are considered valid the button will loose the disabled property
 

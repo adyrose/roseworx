@@ -3,6 +3,11 @@
 class rwxForms {
 	constructor()
 	{
+		window.onload = this.init;
+	}
+
+	init()
+	{
 		const forms = [...document.querySelectorAll('[rwx-form]')];
 		if(forms.length === 0){return;}
 		this.internalMap = {}

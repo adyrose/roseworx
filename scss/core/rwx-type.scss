@@ -14,14 +14,14 @@ $headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5"
     font-size: $size;
     @extend .rwxf-bold;
     font-family: $font-heading;
-    margin-bottom: 0.6rem;
+    margin-bottom: 1.3rem;
     line-height: $size + 0.55rem;
   }
 }
 
-p, strong, span
+p, strong, span, ul
 {
-  margin-bottom:0.9rem;
+  margin-bottom:1.1rem;
   &.small
   {
     @extend .rwxf-small;
@@ -70,19 +70,21 @@ a:not(.no-decoration):not(.rwx-button)
 
 ul
 {
+  padding-left:0.8rem;
   &:not(.no-decoration)
   {
     li
     {
+      position:relative;
       margin-bottom:0.75rem;
-      display:flex;
+      padding-left: 25px;
       &:before
       {
         content:"-";
         width:20px;
-        text-align:center;
-        flex-grow:0;
-        flex-shrink:0;
+        position:absolute;
+        left:0px;
+        top:0px;
       }
     }
   }
@@ -101,4 +103,8 @@ $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
 .rwxf-small
 {
   font-size:$font-size-small;
+}
+.rwxf-uppercase
+{
+  text-transform: uppercase;
 }

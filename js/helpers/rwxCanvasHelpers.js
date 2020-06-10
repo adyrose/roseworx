@@ -1,1 +1,6 @@
-rwxCanvasHelpers.js
+const rwxCanvasHelpers =
+{
+	scaleCanvas: ()=>{
+		
+	}
+}

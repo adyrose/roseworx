@@ -1,4 +1,9 @@
 import rwxForms from './core/rwxForms';
 import rwxTables from './core/rwxTables';
 
-export {rwxForms, rwxTables};
+let forms = new rwxForms();
+new rwxTables();
+
+const rwx = {forms}
+
+export default rwx;

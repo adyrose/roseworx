@@ -1,6 +1,11 @@
 class rwxTables {
 	constructor()
 	{
+		window.onload = this.init;
+	}
+	
+	init()
+	{
 		const tables = [...document.querySelectorAll('[rwx-table]')];
 		tables.map((t)=>{
 			const dual = t.classList.contains('dual-headings');

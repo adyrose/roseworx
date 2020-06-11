@@ -1,0 +1,46 @@
+@function safeHexForSvg($color)
+{
+  @return '%23' + str-slice('#{$color}', 2, -1)
+}
+
+$iconmap: (
+	'tick': (
+		'viewbox': "20 20", 
+		'svg': "<polyline points='2,12 7,17 18,4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' />"		
+	),
+	'select-list': (
+		'viewbox': "40 40", 
+		'svg': "<polyline points='2,6 16,6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,14 16,14' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,24 16,24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,32 16,32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='24,14 37,14 31,5 24,14 37,14' stroke-width='2px' /><polyline points='24,24 37,24 31,33 24,24 37,24' stroke-width='2px' />"
+	)
+);
+
+@function icon($type, $color:$theme-color-base) {
+	$icon:null;
+	@if map-has-key($iconmap, $type) {
+		$icon: map-get($iconmap, $type);
+	}
+	@else {
+		@warn "`#{$type} is not a valid icon. Available icons are: #{map-keys($iconmap)}`";
+		@return none;
+	}
+  
+	$toReturn: url("data:image/svg+xml, <svg viewBox='0 0 #{map-get($icon, 'viewbox')}' stroke='#{safeHexForSvg($color)}' fill='none' xmlns='http://www.w3.org/2000/svg'>#{map-get($icon, 'svg')}</svg>");
+	@return $toReturn;
+}
+
+.rwxi
+{
+	// LOOP THROUGH COLORS AND ICON MAP
+	&-tick
+	{
+		background: icon('tick');
+	}
+	&-select-list
+	{
+		background: icon('select-list');
+	}
+	&-help
+	{
+		background: icon('help');
+	}
+}

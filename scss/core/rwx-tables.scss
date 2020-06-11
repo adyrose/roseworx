@@ -3,7 +3,7 @@ $emphasis-line:	2px solid $table-color-base;
 $mist-size: 50px;
 
 @mixin stuck {
-	@extend .rwxf-bold;
+	@extend .rwxt-bold;
 	left:0px;
 	position:absolute;
 	background-color:$white !important;
@@ -15,6 +15,7 @@ $mist-size: 50px;
 
 .rwx-table
 {
+	margin-bottom: $small-spacing;
 	&[rwx-table]
 	{
 		max-height:$table-height-limit;
@@ -71,6 +72,14 @@ $mist-size: 50px;
 			margin-bottom:0px;
 			padding: 0.8rem;
 			flex:1;
+			&.x2
+			{
+				flex:2;
+			}
+			&.x3
+			{
+				flex:3;
+			}
 			&.scroll
 			{
 				animation: stickyHeaderHorizontal 0.6s $transition-base;
@@ -114,7 +123,7 @@ $mist-size: 50px;
 
 	&.vertical &-data span:first-child, &:not(.vertical) &-data:first-child span, &.dual-headings &-data span:first-child, &.dual-headings &-data:first-child span
 	{
-		@extend .rwxf-bold;
+		@extend .rwxt-bold;
 	}
 
 	&.dual-headings &-data span:first-child, &.dual-headings &-data span.scroll
@@ -156,6 +165,11 @@ $mist-size: 50px;
 		transform: rotate(-113deg) translate(12px, 12px)
 	}
 
+	&.slanted.vertical
+	{
+		padding-bottom:60px;
+	}
+
 	&.full-grid &-data
 	{
 		span
@@ -174,7 +188,17 @@ $mist-size: 50px;
 		}
 	}
 
-	&.highlightable &-data
+	&.highlightable.vertical &-data
+	{
+		&:hover span:not(:first-child)
+		{
+			cursor:pointer;
+			background-color: rgba($table-color-highlight, 0.2);			
+		}
+	}
+
+
+	&.highlightable:not(.vertical) &-data:not(:first-child)
 	{
 		&:hover span
 		{

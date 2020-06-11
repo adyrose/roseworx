@@ -12,58 +12,77 @@ $headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5"
   .#{$selector}, #{$selector}
   {
     font-size: $size;
-    @extend .rwxf-bold;
+    @extend .rwxt-bold;
     font-family: $font-heading;
     margin-bottom: 1.3rem;
     line-height: $size + 0.55rem;
   }
 }
 
+p
+{
+  &.help, &.warning, &.note
+  {
+    padding-left: 20px;
+    position:relative;
+  }
+  &.help
+  {
+    &:before
+    {
+      content: "";
+      width:20px;
+      height:20px;
+      position:absolute;
+      top:0px;
+      left:0px;
+      @extend .rwxi-help;
+    }
+  } 
+}
+
 p, strong, span, ul
 {
   margin-bottom:1.1rem;
-  &.small
+}
+
+sup, p.small, strong.small, span.small, li.small
+{
+  @extend .rwxt-small;
+}
+
+a
+{
+  &.no-decoration
   {
-    @extend .rwxf-small;
+    color:$font-color-base;
   }
-}
-
-sup
-{
-  @extend .rwxf-small;
-}
-
-a.no-decoration
-{
-  color:$font-color-base;
-  
-}
-
-a:not(.no-decoration):not(.rwx-button)
-{
-  text-shadow: 0px 1px $font-link-color;
-  text-decoration:none;
-  color:$font-link-color;
-  display:inline-block;
-  position:relative;
-  &:after
+  &:not(.no-decoration):not(.rwx-button)
   {
+    text-shadow: 0px 1px $font-link-color;
+    text-decoration:none;
+    color:$font-link-color;
     display:inline-block;
-    content:"";
-    width:0px;
-    height:2px;
-    background-color:$font-link-color;
-    transition: width 0.3s $transition-fast-in;
-    position:absolute;
-    bottom:0px;
-    left:0px;
-  }
-  &:hover, &.active
-  {
+    position:relative;
     &:after
     {
+      display:inline-block;
+      content:"";
+      width:0px;
+      height:2px;
+      background-color:$font-link-color;
       transition: width 0.3s $transition-fast-in;
-      width:100%;
+      position:absolute;
+      bottom:0px;
+      left:0px;
+    }
+    &:hover, &.active
+    {
+      &:after
+      {
+        transition: width 0.3s $transition-fast-in;
+        width:100%;
+      }
     }
   }
 }
@@ -94,17 +113,27 @@ $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
 
 @each $selector, $weight in $weights
 {
-	.rwxf-#{$selector}
+	.rwxt-#{$selector}
 	{
 		font-weight: $weight;
 	}
 }
 
-.rwxf-small
+.rwxt-small
 {
   font-size:$font-size-small;
 }
-.rwxf-uppercase
+.rwxt-uppercase
 {
   text-transform: uppercase;
+}
+
+.rwxt-text-center
+{
+  text-align:center;
+}
+
+.rwxt-text-right
+{
+  text-align:right;
 }

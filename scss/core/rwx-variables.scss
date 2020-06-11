@@ -35,21 +35,27 @@ $colors: ('black':$black,
 					'brown': $brown
 					);
 
+//theme
 $theme-color-base: $dark-grey;
 $theme-color-secondary: $grey;
 
-//breakpoints
-$breakpoints: (
-	mini: 480px,
-	sm: 576px,
-	md: 768px,
-	lg: 992px,
-	xl: 1200px
-) !default;
-
-
 //grid
 $grid-item-gutter:15px !default;
+$breakpoint-mini: 480px !default;
+$breakpoint-sm: 576px !default;
+$breakpoint-md: 768px !default;
+$breakpoint-lg: 992px !default;
+$breakpoint-xl: 1200px !default;
+
+//breakpoints
+$breakpoints: (
+	mini: $breakpoint-mini,
+	sm: $breakpoint-sm,
+	md: $breakpoint-md,
+	lg: $breakpoint-lg,
+	xl: $breakpoint-xl
+) !default;
+
 
 //spacings
 $small-spacing: 1.5rem !default;

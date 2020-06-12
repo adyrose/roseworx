@@ -1,9 +1,7 @@
-
-
 class rwxForms {
 	constructor()
 	{
-		window.onload = this.init;
+		window.addEventListener('load', this.init);
 	}
 
 	init()

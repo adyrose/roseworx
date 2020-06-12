@@ -7,30 +7,29 @@
 		content:"";
 		overflow:hidden;
 		z-index:9998;
-		@include full-screen;
+		@include full-size;
 		background: rgba($grey, 0.5);
 	}
 	&:after
 	{
 		z-index: 9999;
-		animation: loading 1.5s $transition-base infinite;
+		animation: loading 2s cubic-bezier(0,.44,1,.45) infinite;
 		content: "";
-		left:0;
 		position:absolute;
-		height:200px;
+		height:200%;
 		width:200%;
-		background:linear-gradient(to bottom, rgba($white,0), rgba($white,1), rgba($white,0));
+		background:linear-gradient(to bottom, rgba($grey,0), rgba($white,0) 40%, rgba($white,1) 50%, rgba($white,0) 60%, rgba($grey,0));
 		transform:rotate(-45deg);
 	}
 }
 
 @keyframes loading {
 	0% {
-		left:-120%;
-		top: -50%;
+		left:-150%;
+		top: -150%;
 	}
-	80% {
-		left: 50%;
-		top: 50%;
+	100% {
+		left: 150%;
+		top: 100%;
 	}
 }

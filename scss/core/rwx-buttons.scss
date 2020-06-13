@@ -60,9 +60,9 @@
 	{
 		@include invertedButton($button-color-base);	
 	}
-	@each $selector, $color in $colors
+	@each $modifier, $color in $colors
 	{
-		&.--#{$selector}
+		&.--#{$modifier}
 		{
 			@include button($color);
 			&.--inverted

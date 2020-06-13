@@ -19,33 +19,6 @@ $headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5"
   }
 }
 
-p
-{
-  //convert to SCSS MAP
-  &.help, &.warning, &.note, &.hint
-  {
-    padding-left: 20px;
-    position:relative;
-    // background modifier 
-  }
-  &:before
-  {
-    content: "";
-    width:20px;
-    height:20px;
-    position:absolute;
-    top:0px;
-    left:0px;
-  }
-  &.help
-  {
-    &:before
-    {
-      @extend .rwxi-help;
-    }
-  } 
-}
-
 p, strong, span, ul
 {
   margin-bottom:1.1rem;
@@ -124,21 +97,44 @@ $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
 	}
 }
 
+$cards: ("help", "note", "warning", "hint");
+
+@each $card in $cards
+{
+  p.#{$card}
+  {
+    padding: 15px 10px 15px 60px;
+    position:relative;
+    background-color:$theme-color-secondary;
+    box-shadow: 0px 0px 3px $dark-grey;
+    &:before
+    {
+      content: "";
+      width:33px;
+      height:33px;
+      position:absolute;
+      top:15px;
+      left:10px;
+      background: icon(#{$card});     
+    }
+  }
+}
+
 .rwxt-small
 {
-  font-size:$font-size-small;
+  font-size:$font-size-small !important;
 }
 .rwxt-uppercase
 {
-  text-transform: uppercase;
+  text-transform: uppercase !important;
 }
 
 .rwxt-text-center
 {
-  text-align:center;
+  text-align:center !important;
 }
 
 .rwxt-text-right
 {
-  text-align:right;
+  text-align:right !important;
 }

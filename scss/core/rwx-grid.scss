@@ -48,14 +48,6 @@ $grid-classes:
 			max-width: map-get($breakpoints, 'xl');
 		}
 	}
-	@include snap-down-from('md')
-	{
-		> div 
-		{
-			position:relative;
-			width:100%;
-		}
-	}
 	overflow-x:hidden;
 	display:flex;
 	flex-wrap:wrap;
@@ -66,6 +58,11 @@ $grid-classes:
 			width: #{$value};
 			padding-left: $grid-item-gutter;
 			padding-right: $grid-item-gutter;
+			position:relative;
+			@include snap-down-from('md')
+			{
+				width:100%;
+			}
 		}
 	}
 }

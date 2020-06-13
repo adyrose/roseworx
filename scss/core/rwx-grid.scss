@@ -59,16 +59,13 @@ $grid-classes:
 	overflow-x:hidden;
 	display:flex;
 	flex-wrap:wrap;
-	> div > *
-	{
-		padding-left:$grid-item-gutter;
-		padding-right:$grid-item-gutter;
-	}
 	@each $selector, $value in $grid-classes
 	{
 		&-#{$selector}
 		{
 			width: #{$value};
+			padding-left: $grid-item-gutter;
+			padding-right: $grid-item-gutter;
 		}
 	}
 }

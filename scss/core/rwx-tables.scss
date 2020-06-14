@@ -224,6 +224,14 @@ $mist-size: 50px;
 		{
 			word-break:break-word;
 			min-width:$table-cell-width-limit;
+			&.x2
+			{
+				min-width: $table-cell-width-limit * 2;
+			}
+			&.x3
+			{
+				min-width: $table-cell-width-limit * 3;
+			}
 		}
 	}
 }

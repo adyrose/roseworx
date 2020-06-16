@@ -31,13 +31,8 @@ sup, p.small, strong.small, span.small, li.small
 
 a
 {
-  &.no-decoration
+  &:not(.rwx-button)
   {
-    color:$font-color-base;
-  }
-  &:not(.no-decoration):not(.rwx-button)
-  {
-    text-shadow: 0px 1px $font-link-color;
     text-decoration:none;
     color:$font-link-color;
     display:inline-block;
@@ -47,20 +42,38 @@ a
       display:inline-block;
       content:"";
       width:0px;
-      height:2px;
+      height:1px;
       background-color:$font-link-color;
-      transition: width 0.3s $transition-fast-in;
+      transition: all 0.3s $transition-fast-in;
       position:absolute;
       bottom:0px;
-      left:0px;
+      width:100%;
+      left:0;
     }
     &:hover, &.active
     {
       &:after
       {
-        transition: width 0.3s $transition-fast-in;
-        width:100%;
+        transition: all 0.3s $transition-fast-in;
+        left:45%;
+        width:5%;
       }
+    }
+    &.inverted
+    {
+      &:after
+      {
+        width:0;
+        left:50%;
+      }
+      &:hover, &.active
+      {
+        &:after
+        {
+          left:0;
+          width:100%;
+        }
+      } 
     }
   }
 }

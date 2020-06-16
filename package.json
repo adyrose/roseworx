@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/adyrose/roseworx/issues"
   },
-  "homepage": "https://github.com/adyrose/roseworx#readme",
+  "homepage": "roseworx.adyrose.co.uk",
   "devDependencies": {
     "@babel/core": "^7.10.2",
     "autoprefixer": "^9.8.0",

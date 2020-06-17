@@ -4,7 +4,9 @@
   "description": "Front end css and js framework",
   "main": "js/roseworx.js",
   "scripts": {
-    "compile": "webpack --config compile-config.js"
+    "test": "echo \"No tests specified\"",
+    "compile": "webpack --config compile-config.js",
+    "release": "np"
   },
   "repository": {
     "type": "git",
@@ -13,8 +15,13 @@
   "keywords": [
     "js",
     "css",
-    "responsive",
-    "framework"
+    "Responsive",
+    "Framework",
+    "Components",
+    "scss",
+    "Front End Framework",
+    "Helpers",
+    "Tooling"
   ],
   "author": "Ady Rose",
   "license": "ISC",

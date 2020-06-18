@@ -1,33 +1,27 @@
-class rwxForms {
+import Roseworx from '../rwxCore';
+
+class rwxForms extends Roseworx.Core {
 	constructor()
 	{
-		this.init = this.init.bind(this);
-		window.addEventListener('load', this.init);
+		super();
 	}
 
-	init()
+	execute()
 	{
 		const forms = [...document.querySelectorAll('[rwx-form]')];
 		if(forms.length === 0){return;}
 		this.internalMap = {}
 		forms.map((f)=> {
-			const id = f.id;
-			const form = new rwxForm(f); 
-			if(id){this.internalMap[id] = form}
+			const Form = new rwxForm(f);
+			if(f.id){this.addIME(f.id,Form);}
 		 	return;
 		});
 	}
 
 	customSubmitFn(id, submitFunction)
 	{
-		if(this.internalMap && this.internalMap[id])
-		{
-			this.internalMap[id].customSubmit = submitFunction;
-		}
-		else
-		{
-			console.log(`rwxForms - No Form element found with id - ${id}`);
-		}
+		const IME = this.getIME(id);
+		if(IME)IME.customSubmit = submitFunction;
 	}
 }
 

@@ -1,10 +1,12 @@
-class rwxTables {
+import Roseworx from '../rwxCore';
+
+class rwxTables extends Roseworx.Core {
 	constructor()
 	{
-		window.addEventListener('load', this.init);
+		super();
 	}
 	
-	init()
+	execute()
 	{
 		const tables = [...document.querySelectorAll('[rwx-table]')];
 		tables.map((t)=>{

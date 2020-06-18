@@ -1,15 +1,14 @@
 require('../../scss/components/rwx-slider.scss');
+import Roseworx from '../rwxCore';
 
-class rwxSliders {
+class rwxSliders extends Roseworx.Core {
 	constructor()
 	{
-		this.init = this.init.bind(this);
-		window.addEventListener('load', this.init);
+		super();
 	}
 
-	init()
+	execute()
 	{
-		this.internalMap = {};
 		const sliders = [...document.querySelectorAll('[rwx-slider]')];
 		sliders.map((s)=>{
 			const counters = s.hasAttribute('data-rwx-slider-counters');
@@ -17,23 +16,16 @@ class rwxSliders {
 			const autoSlideTimeout = autoSlide ? s.getAttribute('data-rwx-slider-auto-slide') : 0;
 			const reeling = s.hasAttribute('data-rwx-slider-reeling');
 			const vertical = s.hasAttribute('data-rwx-slider-vertical');
-			const id = s.id;
-			const slider = new rwxSlider(s, vertical, autoSlide, counters, reeling, autoSlideTimeout ? autoSlideTimeout : 5);
-			if(id){this.internalMap[id] = slider}
+			const Slider = new rwxSlider(s, vertical, autoSlide, counters, reeling, autoSlideTimeout ? autoSlideTimeout : 5);
+			if(s.id){this.addIME(s.id,Slider);}
 		 	return;
 		});
 	}
 
 	goToSlide(id, slideNumber)
 	{
-		if(this.internalMap && this.internalMap[id])
-		{
-			this.internalMap[id].goToSlide(slideNumber);
-		}
-		else
-		{
-			console.log(`rwxSliders - No Slider element found with id - ${id}`);
-		}		
+		const IME = this.getIME(id);
+		IME && IME.goToSlide(slideNumber);		
 	}
 
 }

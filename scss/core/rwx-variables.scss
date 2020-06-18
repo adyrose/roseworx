@@ -79,6 +79,7 @@ $font-link-color: $blue !default;
 
 //animation-easings
 $transition-slow-in: cubic-bezier(.09,1.08,.74,.95); 
+$transition-slow-in-slow-out: cubic-bezier(0,.44,1,.45);
 $transition-fast-in: cubic-bezier(1,.15,.72,.81); 
 $transition-base: cubic-bezier(.11,.82,.63,.94);
 
@@ -100,3 +101,13 @@ $form-item-size: 50px !default;
 //buttons
 $button-size: 50px !default;
 $button-color-base: $theme-color-base !default;
+
+
+
+
+//// Only takes effect is js imported
+
+//Slider
+$slider-counter-active-color: $theme-color-base !default;
+$slider-counter-inactive-color: $theme-color-secondary !default;
+$slider-counter-size: 20px !default;

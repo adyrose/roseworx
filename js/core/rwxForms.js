@@ -1,6 +1,7 @@
 class rwxForms {
 	constructor()
 	{
+		this.init = this.init.bind(this);
 		window.addEventListener('load', this.init);
 	}
 
@@ -10,7 +11,7 @@ class rwxForms {
 		if(forms.length === 0){return;}
 		this.internalMap = {}
 		forms.map((f)=> {
-			const id = f.getAttribute('id');
+			const id = f.id;
 			const form = new rwxForm(f); 
 			if(id){this.internalMap[id] = form}
 		 	return;
@@ -22,6 +23,10 @@ class rwxForms {
 		if(this.internalMap && this.internalMap[id])
 		{
 			this.internalMap[id].customSubmit = submitFunction;
+		}
+		else
+		{
+			console.log(`rwxForms - No Form element found with id - ${id}`);
 		}
 	}
 }
@@ -148,4 +153,4 @@ class rwxForm {
 	}
 }
 
-export default rwxForms;
+export default new rwxForms();

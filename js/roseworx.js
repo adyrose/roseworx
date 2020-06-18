@@ -1,9 +1,5 @@
 import rwxForms from './core/rwxForms';
 import rwxTables from './core/rwxTables';
 
-let forms = new rwxForms();
-new rwxTables();
-
-const rwx = {forms}
-
-export default rwx;
+export default {forms:rwxForms}; 
+//Forms has the custom submit method users can use

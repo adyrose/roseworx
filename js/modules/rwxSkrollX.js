@@ -1,17 +1,30 @@
-require('../../scss/components/rwx-skrollx.scss');
+require('../../scss/modules/rwx-skrollx.scss');
 
-export default class rwxSkrollX {
+class rwxSkrollX {
 	constructor(trigger=150)
 	{
-		this.elements = [...document.querySelectorAll('[rwxsx]')];
 		this.trigger = window.innerHeight - trigger;
 		this.calculateScroll = this.calculateScroll.bind(this);
+		this.init = this.init.bind(this);
 		this.doneFlag = 'rwxsx-end';
+		window.addEventListener('load', this.init);
+	}
+
+	setConfig(obj)
+	{
+		//Object.assign(this, obj);
+		if(obj.trigger){this.trigger = window.innerHeight - obj.trigger}
+	}
+
+	init()
+	{
+		this.elements = [...document.querySelectorAll('[rwxsx]')];
 		setTimeout(()=>{
 			this.calculateScroll();
 		}, 500);
-		window.addEventListener('scroll', this.calculateScroll)
+		window.addEventListener('scroll', this.calculateScroll);
 	}
+
 	calculateScroll()
 	{
 		this.elements.map((el)=>{
@@ -31,3 +44,5 @@ export default class rwxSkrollX {
 		})
 	}
 }
+
+export default new rwxSkrollX();

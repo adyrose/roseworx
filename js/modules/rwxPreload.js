@@ -1,4 +1,4 @@
-export default class rwxPreload {
+class rwxPreload {
 	constructor()
 	{
 		window.addEventListener('load', ()=>{
@@ -8,3 +8,5 @@ export default class rwxPreload {
 		});
 	}
 }
+
+export default new rwxPreload();

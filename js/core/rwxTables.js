@@ -242,4 +242,4 @@ class rwxHorizontalStickyTableHeader
 	}
 }
 
-export default rwxTables;
+export default new rwxTables();

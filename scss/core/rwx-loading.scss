@@ -13,7 +13,7 @@
 	&:after
 	{
 		z-index: 9999;
-		animation: loading 2s cubic-bezier(0,.44,1,.45) infinite;
+		animation: loading 2s $transition-slow-in-slow-out infinite;
 		content: "";
 		position:absolute;
 		height:200%;

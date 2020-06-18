@@ -1,2 +1,3 @@
 Tables
 Colored class sticky header sometimes isnt same color, sometimes is?
+when scrolling on mobile DRAG, the misting does no dissapear

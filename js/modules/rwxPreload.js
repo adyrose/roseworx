@@ -1,3 +1,5 @@
+require('../../scss/modules/rwx-preload.scss');
+
 import Roseworx from '../rwxCore';
 
 class rwxPreload extends Roseworx.Core{
@@ -9,7 +11,7 @@ class rwxPreload extends Roseworx.Core{
 	execute()
 	{
 		setTimeout(()=>{
-			document.body.classList.contains('preload') && document.body.classList.remove('preload');
+			document.body.classList.contains('rwx-preload') && document.body.classList.remove('rwx-preload');
 		}, 300);
 	}
 }

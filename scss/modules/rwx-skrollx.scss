@@ -1,4 +1,5 @@
 @import '../core/rwx-variables';
+$rwxsx-distance: 30%;
 .rwxsx
 {
 	&-end
@@ -9,25 +10,22 @@
 	}
 	&-start
 	{
-		&-left, &-right, &-top, &-bottom
+		$direction: (	'left': -#{$rwxsx-distance}#{','} 0, 
+									'right':  #{$rwxsx-distance}#{','} 0,
+									'top': 0#{','} -#{$rwxsx-distance},
+									'bottom': 0#{','} #{$rwxsx-distance},
+									'top-left': -#{$rwxsx-distance}#{','} -#{$rwxsx-distance},
+									'top-right': #{$rwxsx-distance}#{','} -#{$rwxsx-distance},
+									'bottom-left': -#{$rwxsx-distance}#{','} #{$rwxsx-distance},
+									'bottom-right': #{$rwxsx-distance}#{','} #{$rwxsx-distance},
+									'initial': 0 0);
+		@each $selector, $transform in $direction
 		{
-			opacity:0;
-		}
-		&-left
-		{
-			transform: translate(-30%, 0);
-		}
-		&-right
-		{
-			transform: translate(30%, 0);
-		}
-		&-top
-		{
-			transform: translate(0, -30%);
-		}
-		&-bottom
-		{
-			transform: translate(0, 30%);
+			&-#{$selector}
+			{
+				opacity:0;
+				transform: translate($transform);
+			}
 		}
 	}
 }

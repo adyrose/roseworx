@@ -1,22 +1,26 @@
 require('../../scss/modules/rwx-skrollx.scss');
+import Roseworx from '../rwxCore';
 
-class rwxSkrollX {
-	constructor(trigger=150)
+class rwxSkrollX extends Roseworx.Core{
+	constructor()
 	{
-		this.trigger = window.innerHeight - trigger;
+		super();
+		this.setTrigger(150);
 		this.calculateScroll = this.calculateScroll.bind(this);
-		this.init = this.init.bind(this);
 		this.doneFlag = 'rwxsx-end';
-		window.addEventListener('load', this.init);
+	}
+
+	setTrigger(val)
+	{
+		this.trigger = window.innerHeight - val
 	}
 
 	setConfig(obj)
 	{
-		//Object.assign(this, obj);
-		if(obj.trigger){this.trigger = window.innerHeight - obj.trigger}
+		if(obj.trigger)this.setTrigger(obj.trigger);
 	}
 
-	init()
+	execute()
 	{
 		this.elements = [...document.querySelectorAll('[rwxsx]')];
 		setTimeout(()=>{

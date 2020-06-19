@@ -1,9 +1,10 @@
 class Core {
 	constructor()
 	{
-		this.execute = this.execute.bind(this);
 		this.internalMap = {};
-		this.resourceName = this.constructor.name
+		this.resourceName = this.constructor.name;		
+		if(!this.execute){console.warn(`[rwx] ${this.resourceName} - No execute method.`); return;}
+		this.execute = this.execute.bind(this);
 		window.addEventListener('load', this.execute);
 	}
 
@@ -22,7 +23,7 @@ class Core {
 		{
 			if(Object.keys(this.internalMap).length > 0)
 			{
-				console.log(`[rwx] ${this.resourceName} - No element found with id - ${id} \n[rwx] Possible ID's on this page are - ${Object.keys(this.internalMap).join(', ')}`);
+				console.warn(`[rwx] ${this.resourceName} - No element found with id - ${id} \n[rwx] Possible ID's on this page are - ${Object.keys(this.internalMap).join(', ')}`);
 			}
 		}		
 	}

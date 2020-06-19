@@ -36,8 +36,8 @@ $colors: ('black':$black,
 					);
 
 //theme
-$theme-color-base: $dark-grey;
-$theme-color-secondary: $grey;
+$theme-color-base: $dark-grey !default;
+$theme-color-secondary: $grey !default;
 
 //grid
 $grid-item-gutter:15px !default;
@@ -75,7 +75,8 @@ $h6-size: $font-size-base * 1.2 !default;
 $font-base: 'Roboto Mono', monospace !default;
 $font-heading: 'Josefin Sans', sans-serif !default;
 $font-color-base: $black !default;
-$font-link-color: $blue !default;
+$font-link-color: $light-blue !default;
+$list-item-counter-color: $light-blue !default;
 
 //animation-easings
 $transition-slow-in: cubic-bezier(.09,1.08,.74,.95); 

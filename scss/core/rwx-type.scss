@@ -90,11 +90,30 @@ ul
       padding-left: 25px;
       &:before
       {
-        content:"-";
-        width:20px;
+        content:"";
+        width:10px;
+        height:2px;
         position:absolute;
         left:0px;
-        top:0px;
+        top:12px;
+        background: $list-item-counter-color
+      }
+    }
+  }
+  &.inline
+  {
+    display:flex;
+    flex-wrap:wrap;
+    li
+    {
+      margin-right: 50px;
+      &:before
+      {
+        height:8px;
+        width:8px;
+        top:10px;
+        background: $list-item-counter-color;
+        border-radius:100%;
       }
     }
   }

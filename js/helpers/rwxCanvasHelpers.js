@@ -93,7 +93,7 @@ const rwxCanvas =
 		return duration;
 	},
 
-  easingFunction: function(easing, duration, variable, cb) {
+  easingFunction: function(easing, duration, variable) {
     if(!this[variable])
     {
       this[variable] = performance.now();
@@ -102,7 +102,6 @@ const rwxCanvas =
     let val = rwxCanvas.EasingFunctions[easing](p);
     if (performance.now() - this[variable] > duration){
       delete this[variable];
-      if(cb){cb();}
       return 1;
     }
     else
@@ -116,7 +115,37 @@ const rwxCanvas =
   	if(!this[`${id}Easing`]){this[`${id}Easing`] = rwxCanvas.sanitizeEasing(easing, id);}
   	if(!this[`${id}Duration`]){this[`${id}Duration`] = rwxCanvas.sanitizeDuration(duration, id);}
   	let val = rwxCanvas.easingFunction(this[`${id}Easing`], this[`${id}Duration`], `${id}Ease`, cb);
+  	if(val >= 1)
+  	{
+  		cb();
+  		delete this[`${id}Easing`];
+  		delete this[`${id}Duration`];
+  		return 1;
+  	}
     return (from + (to - from) * val);
+  },
+
+  moveObjectAlongBezier: function(p0, p1, p2, p3, id, cb, duration, easing) {
+  	if(!id)return;
+  	if(!this[`${id}Easing`]){this[`${id}Easing`] = rwxCanvas.sanitizeEasing(easing, id);}
+  	if(!this[`${id}Duration`]){this[`${id}Duration`] = rwxCanvas.sanitizeDuration(duration, id);}
+  	let val = rwxCanvas.easingFunction(this[`${id}Easing`], this[`${id}Duration`], `${id}Ease`, cb);
+    let cx = 3 * (p1.x - p0.x)
+    let bx = 3 * (p2.x - p1.x) - cx;
+    let ax = p3.x - p0.x - cx - bx;
+    let cy = 3 * (p1.y - p0.y);
+    let by = 3 * (p2.y - p1.y) - cy;
+    let ay = p3.y - p0.y - cy - by;
+    let x = ax*(val*val*val) + bx*(val*val) + cx*val + p0.x;
+    let y = ay*(val*val*val) + by*(val*val) + cy*val + p0.y;
+    if(val>=1)
+    {
+      cb();
+      delete this[`${id}Easing`];
+  		delete this[`${id}Duration`];
+  		return {x:p3.x, y:p3.y};
+    }
+  	return {x:x, y:y};
   },
 
   getDistance: (p1, p2)=>{
@@ -208,54 +237,3 @@ const rwxCanvas =
   // },
 }
 export default rwxCanvas;
-
-
-
-
-
-// const canvasHelpers = {
-  
-//   moveObjectAlongBezier()
-//   {
-//     /* Pass following to canvas object */
-//     let cubicBezierPoints = {
-//       bcp = {
-//         x1: randomInt(0, window.innerWidth) ,
-//         y1: randomInt(0, window.innerHeight),
-//         x2: randomInt(0, window.innerWidth),
-//         y2: randomInt(0, window.innerHeight) 
-//       } 
-//     };
-//     let startX = randomInt(0, window.innerWidth);
-//     let startY = randomInt(0, window.innerHeight);
-//     let moveToX = randomInt(0, window.innerWidth);
-//     let moveToY = randomInt(0, window.innerHeight);
-
-//     /* Put below in canvas object INIT */
-//     this.drag = 0.015;
-//     this.p0 = {x:startX, y:startY};
-//     this.p1 = {x:bcp.x1, y:bcp.y1};
-//     this.p2 = {x:bcp.x2, y:bcp.y2};
-//     this.p3 = {x:this.moveToX, y:this.moveToY};
-
-//     /* Put below in animation loop UPDATE on object */
-//     this.cx = 3 * (this.p1.x - this.p0.x)
-//     this.bx = 3 * (this.p2.x - this.p1.x) - this.cx;
-//     this.ax = this.p3.x - this.p0.x - this.cx - this.bx;
-//     this.cy = 3 * (this.p1.y - this.p0.y);
-//     this.by = 3 * (this.p2.y - this.p1.y) - this.cy;
-//     this.ay = this.p3.y - this.p0.y - this.cy - this.by;
-//     this.t += this.drag;
-//     if(this.t>=1)
-//     {      
-//       this.t = 1;
-//     }
-//     this.x = this.ax*(this.t*this.t*this.t) + this.bx*(this.t*this.t) + this.cx*this.t + this.p0.x;
-//     this.y = this.ay*(this.t*this.t*this.t) + this.by*(this.t*this.t) + this.cy*this.t + this.p0.y;
-//     if(this.t==1)
-//     {
-//       /* Animation Complete */
-//     }    
-//   }
-// }
-//export default canvasHelpers;

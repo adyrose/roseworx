@@ -64,5 +64,30 @@ $grid-classes:
 				width:100%;
 			}
 		}
+		& .rwx-split &-#{$selector}
+		{
+			@include snap-down-from('md')
+			{
+				&:not(:first-of-type), &:not(:last-of-type)
+				{
+					padding-left:0px;
+					padding-right:0px;
+				}
+			}
+
+			@include snap-up-from('md')
+			{			
+				padding-left: $grid-item-gutter;
+				padding-right: $grid-item-gutter;
+				&:last-of-type
+				{
+					padding-right:0px;
+				}
+				&:first-of-type
+				{
+					padding-left:0px;
+				}
+			}
+		}
 	}
 }

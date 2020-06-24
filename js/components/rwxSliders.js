@@ -1,4 +1,4 @@
-require('../../scss/components/rwx-slider.scss');
+require('../../scss/components/rwx-sliders.scss');
 import Roseworx from '../rwxCore';
 
 class rwxSliders extends Roseworx.Core {
@@ -37,7 +37,8 @@ class rwxSlider {
 		this.currentSlide = 1;
 		this.counter = 0;
 		this.direction = vertical ? "Y" : "X";
-		this.slides = [...el.querySelectorAll('.rwx-slider-slide')];
+		this.slides = [...el.children].filter((c)=>c.classList.contains('rwx-slider-slide'));
+		if(this.slides.length == 0)return;
 		this.autoSlideLoop = this.autoSlideLoop.bind(this);
 		this.autoSlideTimeout = autoSlideTimeout * 60;
 		autoSlide && this.autoSlideLoop();

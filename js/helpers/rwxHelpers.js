@@ -1,4 +1,5 @@
+import rwxAnimate from './rwxAnimateHelpers';
 import rwxCanvas from './rwxCanvasHelpers';
-import rwxMath from './rwxMathHelpers.js';
+import rwxMath from './rwxMathHelpers';
 
 export {rwxCanvas, rwxMath};

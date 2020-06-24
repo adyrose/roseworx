@@ -1,11 +1,12 @@
 @import '../core/rwx-variables';
-@import '../core/rwx-mixins';
 
 .rwx-slider
 {
 	position:relative;
 	display:flex;
 	overflow:hidden;
+	margin-bottom: $large-spacing;
+	margin-top: $large-spacing;
 	&-slide
 	{
 		width:100%;
@@ -33,7 +34,7 @@
 		}
 	}
 
-	&:not([data-rwx-slider-vertical])
+	&[data-rwx-slider-counters]:not([data-rwx-slider-vertical])
 	{
 		padding-bottom:$slider-counter-size+40;
 	}

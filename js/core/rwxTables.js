@@ -1,4 +1,5 @@
 import Roseworx from '../rwxCore';
+import rwxMist from '../modules/rwxMist';
 
 class rwxTables extends Roseworx.Core {
 	constructor()
@@ -20,7 +21,7 @@ class rwxTables extends Roseworx.Core {
 
 			if(!noMist)
 			{
-				mist  = new rwxTableMist(t);
+				mist  = new rwxMist(t);
 			}
 
 			if(!noStick)
@@ -41,51 +42,10 @@ class rwxTables extends Roseworx.Core {
 
 			t.addEventListener('scroll', ()=>{
 				!noStick && stick.update();
-				!noMist && mist.update();
 			});
 
 			return;
 		})
-	}
-}
-
-class rwxTableMist
-{
-	constructor(t)
-	{
-		this.table = t;
-		if(t.scrollWidth > t.offsetWidth){
-			this.rightMist = document.createElement('div');
-			this.rightMist.classList.add('right-mist');
-			t.appendChild(this.rightMist);
-		}
-		if(t.scrollHeight > t.offsetHeight){
-			this.bottomMist = document.createElement('div');
-			this.bottomMist.classList.add('bottom-mist');
-			t.appendChild(this.bottomMist);
-		}
-	}
-
-	update()
-	{
-		if(this.rightMist)
-		{
-			if((this.table.scrollLeft + this.table.offsetWidth) < this.table.scrollWidth){
-				this.rightMist.style.display = "block"; 
-				this.rightMist.style.right = -this.table.scrollLeft + "px";
-				this.rightMist.style.height = this.table.scrollHeight + "px";
-			}
-			else{this.rightMist.style.display = "none";}
-		}
-		if(this.bottomMist)
-		{
-			if((this.table.scrollTop + this.table.offsetHeight) < this.table.scrollHeight){
-				this.bottomMist.style.display = "block";
-				this.bottomMist.style.width = this.table.scrollWidth + "px";
-				this.bottomMist.style.bottom = -this.table.scrollTop + "px";
-			}
-			else{this.bottomMist.style.display = "none";}
-		}
 	}
 }
 

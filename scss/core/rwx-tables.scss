@@ -1,6 +1,5 @@
 $normal-line : 1px solid $table-color-secondary;
 $emphasis-line:	2px solid $table-color-base;
-$mist-size: 50px;
 
 @mixin stuck {
 	@extend .rwxt-bold;
@@ -21,29 +20,6 @@ $mist-size: 50px;
 		max-height:$table-height-limit;
 		overflow:auto;
 		position:relative;
-	}
-
-	.right-mist, .bottom-mist
-	{
-		position:absolute;
-	}
-
-	.right-mist
-	{
-		right:0px;
-		top:0px;
-		height:100%;
-		width: $mist-size;
-		background: linear-gradient(to right, rgba(245,245,245,0), rgba(245,245,245,1));
-	}
-
-	.bottom-mist
-	{
-		left:0px;
-		bottom:0px;
-		width:100%;
-		height:$mist-size;
-		background: linear-gradient(to bottom, rgba(245,245,245,0), rgba(245,245,245,1));
 	}
 
 	.scroll-mask

@@ -44,7 +44,6 @@ class rwxSlider {
 		autoSlide && this.autoSlideLoop();
 		counters && this.createCounter(el);
 		vertical && this.setToHighest(el);
-		//this.goToSlide(this.currentSlide);
 	}
 
 	setToHighest(el)

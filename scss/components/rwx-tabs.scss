@@ -55,4 +55,16 @@ $mist-size: 50px;
 			background: linear-gradient(to right, rgba(245,245,245,0), rgba(245,245,245,1));
 		}
 	}
+	.rwx-tabs
+	{
+		.rwx-tabs-container
+		{
+			padding-left:30px;
+			padding-right:30px;
+			span
+			{
+				font-size: $h6-size;
+			}
+		}
+	}
 }

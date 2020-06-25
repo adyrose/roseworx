@@ -129,7 +129,7 @@ $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
 	}
 }
 
-$cards: ("help", "note", "warning", "hint");
+$cards: ("help", "note", "warning", "hint", "feature");
 
 @each $card in $cards
 {

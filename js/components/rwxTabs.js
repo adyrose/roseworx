@@ -129,18 +129,18 @@ class rwxTab {
 	hideTab()
 	{
 		let scale = rwxAnimate.fromTo(1, 0.5, 'deScaleTab', 'easeInCubic', 300);
-		let opacity = rwxAnimate.fromTo(1, 0, 'opaqueTab', 'linear', 300, ()=>{
-			this.hidden = true; 
+		let opacity = rwxAnimate.fromTo(1, 0, 'opaqueTab', 'linear', 300, ()=>{ this.hidden = true;});
+		this.tabs[this.activeTab-1].style.transform = `scale(${scale})`;
+		this.tabs[this.activeTab-1].style.opacity = opacity;
+		if(this.hidden) {
 			this.tabs[this.activeTab-1].style.display = "none";
 			this.activeTab = this.newTabNumber;
 			this.tabs[this.activeTab-1].classList.remove('initial-hide');
 			this.tabs[this.activeTab-1].style.display = "none";
 			this.tabs[this.activeTab-1].removeAttribute('style');
 			this.showTab();
-		});
-		this.tabs[this.activeTab-1].style.transform = `scale(${scale})`;
-		this.tabs[this.activeTab-1].style.opacity = opacity;
-		if(this.hidden){return;}
+			return;
+		}
 		window.requestAnimationFrame(this.hideTab)
 	}
 

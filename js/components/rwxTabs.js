@@ -1,6 +1,7 @@
 require('../../scss/components/rwx-tabs.scss');
 import Roseworx from '../rwxCore';
 import rwxAnimate from '../helpers/rwxAnimateHelpers';
+import rwxDOM from '../helpers/rwxDOMHelpers';
 import rwxMist from '../modules/rwxMist';
 
 class rwxTabs extends Roseworx.Core {
@@ -14,7 +15,7 @@ class rwxTabs extends Roseworx.Core {
 		const tabs = [...document.querySelectorAll('[rwx-tabs]')];
 		tabs.map((t)=>{
 			const Tab = new rwxTab(t);
-			if(t.id){this.addIME(t.id,Tab);}
+			this.addIME(t.id,Tab);
 		 	return;
 		});
 	}
@@ -29,20 +30,46 @@ class rwxTabs extends Roseworx.Core {
 class rwxTab {
 	constructor(el)
 	{
+		this.el = el;
 		this.hidden = true;
 		this.shown = true;
 		this.showTab = this.showTab.bind(this);
 		this.hideTab = this.hideTab.bind(this);
-		this.tabs = [...el.children].filter((c)=>c.classList.contains('rwx-tabs-tab'));
+		this.tabs = [...this.el.children].filter((c)=>c.classList.contains('rwx-tabs-tab'));
 		this.tabHeaders = [];
 		this.activeTab = 1;
 		if(this.tabs.length == 0){return;}
-		this.createTabs(el);
+		this.autoActiveTabFromLocationHash();
+		this.createTabs();
 	}
 
-	createTabs(el)
+	autoActiveTabFromLocationHash()
 	{
-		this.tab = el;
+		if(window.location.hash)
+		{
+			let el = this.el.querySelector(`#${window.location.hash.replace('#', '')}`);
+			if(el)
+			{
+				let tab = rwxDOM.hasAncestor(el, '.rwx-tabs-tab');
+				let parent = rwxDOM.hasAncestor(tab, '.rwx-tabs-tab');
+				if(parent && this.el.contains(parent)){this.compareAndOpen(parent); return;}
+				if(tab){this.compareAndOpen(tab); this.hash = el;}
+			}
+		}
+	}
+
+	compareAndOpen(compare)
+	{
+		this.tabs.map((t,i)=>{
+			if(t == compare)
+			{
+				this.activeTab = (i+1);
+			}
+		})		
+	}
+
+	createTabs()
+	{
 		this.container = document.createElement('div');
 		this.container.classList.add('rwx-tabs-container');
 		this.bullet = document.createElement('span');
@@ -58,12 +85,16 @@ class rwxTab {
 				this.tabHeaders.push(span);
 				this.container.appendChild(span);
 			}
-			if(i+1 !== this.activeTab){t.style.display = "none";}
-			else{this.tabHeaders[i].classList.add('active'); window.requestAnimationFrame(()=>{this.moveBullet(this.activeTab)})}
+			if(i+1 == this.activeTab){this.tabHeaders[i].classList.add('active'); window.requestAnimationFrame(()=>{this.moveBullet(this.activeTab)})}
+			else{t.classList.add('initial-hide')}
 			return;
 		});
-		el.insertBefore(this.container, this.tabs[0]);
+		this.el.insertBefore(this.container, this.tabs[0]);
 		new rwxMist(this.container);
+		if(this.hash)
+		{
+			window.requestAnimationFrame(()=>{window.scrollTo(0, window.scrollY + this.hash.getBoundingClientRect().top-40);});
+		}
 	}
 
 	changeTab(tabNumber)
@@ -80,7 +111,7 @@ class rwxTab {
 	moveBullet(tabNumber)
 	{
 		let rect = this.tabHeaders[tabNumber-1].getBoundingClientRect();
-		let left = (rect.left - this.tab.getBoundingClientRect().left) + this.container.scrollLeft;
+		let left = (rect.left - this.el.getBoundingClientRect().left) + this.container.scrollLeft;
 		this.bullet.style.left = `${left}px`;
 		this.bullet.style.width = `${rect.width}px`;
 	}
@@ -102,6 +133,8 @@ class rwxTab {
 			this.hidden = true; 
 			this.tabs[this.activeTab-1].style.display = "none";
 			this.activeTab = this.newTabNumber;
+			this.tabs[this.activeTab-1].classList.remove('initial-hide');
+			this.tabs[this.activeTab-1].style.display = "none";
 			this.tabs[this.activeTab-1].removeAttribute('style');
 			this.showTab();
 		});

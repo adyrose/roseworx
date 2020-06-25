@@ -13,7 +13,7 @@ class rwxForms extends Roseworx.Core {
 		this.internalMap = {}
 		forms.map((f)=> {
 			const Form = new rwxForm(f);
-			if(f.id){this.addIME(f.id,Form);}
+			this.addIME(f.id,Form);
 		 	return;
 		});
 	}

@@ -2,38 +2,55 @@
 $mist-size: 50px;
 .rwx-tabs
 {
+	position:relative;
+	overflow:hidden;
 	margin-bottom: $large-spacing;
 	margin-top: $large-spacing;
+	.initial-hide
+	{
+		position:absolute;
+		z-index:-1;
+		visibility:hidden;
+	}
 	&-container
 	{
 		padding: 10px;
 		margin-bottom: 40px;
 		display:flex;
 		align-items:flex-end;
-		border-bottom: 2px solid $grey;
+		border-bottom: 2px solid $tabs-seperator-color;
 		position:relative;
 		overflow-x:auto;
 		overflow-y:visible;
 		span
 		{
-			cursor:pointer;
-			color: $tabs-title-color;
-			font-size: $h5-size;
-			font-family: $font-heading;
 			margin-bottom:0;
-			transition: all 0.5s $transition-base;
-			&:not(:last-child):not(.bullet)
+			&:not(.bullet)
 			{
-				margin-right: 40px;
-			}
-			&.active, &:hover
-			{
-				color: $tabs-active-color;
-				transition: all 0.5s $transition-base;
-			}
-			&.active
-			{
-				font-weight: bold;
+				border-top: 2px solid $tabs-seperator-color;
+				border-bottom: 2px solid $tabs-seperator-color;
+				border-radius: 10px;
+				padding: 10px;
+				cursor:pointer;
+				color: $tabs-title-color;
+				font-size: $tabs-title-size;
+				font-family: $font-heading;
+				transition: all 0.7s $transition-base;
+				&.active, &:hover
+				{
+					color: $tabs-active-color;
+					border-color: $tabs-active-color;
+					transition: all 0.7s $transition-base;
+				}
+				&.active
+				{
+					border-bottom:none;
+					font-weight: bold;
+				}
+				&:not(:last-child)
+				{
+					margin-right: 40px;
+				}
 			}
 		}
 		.bullet
@@ -45,15 +62,6 @@ $mist-size: 50px;
 			background-color: $tabs-active-color;
 			transition: all 0.5s $transition-base;
 		}
-		.right-mist
-		{
-			position:absolute;
-			right:0px;
-			top:0px;
-			height:100%;
-			width: $mist-size;
-			background: linear-gradient(to right, rgba(245,245,245,0), rgba(245,245,245,1));
-		}
 	}
 	.rwx-tabs
 	{
@@ -61,10 +69,28 @@ $mist-size: 50px;
 		{
 			padding-left:30px;
 			padding-right:30px;
+			border-bottom: 1px solid $tabs-seperator-color;
 			span
 			{
-				font-size: $h6-size;
+				&:not(.bullet)
+				{
+					font-size: $tabs-title-size * 0.8;
+					border-top: 1px solid $tabs-seperator-color;
+					border-bottom: 1px solid $tabs-seperator-color;
+					&.active, &:hover
+					{
+						border-color: $tabs-active-color;
+					}
+					&.active
+					{
+						border-bottom:none;
+					}
+				}
 			}
+		}
+		.bullet
+		{
+			height:2px;
 		}
 	}
 }

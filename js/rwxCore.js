@@ -1,3 +1,4 @@
+import rwxMisc from './helpers/rwxMiscHelpers';
 class Core {
 	constructor()
 	{
@@ -8,9 +9,19 @@ class Core {
 		window.addEventListener('load', this.execute);
 	}
 
+	getIMES()
+	{
+		return this.internalMap;
+	}
+
 	addIME(id, obj)
 	{
-		this.internalMap[id] = obj;
+		let toUse = id;
+		if(!toUse)
+		{
+			toUse = rwxMisc.uniqueId();
+		}
+		this.internalMap[toUse] = obj;
 	}
 
 	getIME(id)

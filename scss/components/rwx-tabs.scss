@@ -3,13 +3,14 @@ $mist-size: 50px;
 .rwx-tabs
 {
 	position:relative;
-	overflow:hidden;
+	//overflow:hidden;
 	margin-bottom: $large-spacing;
 	margin-top: $large-spacing;
 	.initial-hide
 	{
 		position:absolute;
 		z-index:-1;
+		transform:translateY(-100%);
 		visibility:hidden;
 	}
 	&-container

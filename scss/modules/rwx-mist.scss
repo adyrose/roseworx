@@ -1,4 +1,9 @@
 $mist-size: 50px;
+[rwx-mist]
+{
+	overflow:auto;
+	position:relative;
+}
 .rwx-mist
 {
 	&-right, &-bottom

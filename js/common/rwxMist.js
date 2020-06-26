@@ -1,22 +1,57 @@
 require('../../scss/modules/rwx-mist.scss');
 
-class rwxTableMist
+
+//window resize with debounce and mist checking
+class rwxMist
 {
 	constructor(el)
 	{
 		this.element = el;
+		this.calculate();
+		el.addEventListener('scroll', this.update);
+
+		window.addEventListener('resize', ()=>{
+			this.debounce && clearTimeout(this.debounce)
+			this.debounce = setTimeout(()=>{
+				this.calculate();
+			}, 250)
+		})
+	}
+
+	calculate()
+	{
 		if(this.element.scrollWidth > this.element.offsetWidth){
-			this.rightMist = document.createElement('div');
-			this.rightMist.classList.add('rwx-mist-right');
-			this.element.appendChild(this.rightMist);
+			if(!this.rightMist)
+			{
+				this.rightMist = document.createElement('div');
+				this.rightMist.classList.add('rwx-mist-right');
+				this.element.appendChild(this.rightMist);
+			}
+		} 
+		else {
+			if(this.rightMist)
+			{
+				this.element.removeChild(this.rightMist); 
+				this.rightMist = false;
+			}
 		}
+
 		if(this.element.scrollHeight > this.element.offsetHeight){
-			this.bottomMist = document.createElement('div');
-			this.bottomMist.classList.add('rwx-mist-bottom');
-			this.element.appendChild(this.bottomMist);
+			if(!this.bottomMist)
+			{
+				this.bottomMist = document.createElement('div');
+				this.bottomMist.classList.add('rwx-mist-bottom');
+				this.element.appendChild(this.bottomMist);
+			}
+		} 
+		else {
+			if(this.bottomMist)
+			{
+				this.element.removeChild(this.bottomMist); 
+				this.bottomMist = false;
+			}
 		}
 		this.update = this.update.bind(this);
-		el.addEventListener('scroll', this.update);
 	}
 
 	update()
@@ -42,4 +77,4 @@ class rwxTableMist
 	}
 }
 
-export default rwxTableMist;
+export default rwxMist;

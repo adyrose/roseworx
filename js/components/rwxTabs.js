@@ -2,7 +2,7 @@ require('../../scss/components/rwx-tabs.scss');
 import Roseworx from '../rwxCore';
 import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxDOM from '../helpers/rwxDOMHelpers';
-import rwxMist from '../modules/rwxMist';
+import rwxMist from '../common/rwxMist';
 
 class rwxTabs extends Roseworx.Core {
 	constructor()

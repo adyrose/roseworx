@@ -1,5 +1,5 @@
 import Roseworx from '../rwxCore';
-import rwxMist from '../modules/rwxMist';
+import rwxMist from '../common/rwxMist';
 
 class rwxTables extends Roseworx.Core {
 	constructor()
@@ -14,8 +14,8 @@ class rwxTables extends Roseworx.Core {
 			const dual = t.classList.contains('dual-headings');
 			const vertical = t.classList.contains('vertical');
 			const verticalLine = t.classList.contains('vertical-line');
-			const noMist = t.hasAttribute('rwx-table-no-mist');
-			const noStick = t.hasAttribute('rwx-table-no-stick');
+			const noMist = t.hasAttribute('data-rwx-table-no-mist');
+			const noStick = t.hasAttribute('data-rwx-table-no-stick');
 
 			let mist, stick;
 

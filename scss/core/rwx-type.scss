@@ -19,7 +19,16 @@ $headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5"
   }
 }
 
-p, strong, span, ul
+@if $secton-seperators
+{
+  section
+  {
+    padding-top:20px;
+    border-top: 3px solid $section-seperator-color;
+  }
+}
+
+p, strong, ul
 {
   margin-bottom:1.1rem;
 }

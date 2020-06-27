@@ -33,12 +33,12 @@ class rwxSliders extends Roseworx.Core {
 class rwxSlider {
 	constructor(el, vertical, autoSlide, counters, reeling, autoSlideTimeout)
 	{
+		this.slides = [...el.children].filter((c)=>c.classList.contains('rwx-slider-slide'));
+		if(this.slides.length == 0)return;
 		this.reeling = reeling;
 		this.currentSlide = 1;
 		this.counter = 0;
 		this.direction = vertical ? "Y" : "X";
-		this.slides = [...el.children].filter((c)=>c.classList.contains('rwx-slider-slide'));
-		if(this.slides.length == 0)return;
 		this.autoSlideLoop = this.autoSlideLoop.bind(this);
 		this.autoSlideTimeout = autoSlideTimeout * 60;
 		autoSlide && this.autoSlideLoop();

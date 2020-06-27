@@ -22,23 +22,31 @@ class rwxTabs extends Roseworx.Core {
 
 	goToTab(id, tabNumber)
 	{
+		if(!tabNumber){return;}
 		const IME = this.getIME(id);
 		IME && IME.changeTab(tabNumber);		
+	}
+
+	addTabChangeEvent(id, tabNumber, cb, type="show")
+	{
+		if(!tabNumber || !cb){return;}
+		const IME = this.getIME(id);
+		IME && IME.addTabChangeEvent(tabNumber, cb, type);		
 	}
 }
 
 class rwxTab {
 	constructor(el)
 	{
+		this.tabs = [...el.children].filter((c)=>c.classList.contains('rwx-tabs-tab'));
+		if(this.tabs.length == 0){return;}
 		this.el = el;
-		this.hidden = true;
-		this.shown = true;
 		this.showTab = this.showTab.bind(this);
 		this.hideTab = this.hideTab.bind(this);
-		this.tabs = [...this.el.children].filter((c)=>c.classList.contains('rwx-tabs-tab'));
 		this.tabHeaders = [];
 		this.activeTab = 1;
-		if(this.tabs.length == 0){return;}
+		this.tabShowChangeEvents = [];
+		this.tabHideChangeEvents = [];
 		this.autoActiveTabFromLocationHash();
 		this.createTabs();
 	}
@@ -97,13 +105,27 @@ class rwxTab {
 		}
 	}
 
+	addTabChangeEvent(tabNumber, cb, type)
+	{
+		type == 'show' && this.tabShowChangeEvents.push({tabNumber, cb});
+		type == 'hide' && this.tabHideChangeEvents.push({tabNumber, cb});
+	}
+
+	resetAnimationFlags()
+	{
+		this.shownScale = false;
+		this.shownOpacity = false;
+		this.hiddenScale = false;
+		this.hiddenOpacity = false;
+	}
+
 	changeTab(tabNumber)
 	{
-		if(tabNumber == this.activeTab || !this.shown || !this.hidden){return;}
+		if(tabNumber == this.activeTab || this.animating){return;}
 		this.newTabNumber = tabNumber;
-		this.shown = false;
-		this.hidden = false;
+		this.resetAnimationFlags();
 		this.moveBullet(tabNumber);
+		this.animating = true;
 		this.hideTab();
 		this.tabHeaders.map((th,i)=>(tabNumber-1 == i) ? th.classList.add('active') : th.classList.remove('active'))
 	}
@@ -116,29 +138,55 @@ class rwxTab {
 		this.bullet.style.width = `${rect.width}px`;
 	}
 
+	runTabEvents(type, number)
+	{
+		if(this[type].length == 0)return;
+		const changeEvents = this[type].filter((tce)=>tce.tabNumber == number);
+		if(changeEvents.length == 0)return;
+		changeEvents.map((ch)=>ch.cb());
+	}
+
+	tabShown()
+	{
+		this.animating = false;
+		this.runTabEvents('tabShowChangeEvents', this.activeTab);
+	}
+
+	tabHidden()
+	{
+		let cache = this.activeTab;
+		this.tabs[this.activeTab-1].style.display = "none";
+		this.activeTab = this.newTabNumber;
+		this.tabs[this.activeTab-1].classList.remove('initial-hide');
+		this.tabs[this.activeTab-1].style.display = "none";
+		this.tabs[this.activeTab-1].removeAttribute('style');
+		this.showTab();
+		this.runTabEvents('tabHideChangeEvents', cache);
+	}
+
 	showTab()
 	{
-		let scale = rwxAnimate.fromTo(0.5, 1, 'scaleTab', 'easeOutCubic', 300);
-		let opacity = rwxAnimate.fromTo(0, 1, 'normalTab', 'linear', 300, ()=>{this.shown = true;})
+		let scale, opacity;
+		if(!this.shownScale){scale = rwxAnimate.fromTo(0.5, 1, 'scaleTab', 'easeOutCubic', 300, ()=>{this.shownScale = true});}
+		if(!this.shownOpacity){opacity = rwxAnimate.fromTo(0, 1, 'normalTab', 'linear', 300, ()=>{this.shownOpacity = true;});}
 		this.tabs[this.activeTab-1].style.transform = `scale(${scale})`;
 		this.tabs[this.activeTab-1].style.opacity = opacity;
-		if(this.shown){return;}
+		if(this.shownScale && this.shownOpacity){		
+			this.tabShown();
+			return;
+		}
 		window.requestAnimationFrame(this.showTab)
 	}
 
 	hideTab()
 	{
-		let scale = rwxAnimate.fromTo(1, 0.5, 'deScaleTab', 'easeInCubic', 300);
-		let opacity = rwxAnimate.fromTo(1, 0, 'opaqueTab', 'linear', 300, ()=>{ this.hidden = true;});
+		let scale, opacity;
+		if(!this.hiddenScale){scale = rwxAnimate.fromTo(1, 0, 'opaqueTab', 'linear', 300, ()=>{ this.hiddenScale = true; });}
+		if(!this.hiddenOpacity){opacity = rwxAnimate.fromTo(1, 0.5, 'deScaleTab', 'easeInCubic', 300, ()=>{ this.hiddenOpacity = true; });}
 		this.tabs[this.activeTab-1].style.transform = `scale(${scale})`;
 		this.tabs[this.activeTab-1].style.opacity = opacity;
-		if(this.hidden) {
-			this.tabs[this.activeTab-1].style.display = "none";
-			this.activeTab = this.newTabNumber;
-			this.tabs[this.activeTab-1].classList.remove('initial-hide');
-			this.tabs[this.activeTab-1].style.display = "none";
-			this.tabs[this.activeTab-1].removeAttribute('style');
-			this.showTab();
+		if(this.hiddenScale && this.hiddenOpacity) {
+			this.tabHidden();
 			return;
 		}
 		window.requestAnimationFrame(this.hideTab)

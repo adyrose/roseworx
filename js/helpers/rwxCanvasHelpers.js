@@ -24,7 +24,23 @@ const rwxCanvas =
     }
     context.scale(ratio, ratio);
     return ratio;		
-	}
+	},
+
+  drawSector: (ctx, center, radius, startAngle, endAngle) => {
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, radius/2, startAngle, endAngle);
+    ctx.lineWidth = radius;
+    ctx.stroke();
+    ctx.closePath();
+  },
+
+  drawArc: (ctx, center, radius, depth, startAngle, endAngle) => {
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, (radius-(depth/2)), startAngle, endAngle);
+    ctx.lineWidth = depth;
+    ctx.stroke();
+    ctx.closePath();    
+  }
 
  	// not sure how to put into test
 	//   resolveCollision(object, otherobject) {

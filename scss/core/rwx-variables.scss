@@ -38,6 +38,7 @@ $colors: ('black':$black,
 //theme
 $theme-color-base: $dark-grey !default;
 $theme-color-secondary: $grey !default;
+$theme-color-tertiary: $light-blue !default;
 
 //grid
 $grid-item-gutter:15px !default;
@@ -75,12 +76,14 @@ $h6-size: $font-size-base * 1.2 !default;
 $font-base: 'Roboto Mono', monospace !default;
 $font-heading: 'Josefin Sans', sans-serif !default;
 $font-color-base: $black !default;
-$font-link-color: $light-blue !default;
-$list-item-counter-color: $light-blue !default;
+$font-link-color: $theme-color-tertiary !default;
+$list-item-counter-color: $theme-color-tertiary !default;
 $card-background-color: $theme-color-secondary !default;
 $card-border-color: $theme-color-base !default;
-$card-ident-color: $light-blue !default;
+$card-ident-color: $theme-color-tertiary !default;
 $card-icon-color: $white !default;
+$secton-seperators: true !default;
+$section-seperator-color: $theme-color-tertiary !default;
 
 //animation-easings
 $transition-slow-in: cubic-bezier(.09,1.08,.74,.95); 
@@ -91,7 +94,7 @@ $transition-base: cubic-bezier(.11,.82,.63,.94);
 //tables
 $table-color-base: $theme-color-base !default;
 $table-color-secondary: $theme-color-secondary !default;
-$table-color-highlight: $light-blue !default;
+$table-color-highlight: $theme-color-tertiary !default;
 $table-height-limit: 500px !default;
 $table-cell-width-limit: 200px !default;
 
@@ -117,5 +120,5 @@ $slider-counter-size: 20px !default;
 //Tabs
 $tabs-title-color: $theme-color-base !default;
 $tabs-title-size: $h5-size !default;
-$tabs-active-color: $light-blue !default;
+$tabs-active-color: $theme-color-tertiary !default;
 $tabs-seperator-color: $theme-color-secondary !default;

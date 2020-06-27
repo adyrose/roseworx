@@ -1,5 +1,7 @@
 //import { rwxCanvasHelpers } from 'roseworx';
 
+//create an array of points needed for each letter and assign particle to each
+
 class WordSwarm {
 	constructor(canvasid, width, height, word)
 	{
@@ -18,6 +20,21 @@ class WordSwarm {
 
 class WordSwarmLetter {
 	constructor()
+	{
+
+	}
+
+	in()
+	{
+
+	}
+
+	out()
+	{
+
+	}
+
+	rejiggle()
 	{
 
 	}

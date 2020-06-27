@@ -77,6 +77,10 @@ $font-heading: 'Josefin Sans', sans-serif !default;
 $font-color-base: $black !default;
 $font-link-color: $light-blue !default;
 $list-item-counter-color: $light-blue !default;
+$card-background-color: $theme-color-secondary !default;
+$card-border-color: $theme-color-base !default;
+$card-ident-color: $light-blue !default;
+$card-icon-color: $white !default;
 
 //animation-easings
 $transition-slow-in: cubic-bezier(.09,1.08,.74,.95); 

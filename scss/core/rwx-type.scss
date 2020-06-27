@@ -136,19 +136,32 @@ $cards: ("help", "note", "warning", "hint", "feature");
   p.#{$card}
   {
     text-align:left;
-    padding: 15px 10px 15px 60px;
+    padding: 15px 10px 15px 70px;
     position:relative;
-    background-color:$theme-color-secondary;
-    box-shadow: 0px 0px 3px $dark-grey;
+    background-color:$card-background-color;
+    box-shadow: 0px 0px 3px $card-border-color;
+    min-height:80px;
     &:before
     {
       content: "";
       width:33px;
       height:33px;
       position:absolute;
-      top:15px;
+      top:20px;
       left:10px;
-      background: icon(#{$card});     
+      background: icon(#{$card}, $card-icon-color); 
+      z-index:2;    
+    }
+    &:after
+    {
+      content: "";
+      position:absolute;
+      left:0px;
+      top:0px;
+      height:100%;
+      width:50px;
+      z-index:1;
+      background-color:$card-ident-color;
     }
   }
 }

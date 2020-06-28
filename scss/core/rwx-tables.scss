@@ -185,11 +185,11 @@ $emphasis-line:	2px solid $table-color-base;
 
 	&.colored &-data
 	{
-		&:nth-child(odd)
+		&.scroll, &:nth-child(odd)
 		{
 			span
 			{
-				background-color: rgba($table-color-highlight, 0.2);
+				background-image: linear-gradient(rgba(51, 153, 255, 0.2), rgba(51, 153, 255, 0.2)), linear-gradient(white, white)	
 			}
 		}
 	}

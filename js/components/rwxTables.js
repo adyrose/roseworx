@@ -66,6 +66,7 @@ class rwxDualStickyTableHeader
 		mask.classList.add(this.isVerticalLine ? 'scroll-mask-vertical':'scroll-mask')
 		mask.style.height = this.stick2.getHeight() + "px";
 		mask.style.width = this.stick.getWidth() + "px";
+		mask.style.minWidth = 0 + "px";
 		this.mask = mask;
 		this.table.appendChild(mask);
 		this.maskCreated = true;
@@ -119,7 +120,17 @@ class rwxVerticalStickyTableHeader
 
 	getWidth()
 	{
-		return this.headerEls[0].querySelector('span:first-child').getBoundingClientRect().width;
+		let widths = [];
+		this.headerEls.map((el)=>{
+			let e = el.querySelector('span:first-child');
+			let extra = parseInt(getComputedStyle(e)['padding-left'].replace('px', '')) + parseInt(getComputedStyle(e)['padding-right'].replace('px', ''));
+			let el2 = e.cloneNode(true);
+			document.body.appendChild(el2)
+			widths.push(el2.getBoundingClientRect().width + extra + 4);
+			document.body.removeChild(el2);
+			return;
+		})
+		return Math.max(...widths);
 	}
 
 	update()
@@ -138,11 +149,14 @@ class rwxVerticalStickyTableHeader
 	makeHeaderSticky()
 	{
 		this.stuckElements = [];
+		let width = this.getWidth();
+
 		this.headerEls.map((h)=>{
 			let s = h.querySelector('span:first-child');
 			let c = s.cloneNode(true);
+			c.style.minWidth = 0 + "px";
+			c.style.width = width + "px";
 			c.classList.add('scroll');
-			c.style.width = s.getBoundingClientRect().width + "px";
 			c.style.height = s.getBoundingClientRect().height + "px";
 			this.stuckElements.push(c);
 			h.appendChild(c);

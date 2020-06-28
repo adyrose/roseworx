@@ -1,6 +1,6 @@
 const rwxMisc = 
 {
-	uniqueId: ()=>{return "_"+Math.random().toString(36).substr(2,9)},
+	uniqueId: ()=>{return "_"+Math.random().toString(36).substr(2,12)},
 
   setCookie: (c_name, value, exdays) => {
     var exdate = new Date();
@@ -23,7 +23,7 @@ const rwxMisc =
 
   safeCloneArrayOfObjects: (array) => {
     let cloneArray = [...array];
-    cloneArray.map((a,i)=>{cloneArray[i] = this.safeCloneObject(cloneArray[i]) });
+    cloneArray.map((a,i)=>{cloneArray[i] = rwxMisc.safeCloneObject(cloneArray[i]) });
     return cloneArray;
   },
   
@@ -40,7 +40,6 @@ const rwxMisc =
         const j = Math.floor(Math.random() * (i + 1));
         [a[i], a[j]] = [a[j], a[i]];
     }
-    return a;
   },
 }
 

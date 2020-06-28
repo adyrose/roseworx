@@ -16,6 +16,18 @@ $headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5"
     font-family: $font-heading;
     margin-bottom: 1.3rem;
     line-height: $size + 0.55rem;
+    &.underline
+    {
+      text-decoration:underline;
+    }
+    &.no-underline
+    {
+      text-decoration:none;
+    }
+    @if $underline-headings
+    {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -138,6 +150,35 @@ $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
 	}
 }
 
+.rwxt-no-underline
+{
+  text-decoration: none !important;
+}
+
+.rwxt-underline
+{
+  text-decoration: underline !important;
+}
+
+.rwxt-small
+{
+  font-size:$font-size-small !important;
+}
+.rwxt-uppercase
+{
+  text-transform: uppercase !important;
+}
+
+.rwxt-text-center
+{
+  text-align:center !important;
+}
+
+.rwxt-text-right
+{
+  text-align:right !important;
+}
+
 $cards: ("help", "note", "warning", "hint", "feature");
 
 @each $card in $cards
@@ -173,23 +214,4 @@ $cards: ("help", "note", "warning", "hint", "feature");
       background-color:$card-ident-color;
     }
   }
-}
-
-.rwxt-small
-{
-  font-size:$font-size-small !important;
-}
-.rwxt-uppercase
-{
-  text-transform: uppercase !important;
-}
-
-.rwxt-text-center
-{
-  text-align:center !important;
-}
-
-.rwxt-text-right
-{
-  text-align:right !important;
 }

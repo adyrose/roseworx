@@ -19,7 +19,7 @@
 .rwx-form
 {
 	position:relative;
-	margin-bottom: $small-spacing;
+	@include component-spacing;
 	&-item
 	{
 		display:flex;

@@ -14,7 +14,7 @@ $emphasis-line:	2px solid $table-color-base;
 
 .rwx-table
 {
-	margin-bottom: $small-spacing;
+	@include component-spacing;
 	&[rwx-table]
 	{
 		max-height:$table-height-limit;

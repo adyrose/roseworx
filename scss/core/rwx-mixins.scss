@@ -1,3 +1,9 @@
+@mixin component-spacing
+{
+	margin-top: $medium-spacing;
+	margin-bottom: $medium-spacing;
+}
+
 @mixin change-link-color($color) {
 	a
 	{

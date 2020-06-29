@@ -1,12 +1,9 @@
-@import '../core/rwx-variables';
-
 .rwx-slider
 {
 	position:relative;
 	display:flex;
 	overflow:hidden;
-	margin-bottom: $large-spacing;
-	margin-top: $large-spacing;
+	@include component-spacing;
 	&-slide
 	{
 		width:100%;

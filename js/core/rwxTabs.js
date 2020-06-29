@@ -1,4 +1,3 @@
-require('../../scss/components/rwx-tabs.scss');
 import Roseworx from '../rwxCore';
 import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxDOM from '../helpers/rwxDOMHelpers';

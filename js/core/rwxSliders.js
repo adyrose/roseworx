@@ -1,4 +1,3 @@
-require('../../scss/components/rwx-sliders.scss');
 import Roseworx from '../rwxCore';
 
 class rwxSliders extends Roseworx.Core {

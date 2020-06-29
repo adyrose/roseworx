@@ -12,7 +12,7 @@ class rwxSkrollX extends Roseworx.Core{
 
 	setTrigger(val)
 	{
-		this.trigger = window.innerHeight - val
+		this.trigger = window.innerHeight - val;
 	}
 
 	setConfig(obj)
@@ -38,7 +38,7 @@ class rwxSkrollX extends Roseworx.Core{
 			{
 				if(el.hasAttribute('data-rwxsx-delay'))
 				{
-					setTimeout(()=>{el.classList.add(this.doneFlag);}, el.getAttribute('data-rwxsx-delay'));
+					setTimeout(()=>{el.classList.add(this.doneFlag);}, el.getAttribute('data-rwxsx-delay')*1000);
 				}
 				else
 				{

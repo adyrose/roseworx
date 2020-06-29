@@ -1,11 +1,7 @@
-@import '../core/rwx-variables';
-$mist-size: 50px;
 .rwx-tabs
 {
 	position:relative;
-	//overflow:hidden;
-	margin-bottom: $large-spacing;
-	margin-top: $large-spacing;
+	@include component-spacing;
 	.initial-hide
 	{
 		position:absolute;

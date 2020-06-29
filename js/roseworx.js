@@ -1,7 +1,7 @@
-import rwxForms from './components/rwxForms';
-import rwxTables from './components/rwxTables';
-import rwxTabs from './components/rwxTabs';
-import rwxSliders from './components/rwxSliders'
+import rwxForms from './core/rwxForms';
+import rwxTables from './core/rwxTables';
+import rwxTabs from './core/rwxTabs';
+import rwxSliders from './core/rwxSliders'
 
 const globalObject = {forms:rwxForms, sliders:rwxSliders, tabs:rwxTabs}
 window.rwx = globalObject;

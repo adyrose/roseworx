@@ -1,6 +1,6 @@
 const rwxDOM = {
 	hasAncestor: (el, selector) => {
-		let element = el.parentNode;
+		const element = el.parentNode;
 		if(element.matches('body'))
 		{
 			return false;
@@ -13,40 +13,42 @@ const rwxDOM = {
 
 	slideClass: 'rwx-slide-expanded',
 
-  slideDown: (el, time, cb=()=>{}) => {
-    let animetime = time * 60 / 1000;
+  slideDown: (el, duration, cb=()=>{}) => {
+    if(el.offsetHeight > 0){return}
+    el.removeAttribute('style');
     el.style.display = "block";
-    el.style.transition = `height ${(time/1000)/2}s ease-out`;
-    let height = el.getBoundingClientRect().height;
-    let increment = 0;
-    el.style.height = increment;
-    let speed = height / animetime * 10;
-    function animate()
-    {
-      if(increment>height){
-        el.style.height = height+'px';
-        el.classList.add(rwxDom.slideClass);
-        cb();
-        return;}
-      el.style.height = increment+'px';
-      increment = increment+speed;
-      requestAnimationFrame(animate);
-    }
-    animate();
+    el.style.overflow = "hidden";
+    el.style.opacity = 0;
+    const height = el.getBoundingClientRect().height;
+    el.style.height = 0;
+    el.style.transition = `all ${duration}s cubic-bezier(.13,1.06,.98,1)`;
+    requestAnimationFrame(()=>{
+      el.style.height = height+'px';
+      el.style.opacity = 1;
+      el.classList.add(rwxDOM.slideClass);
+      setTimeout(cb, duration*1000);
+      return;      
+    });
   },
 
-  slideUp: (el, time, cb=()=>{}) => {
-    el.style.transition = `height ${(time/1000)}s ease-out`;
-    el.style.height = "0px";
-    setTimeout(()=>{
-      el.classList.remove(rwxDom.slideClass);
-      el.removeAttribute("style")
-      cb();      
-    }, time);
+  slideUp: (el, duration, cb=()=>{}) => {
+    if(el.offsetHeight <= 0){return;}
+    el.removeAttribute('style');
+    el.style.transition = `all ${duration}s cubic-bezier(.13,1.06,.98,1)`;
+    el.style.height = el.getBoundingClientRect().height + "px";
+    el.style.overflow = "hidden";
+    el.style.opacity = 1;
+    window.requestAnimationFrame(()=>{
+      el.style.height = "0px";
+      el.style.opacity = 0;
+      el.classList.remove(rwxDOM.slideClass);
+      setTimeout(cb, duration*1000);
+      return;
+    });
   },
   
-  slideToggle: (el, time, cb=()=>{}) => {
-    el.classList.contains(rwxDom.slideClass) ? this.slideUp(el,time,cb) : this.slideDown(el,time,cb);
+  slideToggle: (el, duration, cb=()=>{}) => {
+    el.offsetHeight <= 0 ? rwxDOM.slideDown(el,duration,cb) : rwxDOM.slideUp(el,duration,cb);
   }
 }
 

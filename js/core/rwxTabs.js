@@ -85,14 +85,29 @@ class rwxTab {
 		this.tabs.map((t, i)=>{
 			if(t.hasAttribute('data-rwx-tabs-title'))
 			{
-				let span = document.createElement('span');
+				let button = document.createElement('button');
 				let text = document.createTextNode(t.getAttribute('data-rwx-tabs-title'));
-				span.appendChild(text);
-				span.addEventListener('click', ()=>{ this.changeTab(i+1); });
-				this.tabHeaders.push(span);
-				this.container.appendChild(span);
+				button.appendChild(text);
+				button.classList.add('no-styles');
+				button.setAttribute('role', 'tab');
+				button.setAttribute('aria-selected', 'false');
+				button.addEventListener('click', ()=>{ this.changeTab(i+1); });
+				button.addEventListener('keydown', (e)=>{
+					if(e.keyCode == 39) {
+						this.tabHeaders[i+1 == this.tabs.length ? 0 : i+1].focus();
+					}
+					else if (e.keyCode == 37) {
+						this.tabHeaders[i == 0 ? this.tabs.length-1 : i-1].focus();
+					}
+				});
+				this.tabHeaders.push(button);
+				this.container.appendChild(button);
 			}
-			if(i+1 == this.activeTab){this.tabHeaders[i].classList.add('active'); window.requestAnimationFrame(()=>{this.moveBullet(this.activeTab)})}
+			if(i+1 == this.activeTab){
+				this.tabHeaders[i].setAttribute('aria-selected', true); 
+				this.tabHeaders[i].classList.add('active'); 
+				window.requestAnimationFrame(()=>{this.moveBullet(this.activeTab)});
+			}
 			else{t.classList.add('initial-hide')}
 			return;
 		});
@@ -148,12 +163,14 @@ class rwxTab {
 	tabShown()
 	{
 		this.animating = false;
+		this.tabHeaders[this.activeTab-1].setAttribute('aria-selected', 'true');
 		this.runTabEvents('tabShowChangeEvents', this.activeTab);
 	}
 
 	tabHidden()
 	{
 		let cache = this.activeTab;
+		this.tabHeaders[this.activeTab-1].setAttribute('aria-selected', 'false');
 		this.tabs[this.activeTab-1].style.display = "none";
 		this.activeTab = this.newTabNumber;
 		this.tabs[this.activeTab-1].classList.remove('initial-hide');

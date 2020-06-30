@@ -47,24 +47,44 @@ class rwxSlider {
 
 	setToHighest(el)
 	{
-		el.style.height = Math.max(...this.slides.map((s)=>s.getBoundingClientRect().height)) + "px";
+		let height = Math.max(...this.slides.map((s)=>s.getBoundingClientRect().height));
+		if(this.dotDiv)
+		{
+			const height2 = this.dotDiv.getBoundingClientRect().height;
+			if(height2 > height) { height = height2;}
+			this.slides.map((s)=>s.style.height = height + "px")
+		}
+		el.style.height = height+ "px";
 	}
 
 	createCounter(el)
 	{
 		this.counters = [];
-		let dotDiv = document.createElement('div');
-		dotDiv.classList.add('rwx-slider-counters');
-		for(let d=0;d<this.slides.length;d++)
-		{
-			let dot = document.createElement('span');
+		this.dotDiv = document.createElement('div');
+		this.dotDiv.classList.add('rwx-slider-counters');
+		this.slides.map((s,i) => {
+			let dot = document.createElement('button');
 			dot.classList.add('rwx-slider-counters-counter');
-			(this.currentSlide == d+1) && dot.classList.add('active');
-			dot.addEventListener('click', ()=>{if(d+1 == this.currentSlide)return; this.goToSlide(d+1); this.counter=0;});
-			dotDiv.appendChild(dot);
+			dot.classList.add('no-styles');
+			(this.currentSlide == i+1) && dot.classList.add('active');
+			dot.addEventListener('click', ()=>{if(i+1 == this.currentSlide)return; this.goToSlide(i+1); this.counter=0;});
+			dot.addEventListener('keydown', (e)=>{
+				let next = this.direction == "Y" ? 40 : 39;
+				let prev = this.direction == "Y" ? 38 : 37;
+				if(e.keyCode == next) {
+					e.preventDefault();
+					this.counters[i+1 == this.slides.length ? 0 : i+1].focus();
+				}
+				else if (e.keyCode == prev) {
+					e.preventDefault();
+					this.counters[i == 0 ? this.slides.length-1 : i-1].focus();
+				}
+			});
+			this.dotDiv.appendChild(dot);
 			this.counters.push(dot);
-		}
-		el.appendChild(dotDiv);
+			return;
+		});
+		el.appendChild(this.dotDiv);
 	}
 
 	autoSlideLoop()
@@ -84,6 +104,11 @@ class rwxSlider {
 	isSlideNumberInRange(number)
 	{
 		return (number > this.slides.length || number < 0) ? 1 : number;
+	}
+
+	slideComplete()
+	{
+
 	}
 
 	goToSlide(number)
@@ -109,12 +134,12 @@ class rwxSlider {
 					if(num < this.currentSlide && (slideNumber == num || this.currentSlide == slideNumber))
 					{
 						s.style.transform = `translate${this.direction}(-100%)`;
-
 					}
-					window.requestAnimationFrame(()=>{
+
+					setTimeout(()=>{
 						s.removeAttribute("style");
 						s.style.transform = `translate${this.direction}(${percent}%)`;
-					});
+					}, 33);
 				}
 				return;
 			});

@@ -19,35 +19,32 @@
 		position:relative;
 		overflow-x:auto;
 		overflow-y:visible;
-		span
+		button
 		{
 			margin-bottom:0;
-			&:not(.bullet)
+			border-top: 2px solid $tabs-seperator-color;
+			border-bottom: 2px solid $tabs-seperator-color;
+			border-radius: 10px;
+			padding: 10px;
+			cursor:pointer;
+			color: $tabs-title-color;
+			font-size: $tabs-title-size;
+			font-family: $font-heading;
+			transition: all 0.7s $transition-base;
+			&.active, &:hover, &:focus
 			{
-				border-top: 2px solid $tabs-seperator-color;
-				border-bottom: 2px solid $tabs-seperator-color;
-				border-radius: 10px;
-				padding: 10px;
-				cursor:pointer;
-				color: $tabs-title-color;
-				font-size: $tabs-title-size;
-				font-family: $font-heading;
+				color: $tabs-active-color;
+				border-color: $tabs-active-color;
 				transition: all 0.7s $transition-base;
-				&.active, &:hover
-				{
-					color: $tabs-active-color;
-					border-color: $tabs-active-color;
-					transition: all 0.7s $transition-base;
-				}
-				&.active
-				{
-					border-bottom:none;
-					font-weight: bold;
-				}
-				&:not(:last-child)
-				{
-					margin-right: 40px;
-				}
+			}
+			&.active
+			{
+				border-bottom:none;
+				font-weight: bold;
+			}
+			&:not(:last-child)
+			{
+				margin-right: 40px;
 			}
 		}
 		.bullet
@@ -67,21 +64,18 @@
 			padding-left:30px;
 			padding-right:30px;
 			border-bottom: 1px solid $tabs-seperator-color;
-			span
+			button
 			{
-				&:not(.bullet)
+				font-size: $tabs-title-size * 0.8;
+				border-top: 1px solid $tabs-seperator-color;
+				border-bottom: 1px solid $tabs-seperator-color;
+				&.active, &:hover
 				{
-					font-size: $tabs-title-size * 0.8;
-					border-top: 1px solid $tabs-seperator-color;
-					border-bottom: 1px solid $tabs-seperator-color;
-					&.active, &:hover
-					{
-						border-color: $tabs-active-color;
-					}
-					&.active
-					{
-						border-bottom:none;
-					}
+					border-color: $tabs-active-color;
+				}
+				&.active
+				{
+					border-bottom:none;
 				}
 			}
 		}

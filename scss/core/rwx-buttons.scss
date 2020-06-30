@@ -42,7 +42,7 @@
 	}		
 }
 
-.rwx-button, button
+.rwx-button, button:not(.no-styles)
 {
 	display:inline-block;
 	min-height:$button-size;
@@ -71,4 +71,16 @@
 			}
 		}
 	}
+}
+
+button.no-styles
+{
+	appearance:none;
+	background:none;
+	outline:none;
+	border:none;
+	font-size:inherit;
+	font:inherit;
+	padding:0;
+	color:inherit;
 }

@@ -50,7 +50,7 @@
 			&:focus
 			{
 				outline:none;
-				box-shadow: 0 0 0.3rem 0.1rem $form-color-focus;
+				@include focus-ring;
 			}
 			&[readonly]
 			{
@@ -137,7 +137,7 @@
 					&:after
 					{
 						transition: 0.5s border $transition-base;
-						box-shadow: 0 0 0.3rem 0.1rem $form-color-focus;
+						@include focus-ring;
 						border:1px solid $form-color-secondary;
 					}
 				}

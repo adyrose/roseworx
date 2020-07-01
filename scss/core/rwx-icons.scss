@@ -1,56 +1,6 @@
-@function safeHexForSvg($color)
-{
-  @return '%23' + str-slice('#{$color}', 2, -1)
-}
-
-$iconmap: (
-	'tick': (
-		'viewbox': "20 20", 
-		'svg': "<polyline points='2,12 7,17 18,4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' />"		
-	),
-	'select-list': (
-		'viewbox': "40 40", 
-		'svg': "<polyline points='2,6 16,6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,14 16,14' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,24 16,24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,32 16,32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='24,14 37,14 31,5 24,14 37,14' stroke-width='2px' /><polyline points='24,24 37,24 31,33 24,24 37,24' stroke-width='2px' />"
-	),
-	'help': (
-		'viewbox': "40 40",
-		'svg': "<path d='m 12 12 c 0 -20 33 -3 8 8 l 0 7' stroke-linecap='round' stroke-linejoin='round' stroke-width='4px' /><circle cx='20' cy='37' r='1.5' stroke-width='3' />"
-	),
-	'note': (
-		'viewbox': "40 40",
-		'svg': "<path d='m 18 0 l 4 0 l -2 25 l -2 -25' stroke-linecap='round' stroke-width='4px' /><circle cx='20' cy='37' r='1.5' stroke-width='3' />"
-	),
-	'warning': (
-		'viewbox': "40 40",
-		'svg': "<path d='m 19 13 l 2 0 l -1 17 l -1 -17' stroke-linecap='round' stroke-width='4px' /><circle cx='20' cy='35' r='1' stroke-width='3' /><path d='m 20 0 l 20 40 l -40 0 l 20 -40' stroke-linejoin='round' stroke-width='2px' />"
-	),
-	'hint': (
-		'viewbox': "40 40",
-		'svg': "<path d='m 17 32 c -30 -32 36 -32 6 0 m 0 1 l -6 0 m 0 2 l 6 0 m 0 2 l -6 0 m 0 2 l 6 0 m -11 -9 l -5 5 m 0 -13 l -5 2 m 5 -12 l -5 -2 m 12 -4 l -3 -5 m 14 5 l 3 -5 m 5 11 l 4 -2 m -4 12 l 5 1 m -10 7 l 5 5' stroke-width='3px' />"
-	),
-	'feature': (
-		'viewbox': "46 46",
-		'svg': "<path d='m 17.5 17.5 l 5 -13 l 4 13 l 14 0 l -10 9 l 5 14 l -13 -8 l -13 8 l 5 -14 l -10 -9 l 13 0 l 5 -13' stroke-width='3px' />"
-	)
-);
-
-@function icon($type, $color:$theme-color-base) {
-	$icon:null;
-	@if map-has-key($iconmap, $type) {
-		$icon: map-get($iconmap, $type);
-	}
-	@else {
-		@warn "`#{$type} is not a valid icon. Available icons are: #{map-keys($iconmap)}`";
-		@return none;
-	}
-  
-	$toReturn: url("data:image/svg+xml, <svg viewBox='0 0 #{map-get($icon, 'viewbox')}' stroke='#{safeHexForSvg($color)}' fill='none' xmlns='http://www.w3.org/2000/svg'>#{map-get($icon, 'svg')}</svg>");
-	@return $toReturn;
-}
-
 $iconsizes: ('xs': 1rem, 'sm': 2rem, 'lg': 4rem, 'xl': 5rem);
 
-@each $iconname, $stuff in $iconmap
+@each $iconname, $stuff in $icons
 {
 	.rwxi-#{$iconname}
 	{

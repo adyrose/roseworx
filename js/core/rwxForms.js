@@ -10,7 +10,6 @@ class rwxForms extends Roseworx.Core {
 	{
 		const forms = [...document.querySelectorAll('[rwx-form]')];
 		if(forms.length === 0){return;}
-		this.internalMap = {}
 		forms.map((f)=> {
 			const Form = new rwxForm(f);
 			this.addIME(f.id,Form);

@@ -1,9 +1,12 @@
 @function safeHexForSvg($color)
 {
+	@if $color == 'none' {
+		@return $color;
+	}
   @return '%23' + str-slice('#{$color}', 2, -1)
 }
 
-@function icon($type, $color:$theme-color-base) {
+@function icon($type, $color:$theme-color-base, $fill:'none') {
 	$icon:null;
 	@if map-has-key($icons, $type) {
 		$icon: map-get($icons, $type);
@@ -13,6 +16,6 @@
 		@return none;
 	}
   
-	$toReturn: url("data:image/svg+xml, <svg viewBox='0 0 #{map-get($icon, 'viewbox')}' stroke='#{safeHexForSvg($color)}' fill='none' xmlns='http://www.w3.org/2000/svg'>#{map-get($icon, 'svg')}</svg>");
+	$toReturn: url("data:image/svg+xml, <svg viewBox='0 0 #{map-get($icon, 'viewbox')}' stroke='#{safeHexForSvg($color)}' fill='#{safeHexForSvg($fill)}' xmlns='http://www.w3.org/2000/svg'>#{map-get($icon, 'svg')}</svg>");
 	@return $toReturn;
 }

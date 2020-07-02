@@ -38,11 +38,12 @@ $colors: ('black':$black,
 $icons: (
 	'tick': (
 		'viewbox': "20 20", 
-		'svg': "<polyline points='2,12 7,17 18,4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' />"		
+		'svg': "<polyline points='2,12 7,17 18,4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' />"
 	),
 	'select-list': (
 		'viewbox': "40 40", 
-		'svg': "<polyline points='2,6 16,6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,14 16,14' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,24 16,24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,32 16,32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='24,14 37,14 31,5 24,14 37,14' stroke-width='2px' /><polyline points='24,24 37,24 31,33 24,24 37,24' stroke-width='2px' />"
+		'svg': "<polyline points='2,6 16,6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,14 16,14' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,24 16,24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='2,32 16,32' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' /><polyline points='24,14 37,14 31,5 24,14 37,14' stroke-width='2px' /><polyline points='24,24 37,24 31,33 24,24 37,24' stroke-width='2px' />",
+		'canhavefill': true
 	),
 	'help': (
 		'viewbox': "40 40",
@@ -54,31 +55,38 @@ $icons: (
 	),
 	'warning': (
 		'viewbox': "40 40",
-		'svg': "<path d='m 19 13 l 2 0 l -1 17 l -1 -17' stroke-linecap='round' stroke-width='4px' /><circle cx='20' cy='35' r='1' stroke-width='3' /><path d='m 20 0 l 20 40 l -40 0 l 20 -40' stroke-linejoin='round' stroke-width='2px' />"
+		'svg': "<path d='m 20 0 l 20 40 l -40 0 l 20 -40' stroke-linejoin='round' stroke-width='2px' /><circle cx='20' cy='35' r='1' stroke-width='3' /><path d='m 19 13 l 2 0 l -1 17 l -1 -17' stroke-linecap='round' stroke-width='4px' />",
+		'canhavefill': true
 	),
 	'hint': (
 		'viewbox': "40 40",
-		'svg': "<path d='m 17 32 c -30 -32 36 -32 6 0 m 0 1 l -6 0 m 0 2 l 6 0 m 0 2 l -6 0 m 0 2 l 6 0 m -11 -9 l -5 5 m 0 -13 l -5 2 m 5 -12 l -5 -2 m 12 -4 l -3 -5 m 14 5 l 3 -5 m 5 11 l 4 -2 m -4 12 l 5 1 m -10 7 l 5 5' stroke-width='3px' />"
+		'svg': "<path d='m 17 32 c -30 -32 36 -32 6 0 m 0 1 l -6 0 m 0 2 l 6 0 m 0 2 l -6 0 m 0 2 l 6 0 m -11 -9 l -5 5 m 0 -13 l -5 2 m 5 -12 l -5 -2 m 12 -4 l -3 -5 m 14 5 l 3 -5 m 5 11 l 4 -2 m -4 12 l 5 1 m -10 7 l 5 5' stroke-width='3px' />",
+		'canhavefill': true
 	),
 	'feature': (
 		'viewbox': "46 46",
-		'svg': "<path d='m 17.5 17.5 l 5 -13 l 4 13 l 14 0 l -10 9 l 5 14 l -13 -8 l -13 8 l 5 -14 l -10 -9 l 13 0 l 5 -13' stroke-width='3px' />"
+		'svg': "<path d='m 17.5 17.5 l 5 -13 l 4 13 l 14 0 l -10 9 l 5 14 l -13 -8 l -13 8 l 5 -14 l -10 -9 l 13 0 l 5 -13' stroke-width='3px' />",
+		'canhavefill': true
 	),
 	'rchev' : (
 		'viewbox': "40 40",
-		'svg': "<path d='m 8 8 l 26 12 l -26 14 l 0 -26 l 2 1' stroke-width='2px' />"
+		'svg': "<path d='m 8 8 l 26 12 l -26 14 l 0 -26 l 2 1' stroke-width='2px' />",
+		'canhavefill': true
 	),
 	'lchev' : (
 		'viewbox': "40 40",
-		'svg': "<path d='m 8 20 l 26 -12 l 0 26 l -26 -14 l 2 -1' stroke-width='2px' />"
+		'svg': "<path d='m 8 20 l 26 -12 l 0 26 l -26 -14 l 2 -1' stroke-width='2px' />",
+		'canhavefill': true
 	),
 	'dchev' : (
 		'viewbox': "40 40",
-		'svg': "<path d='m 7 8 l 25 0 l -12 24 l -13 -24 l 1 0' stroke-width='2px' />"
+		'svg': "<path d='m 7 8 l 25 0 l -12 24 l -13 -24 l 1 0' stroke-width='2px' />",
+		'canhavefill': true
 	),
 	'uchev' : (
 		'viewbox': "40 40",
-		'svg': "<path d='m 20 8 l 14 24 l -26 0 l 12 -24 l 1 2' stroke-width='2px' />"
+		'svg': "<path d='m 20 8 l 14 24 l -26 0 l 12 -24 l 1 2' stroke-width='2px' />",
+		'canhavefill': true
 	)
 );
 

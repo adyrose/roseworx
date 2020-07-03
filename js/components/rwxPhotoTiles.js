@@ -26,7 +26,7 @@ class rwxPhotoTiles extends Roseworx.Core {
 		});
 	}
 
-	changePhoto(id, photoNumber, effect)
+	changeTile(id, photoNumber, effect)
 	{
 		const IME = this.getIME(id);
 		IME && IME.changeBackground(photoNumber, effect);

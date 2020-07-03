@@ -14,8 +14,8 @@ class rwxMist
 			this.debounce && clearTimeout(this.debounce)
 			this.debounce = setTimeout(()=>{
 				this.calculate();
-			}, 250)
-		})
+			}, 250);
+		});
 	}
 
 	calculate()

@@ -166,8 +166,6 @@ $form-item-size: 50px !default;
 $button-size: 50px !default;
 $button-color-base: $theme-color-base !default;
 
-//// Only takes effect is js imported
-
 //Slider
 $slider-counter-active-color: $theme-color-base !default;
 $slider-counter-inactive-color: $theme-color-secondary !default;
@@ -178,3 +176,12 @@ $tabs-title-color: $theme-color-base !default;
 $tabs-title-size: $h5-size !default;
 $tabs-active-color: $theme-color-tertiary !default;
 $tabs-seperator-color: $theme-color-secondary !default;
+
+/*
+
+** Only takes effect is js imported
+
+*/
+
+$slideshow-color: blue !default;
+

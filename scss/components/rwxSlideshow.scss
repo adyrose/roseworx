@@ -4,6 +4,8 @@
 
 .rwx-slideshow
 {
+	@include component-spacing;
+	background: $slideshow-color;
 	@include full-size;
   overflow:hidden;
   position:relative;

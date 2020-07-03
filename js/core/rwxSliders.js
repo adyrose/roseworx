@@ -12,7 +12,7 @@ class rwxSliders extends Roseworx.Core {
 		sliders.map((s)=>{
 			const counters = s.hasAttribute('data-rwx-slider-counters');
 			const autoSlide = s.hasAttribute('data-rwx-slider-auto-slide');
-			const autoSlideTimeout = autoSlide ? s.getAttribute('data-rwx-slider-auto-slide') : 0;
+			const autoSlideTimeout = autoSlide ? s.getAttribute('data-rwx-slider-auto-slide') : false;
 			const reeling = s.hasAttribute('data-rwx-slider-reeling');
 			const vertical = s.hasAttribute('data-rwx-slider-vertical');
 			const Slider = new rwxSlider(s, vertical, autoSlide, counters, reeling, autoSlideTimeout ? autoSlideTimeout : 5);

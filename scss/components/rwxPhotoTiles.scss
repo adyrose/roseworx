@@ -1,0 +1,28 @@
+@import '../core/rwx-variables';
+@import '../core/rwx-mixins';
+.rwx-phototile
+{
+	@include component-spacing;
+	@include flex-center;
+	flex-wrap:wrap;
+	canvas
+	{
+		margin-bottom:20px;
+	}
+	&-container
+	{
+		width:100%;
+		display:flex;
+		flex-wrap:wrap;
+		justify-content:center;
+		* {
+			cursor:pointer;
+			width: 40px;
+			height:40px;
+			margin-top: 20px;
+			position:relative;
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+	}
+}

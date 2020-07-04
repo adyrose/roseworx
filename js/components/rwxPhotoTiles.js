@@ -2,6 +2,7 @@ require('../../scss/components/rwxPhotoTiles.scss');
 
 import Roseworx from '../rwxCore';
 import rwxMath from '../helpers/rwxMathHelpers';
+import rwxAnimate from '../helpers/rwxAnimateHelpers';
 
 let animeCounter = [];
 
@@ -54,8 +55,7 @@ class rwxPhotoTile {
     this.numberOfYTiles = 10;
     this.tileMatrix = [];
     this.nextTileMatrix = [];
-    this.maxTimeout = 10;
-    this.timeoutIncrement = 5;
+    this.maxTimeout = 15;
     this.fx = [
       'bubble',
       'spin',
@@ -193,7 +193,7 @@ class rwxPhotoTile {
 
       if(this.firstblood)
       { 
-        let tile = new Tile(this.c, obj.value, obj.changeType, obj.sx, obj.sy, obj.sw, obj.sh, obj.dx, obj.dy, obj.dw, obj.dh, obj.timeout);        
+        let tile = new Tile(this.c, obj.value, obj.changeType, obj.sx, obj.sy, obj.sw, obj.sh, obj.dx, obj.dy, obj.dw, obj.dh, obj.timeout, `tile${index}`);        
         this.tileMatrix.push(tile);
         tile[changeType]();        
       }
@@ -309,8 +309,9 @@ class rwxPhotoTile {
   }
 }
 
-function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
+function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, uniqueID)
 {
+	this.uniqueID = uniqueID;
   this.timeoutCounter = 0;
   this.duration = 500;
   this.slideDirections = ['slideLeft', 'slideRight', 'slideUp', 'slideDown'];
@@ -375,28 +376,9 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
     this.switched = true;
   }
 
-  this.animationTiming = function(timingfn, flag)
-  {
-    if(!this.start)
-    {
-      this.start = performance.now();
-    }
-    let p = (performance.now() - this.start) / this.duration;
-    let val  = EasingFunctions[timingfn](p);
-    if (performance.now() - this.start > this.duration){
-      delete this.start;
-      if(flag){this[flag] = true;}
-      return 1;
-    }
-    else
-    {
-      return val;      
-    }
-  }
-
   this.unscale = function()
   {
-    let val = this.animationTiming('easeInQuart', 'unscaled');
+    let val = rwxAnimate.getEasingValue(`${this.uniqueID}-UnscaleAnimation`, 'easeInQuart', this.duration, ()=>{this.unscaled = true;} )
     this.dw += (this.nextMatrix.dw - this.dw)*val;
     this.dh += (this.nextMatrix.dh - this.dh)*val;
     this.dx += (this.nextMatrix.dx - this.dx)*val;
@@ -405,11 +387,11 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
 
   this.scale = function ()
   {
-    let val = this.animationTiming('easeOutQuart', 'scaled');
-    this.dw = this.initdw + ((this.initdw-(this.initdw/this.scaleFactor)) - this.initdw) * val;
-    this.dh = this.initdh + ((this.initdh-(this.initdh/this.scaleFactor)) - this.initdh) * val;
-    this.dx = this.initdx + (this.initdx+((this.initdw/this.scaleFactor) - this.initdx)) * val /2;
-    this.dy = this.initdy + (this.initdy+((this.initdh/this.scaleFactor) - this.initdy)) * val /2;    
+    let val = rwxAnimate.getEasingValue(`${this.uniqueID}-ScaleAnimation`, 'easeOutQuart', this.duration, ()=>{this.scaled = true;} )
+    this.dw = rwxAnimate.fromToCalc(this.initdw, (this.initdw/this.scaleFactor), val);
+    this.dh = rwxAnimate.fromToCalc(this.initdh, (this.initdh/this.scaleFactor), val);
+    this.dx = rwxAnimate.fromToCalc(this.initdx, (this.initdx+(this.initdw/this.scaleFactor)/2), val);
+    this.dy = rwxAnimate.fromToCalc(this.initdy, (this.initdy+(this.initdh/this.scaleFactor)/2), val);   
   }
 
   this.spin = function() {
@@ -431,8 +413,7 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
         }
         else
         {
-
-          let val = this.animationTiming('easeInOutQuad', 'rotated');
+        	let val = rwxAnimate.getEasingValue(`${this.uniqueID}-RotatedAnimation`, 'easeInOutQuad', this.duration, ()=>{this.rotated = true;} )
           c.translate(this.initcenterX, this.initcenterY);
           c.rotate((val*360) * Math.PI / 180);
           c.translate(-this.initcenterX, -this.initcenterY);
@@ -458,13 +439,13 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
     {
       if(this.opaque)
       {
-        let val2 = this.animationTiming('easeInOutQuint', 'animeDone');
+      	let val2 = rwxAnimate.getEasingValue(`${this.uniqueID}-DoneAnimation`, 'easeInOutQuint', this.duration, ()=>{this.animeDone = true;} )
         this.switch();
         c.globalAlpha = val2;
       }
       else
       {
-        let val = this.animationTiming('easeInOutQuint', 'opaque');
+      	let val = rwxAnimate.getEasingValue(`${this.uniqueID}-OpaqueAnimation`, 'easeInOutQuint', this.duration, ()=>{this.opaque = true;} )
         c.globalAlpha = 1 - val;
       }
     } 
@@ -484,43 +465,52 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
     {
       if(this.slideShrunk)
       {
-        let val2 = this.animationTiming('easeInQuad', 'animeDone');
+      	let val2 = rwxAnimate.getEasingValue(`${this.uniqueID}-DoneAnimation`, 'easeInQuad', this.duration, ()=>{this.animeDone = true;} )
         this.switch();
         if(this.slideDirection == "slideLeft" || this.slideDirection == "slideRight")
         {
-          this.dw = val2 * this.nextMatrix.dw; this.sw = val2 * this.nextMatrix.sw;
+          this.dw = rwxAnimate.fromToCalc(0, this.nextMatrix.dw, val2);
+          this.sw = rwxAnimate.fromToCalc(0, this.nextMatrix.sw, val2);
           if(this.slideDirection == "slideRight")
           {
-            this.dx = this.nextMatrix.dx - (this.nextMatrix.dx+(this.nextMatrix.dw - this.nextMatrix.dx)) * val2 + this.nextMatrix.dw; this.sx = this.nextMatrix.sx - (this.nextMatrix.sx+(this.nextMatrix.sw - this.nextMatrix.sx)) * val2 + this.nextMatrix.sw;
+          	this.dx = rwxAnimate.fromToCalc((this.nextMatrix.dx + this.nextMatrix.dw), this.nextMatrix.dx, val2); 
+            this.sx = rwxAnimate.fromToCalc((this.nextMatrix.sx + this.nextMatrix.sw), this.nextMatrix.sx, val2);
           }
         }
         if(this.slideDirection == "slideUp" || this.slideDirection == "slideDown")
         {
-          this.dh = val2 * this.nextMatrix.dh; this.sh = val2 * this.nextMatrix.sh;
+          this.dh = rwxAnimate.fromToCalc(0, this.nextMatrix.dh, val2);
+          this.sh = rwxAnimate.fromToCalc(0, this.nextMatrix.sh, val2);
           if(this.slideDirection == "slideDown")
           {
-            this.dy = this.nextMatrix.dy - (this.nextMatrix.dy+(this.nextMatrix.dh - this.nextMatrix.dy)) * val2 + this.nextMatrix.dh; this.sy = this.nextMatrix.sy - (this.nextMatrix.sy+(this.nextMatrix.sh - this.nextMatrix.sy)) * val2 + this.nextMatrix.sh;
+
+            this.dy = rwxAnimate.fromToCalc((this.nextMatrix.dy + this.nextMatrix.dh), this.nextMatrix.dy, val2); 
+            this.sy = rwxAnimate.fromToCalc((this.nextMatrix.sy + this.nextMatrix.sh), this.nextMatrix.sy, val2);
           }
         }
       }
       else
       {
-        let val = this.animationTiming('easeOutQuad', 'slideShrunk');
+        let val = rwxAnimate.getEasingValue(`${this.uniqueID}-SlideAnimation`, 'easeOutQuad', this.duration, ()=>{this.slideShrunk = true;} )
         if(this.slideDirection == "slideLeft" || this.slideDirection == "slideRight")
         {
-          this.dw = this.initdw + (0 - this.initdw) * val; this.sw = this.initsw + (0 - this.initsw) * val;
+        	this.dw = rwxAnimate.fromToCalc(this.initdw, 0, val);
+        	this.sw = rwxAnimate.fromToCalc(this.initsw, 0, val);
           if(this.slideDirection == "slideRight")
           {
-            this.dx = this.initdx + (this.initdx+(this.initdw - this.initdx)) * val; this.sx = this.initsx + (this.initsx+(this.initsw - this.initsx)) * val; 
+            this.dx = rwxAnimate.fromToCalc(this.initdx, (this.initdx+this.initdw), val); 
+            this.sx = rwxAnimate.fromToCalc(this.initsx, (this.initsx+this.initsw), val); 
           }
         }
 
         if(this.slideDirection == "slideUp" || this.slideDirection == "slideDown")
         {
-          this.dh = this.initdh + (0 - this.initdh) * val; this.sh = this.initsh + (0 - this.initsh) * val;
+          this.dh = rwxAnimate.fromToCalc(this.initdh, 0, val); 
+          this.sh = rwxAnimate.fromToCalc(this.initsh, 0, val);
           if(this.slideDirection == "slideDown")
           {
-            this.dy = this.initdy + (this.initdy+(this.initdh - this.initdy)) * val; this.sy = this.initsy + (this.initsy+(this.initsh - this.initsy)) * val;
+          	this.dy = rwxAnimate.fromToCalc(this.initdy, (this.initdy+this.initdh), val);
+            this.sy = rwxAnimate.fromToCalc(this.initsy, (this.initsy+this.initsh), val);
           }
         }
       }
@@ -536,15 +526,15 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
       if(this.bubbled)
       {
         this.switch();
-        let val2 = this.animationTiming('linear', 'animeDone');
-        this.radius = (this.centerX - this.nextMatrix.dx + 10) * val2;
+        let val2 = rwxAnimate.getEasingValue(`${this.uniqueID}-DoneAnimation`, 'linear', this.duration, ()=>{this.animeDone = true;} );
+        this.radius = rwxAnimate.fromToCalc(0,(this.centerX - this.nextMatrix.dx + 10) , val2);
       }
       else
       {
-        let val = this.animationTiming('linear', 'bubbled');
+      	let val = rwxAnimate.getEasingValue(`${this.uniqueID}-BubbleAnimation`, 'linear', this.duration, ()=>{this.bubbled = true;} );
         this.centerX = this.initcenterX;
         this.centerY = this.initcenterY;
-        this.radius = this.initradius - (this.initradius * val);
+        this.radius = rwxAnimate.fromToCalc(this.initradius, 0 , val);
       }
       c.save();
       c.beginPath();
@@ -583,35 +573,5 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
     c.drawImage(this.value, this.sx, this.sy, this.sw, this.sh, this.dx, this.dy, this.dw, this.dh);
   }
 } 
-
-const EasingFunctions = {
-  // no easing, no acceleration
-  linear: function (t) { return t },
-  // accelerating from zero velocity
-  easeInQuad: function (t) { return t*t },
-  // decelerating to zero velocity
-  easeOutQuad: function (t) { return t*(2-t) },
-  // acceleration until halfway, then deceleration
-  easeInOutQuad: function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
-  // accelerating from zero velocity 
-  easeInCubic: function (t) { return t*t*t },
-  // decelerating to zero velocity 
-  easeOutCubic: function (t) { return (--t)*t*t+1 },
-  // acceleration until halfway, then deceleration 
-  easeInOutCubic: function (t) { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
-  // accelerating from zero velocity 
-  easeInQuart: function (t) { return t*t*t*t },
-  // decelerating to zero velocity 
-  easeOutQuart: function (t) { return 1-(--t)*t*t*t },
-  // acceleration until halfway, then deceleration
-  easeInOutQuart: function (t) { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
-  // accelerating from zero velocity
-  easeInQuint: function (t) { return t*t*t*t*t },
-  // decelerating to zero velocity
-  easeOutQuint: function (t) { return 1+(--t)*t*t*t*t },
-  // acceleration until halfway, then deceleration 
-  easeInOutQuint: function (t) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t },
-
-}
 
 export default new rwxPhotoTiles();

@@ -2,14 +2,13 @@
 @import '../core/rwx-variables';
 @import '../core/rwx-functions';
 
+@include component-spacing('rwx-slideshow');
 .rwx-slideshow
 {
-	@include component-spacing;
-	background: $slideshow-color;
 	@include full-size;
   overflow:hidden;
   position:relative;
-  &-background, .slide-container
+  .slide-container
   {
     height:100%;
     width:100%;

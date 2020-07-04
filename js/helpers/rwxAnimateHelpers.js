@@ -58,21 +58,30 @@ const rwxAnimateHelpers = {
 }
 
 const rwxAnimate = {
-  fromTo: function(from, to, id, easing="linear", duration=1000, cb=()=>{}) {
-  	if(!id)return;
-  	if(!this[`${id}Easing`]){this[`${id}Easing`] = rwxAnimateHelpers.sanitizeEasing(easing, id);}
-  	if(!this[`${id}Duration`]){this[`${id}Duration`] = rwxAnimateHelpers.sanitizeDuration(duration, id);}
-  	let val = rwxAnimateHelpers.easingFunction(this[`${id}Easing`], this[`${id}Duration`], `${id}Ease`, cb);
-  	if(val >= 1)
-  	{
+  getEasingValue: function(id, easing="linear", duration=1000, cb=()=>{}) {
+    if(!id)return;
+    if(!this[`${id}Easing`]){this[`${id}Easing`] = rwxAnimateHelpers.sanitizeEasing(easing, id);}
+    if(!this[`${id}Duration`]){this[`${id}Duration`] = rwxAnimateHelpers.sanitizeDuration(duration, id);}
+    let val = rwxAnimateHelpers.easingFunction(this[`${id}Easing`], this[`${id}Duration`], `${id}Ease`, cb);
+    if(val >= 1)
+    {
       cb();
-  		rwxAnimateHelpers.deleteVars(id);
-      return parseInt(to);
-  	}
+      rwxAnimateHelpers.deleteVars(id);
+      return 1;
+    }
+    return val;
+  },
+
+  fromTo: function(from, to, id, easing="linear", duration=1000, cb=()=>{}) {
+  	let val = rwxAnimate.getEasingValue(id, easing, duration, cb);
+    return rwxAnimate.fromToCalc(from, to, val);
+  },
+
+  fromToCalc: function(from, to, val) {
     return (from + (to - from) * val);
   },
 
-  fromToBezier: function(p1, p2, p3, p4, id, easing, duration, cb) {
+  fromToBezier: function(p1, p2, p3, p4, id, easing="linear", duration=1000, cb=()=>{}) {
   	if(!id)return;
   	if(!this[`${id}Easing`]){this[`${id}Easing`] = rwxAnimateHelpers.sanitizeEasing(easing, id);}
   	if(!this[`${id}Duration`]){this[`${id}Duration`] = rwxAnimateHelpers.sanitizeDuration(duration, id);}

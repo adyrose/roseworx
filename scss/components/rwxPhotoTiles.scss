@@ -1,8 +1,9 @@
 @import '../core/rwx-variables';
 @import '../core/rwx-mixins';
+
+@include component-spacing('rwx-phototile');
 .rwx-phototile
 {
-	@include component-spacing;
 	@include flex-center;
 	flex-wrap:wrap;
 	canvas

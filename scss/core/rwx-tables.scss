@@ -11,10 +11,9 @@ $emphasis-line:	2px solid $table-color-base;
 
 // normal - .rwx-table .rwx-table-data:first-child
 // vertical - .rwx-table.vertical .rwx-table-data span span:first-child
-
+@include component-spacing('rwx-table');
 .rwx-table
 {
-	@include component-spacing;
 	&[rwx-table]
 	{
 		max-height:$table-height-limit;

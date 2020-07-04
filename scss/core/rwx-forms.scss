@@ -16,10 +16,10 @@
 	}
 }
 
+@include component-spacing('rwx-form');
 .rwx-form
 {
 	position:relative;
-	@include component-spacing;
 	&-item
 	{
 		display:flex;

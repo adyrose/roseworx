@@ -1,9 +1,9 @@
+@include component-spacing('rwx-slider');
 .rwx-slider
 {
 	position:relative;
 	display:flex;
 	overflow:hidden;
-	@include component-spacing;
 	&-slide
 	{
 		width:100%;

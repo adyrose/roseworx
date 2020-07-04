@@ -3,10 +3,23 @@
 	box-shadow: 0 0 0.3rem 0.1rem $form-color-focus;
 }
 
-@mixin component-spacing
+@mixin component-spacing($component: null)
 {
-	margin-top: $medium-spacing;
-	margin-bottom: $medium-spacing;
+	@if $component
+	{
+		h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6
+		{
+			+ .#{$component}
+			{
+				margin-top: 0px;
+			}
+		}
+		.#{$component}
+		{
+			margin-top: $medium-spacing;
+			margin-bottom: $medium-spacing;
+		}
+	}
 }
 
 @mixin change-link-color($color) {

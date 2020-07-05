@@ -68,7 +68,7 @@ class rwxSlider {
 			dot.classList.add('no-styles');
 			(this.currentSlide == i+1) && dot.classList.add('active');
 			dot.addEventListener('click', ()=>{if(i+1 == this.currentSlide)return; this.goToSlide(i+1); this.counter=0;});
-			dot.addEventListener('keydown', (e)=>{
+			dot.addEventListener('keyup', (e)=>{
 				let next = this.direction == "Y" ? 40 : 39;
 				let prev = this.direction == "Y" ? 38 : 37;
 				if(e.keyCode == next) {

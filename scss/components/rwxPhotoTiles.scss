@@ -24,6 +24,10 @@
 			position:relative;
 			margin-left: 10px;
 			margin-right: 10px;
+			&:hover, &:focus, &:active
+			{
+				@include focus-ring;
+			}
 		}
 	}
 }

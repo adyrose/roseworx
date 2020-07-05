@@ -35,29 +35,37 @@ $headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5"
 {
   section, .section
   {
-    margin-top: $large-spacing;
-    margin-bottom: $large-spacing;
-    padding-top:20px;
     border-top: 3px solid $section-seperator-color;
     section, .section
     {
-      margin-top: $medium-spacing;
-      margin-bottom: $medium-spacing;
       border-top: 2px solid $section-seperator-color;
       section, .section
       {
-        margin-top: $small-spacing;
-        margin-bottom: $small-spacing;
         border-top: 1px solid $section-seperator-color;
       }
     }
   }
 }
 
-section
+section, .section
 {
-  @include component-spacing;
+  margin-top: $large-spacing;
+  margin-bottom: $large-spacing;
+  padding-top:20px;
+  section, .section
+  {
+    margin-top: $medium-spacing;
+    margin-bottom: $medium-spacing;
+    padding-top:15px;
+    section, .section
+    {
+      padding-top:10px;
+      margin-top: $small-spacing;
+      margin-bottom: $small-spacing;
+    }
+  }
 }
+
 
 p, strong
 {
@@ -133,12 +141,12 @@ ul
         position:absolute;
         left:0px;
         top:12px;
+        content:"";
       }
     }
     &:not(.numbered)
     {
       li:before {
-        content:"";
         width:10px;
         height:2px;
         background: $list-item-counter-color;
@@ -170,8 +178,8 @@ ul
       margin-right: 50px;
       &:before
       {
-        height:8px;
-        width:8px;
+        height:8px !important;
+        width:8px !important;
         top:10px;
         background: $list-item-counter-color;
         border-radius:100%;

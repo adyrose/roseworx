@@ -35,8 +35,6 @@
       min-width:300px;
       max-width: 800px;
       transform-style: preserve-3d;
-      margin-left: 55px;
-      margin-right: 55px;
     }
     &-title
     {
@@ -64,6 +62,12 @@
     position:absolute;
     cursor:pointer;
     background:rgba(255,255,255,0.5);
+    transition: box-shadow 0.5s $transition-base;
+    &:hover, &:focus, &:active
+    {
+    	transition: box-shadow 0.5s $transition-base;
+			box-shadow: 0 0 1rem 0.1rem $black;
+    }
   }
 
   .next-slide, .prev-slide

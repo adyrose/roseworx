@@ -5,8 +5,6 @@ import rwxMath from '../helpers/rwxMathHelpers';
 import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxMisc from '../helpers/rwxMiscHelpers';
 
-let animeCounter = [];
-
 class rwxPhotoTiles extends Roseworx.Core {
 	constructor()
 	{
@@ -17,12 +15,12 @@ class rwxPhotoTiles extends Roseworx.Core {
 	{
 		const phototile = [...document.querySelectorAll('[rwx-phototile]')];
 		if(phototile.length === 0){return;}
-		phototile.map((pt)=> {
+		phototile.map((pt, index)=> {
 			const effect = pt.hasAttribute('data-rwx-phototile-effect') ? pt.getAttribute('data-rwx-phototile-effect') : 'random';
 			const auto = pt.hasAttribute('data-rwx-phototile-auto')
 			const autoTimeout = auto ? pt.getAttribute('data-rwx-phototile-auto') : false;
 			const noThumbnails = pt.hasAttribute('data-rwx-phototile-no-thumbnails');
-			const PhotoTile = new rwxPhotoTile(pt, effect, auto, autoTimeout ? autoTimeout : 5, noThumbnails);
+			const PhotoTile = new rwxPhotoTile(pt, effect, auto, autoTimeout ? autoTimeout : 5, noThumbnails, `PhotoTile${index}`);
 			this.addIME(pt.id, PhotoTile);
 		 	return;
 		});
@@ -36,9 +34,10 @@ class rwxPhotoTiles extends Roseworx.Core {
 }
 
 class rwxPhotoTile {
-  constructor(el, effect, auto, autoTimeout, noThumbnails)
+  constructor(el, effect, auto, autoTimeout, noThumbnails, uniqueID)
   {
   	this.el = el;
+  	this.uniqueID = uniqueID;
   	this.photos = [...el.children]//[...el.querySelectorAll('img')];
   	if(this.photos.length == 0)return;
   	this.effectInit = effect;
@@ -54,6 +53,7 @@ class rwxPhotoTile {
     this.numberOfYTiles = 10;
     this.tileMatrix = [];
     this.nextTileMatrix = [];
+    this.animeCounter = [];
     this.maxTimeout = 15;
     this.fx = [
       'bubble',
@@ -109,6 +109,18 @@ class rwxPhotoTile {
   	c.classList.add('rwx-phototile-container');
   	this.photos.map((img, i)=>{
   		c.appendChild(img);
+  		img.addEventListener('keyup', (ev)=>{
+  			if(ev.keyCode == 13 || ev.keyCode == 32)
+  			{
+  				this.changeBackground(i+1, this.effectInit);
+  			}
+  			else if(ev.keyCode == 37){
+  				this.photos[i == 0 ? this.photos.length-1 : i-1].focus();
+  			}
+  			else if(ev.keyCode == 39){
+  				this.photos[i+1 == this.photos.length ? 0 : i+1].focus();
+  			}
+  		});
   		img.addEventListener('click', ()=>{this.changeBackground(i+1, this.effectInit)});
   		if(noThumbnails){img.style.display = "none"}
   		return;
@@ -191,8 +203,8 @@ class rwxPhotoTile {
       }
 
       if(this.firstblood)
-      { 
-        let tile = new Tile(this.c, obj.value, obj.changeType, obj.sx, obj.sy, obj.sw, obj.sh, obj.dx, obj.dy, obj.dw, obj.dh, obj.timeout, `tile${index}`);        
+      {
+        let tile = new Tile(this.c, obj.value, obj.changeType, obj.sx, obj.sy, obj.sw, obj.sh, obj.dx, obj.dy, obj.dw, obj.dh, obj.timeout, `${this.uniqueID}${index}`);        
         this.tileMatrix.push(tile);
         tile[changeType]();        
       }
@@ -277,13 +289,13 @@ class rwxPhotoTile {
   resetAnimation()
   {
     this.readytoanimatein = false;
-    animeCounter = [];
+    this.animeCounter = [];
     this.tileMatrix.map((t)=>{t.reset()});    
   }
 
   animate()
   {
-    if(animeCounter.length == this.tileMatrix.length)
+    if(this.animeCounter.length == this.tileMatrix.length)
     {
       this.resetAnimation();
     }
@@ -298,9 +310,9 @@ class rwxPhotoTile {
         {
           tile.nextMatrix = this.nextTileMatrix[index];
         }
-        if(tile.animeDone && !animeCounter.includes(index))
+        if(tile.animeDone && !this.animeCounter.includes(index))
         {
-          animeCounter.push(index);
+          this.animeCounter.push(index);
         }
         tile[this.effect]();
       }    

@@ -33,10 +33,24 @@ $headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5"
 
 @if $secton-seperators
 {
-  section
+  section, .section
   {
+    margin-top: $large-spacing;
+    margin-bottom: $large-spacing;
     padding-top:20px;
     border-top: 3px solid $section-seperator-color;
+    section, .section
+    {
+      margin-top: $medium-spacing;
+      margin-bottom: $medium-spacing;
+      border-top: 2px solid $section-seperator-color;
+      section, .section
+      {
+        margin-top: $small-spacing;
+        margin-bottom: $small-spacing;
+        border-top: 1px solid $section-seperator-color;
+      }
+    }
   }
 }
 
@@ -45,7 +59,7 @@ section
   @include component-spacing;
 }
 
-p, strong, ul
+p, strong
 {
   margin-bottom:1.1rem;
 }
@@ -106,6 +120,7 @@ a
 
 ul
 {
+  margin-bottom: 1.5rem;
   padding-left:0.8rem;
   &:not(.no-decoration)
   {
@@ -114,16 +129,36 @@ ul
       position:relative;
       margin-bottom:0.75rem;
       padding-left: 25px;
-      &:before
-      {
-        content:"";
-        width:10px;
-        height:2px;
+      &:before {
         position:absolute;
         left:0px;
         top:12px;
-        background: $list-item-counter-color
       }
+    }
+    &:not(.numbered)
+    {
+      li:before {
+        content:"";
+        width:10px;
+        height:2px;
+        background: $list-item-counter-color;
+      }
+    }
+  }
+  &.numbered
+  {
+    counter-reset: ulnumbered;
+    li {
+      min-height:30px;
+      padding-left: 50px;
+      padding-top:3px;
+    }
+    li:before {
+      counter-increment: ulnumbered;
+      content: counter(ulnumbered)".";
+      color: $list-item-counter-color;
+      @extend .h3;
+      top:0px;
     }
   }
   &.inline

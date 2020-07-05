@@ -3,6 +3,7 @@ require('../../scss/components/rwxPhotoTiles.scss');
 import Roseworx from '../rwxCore';
 import rwxMath from '../helpers/rwxMathHelpers';
 import rwxAnimate from '../helpers/rwxAnimateHelpers';
+import rwxMisc from '../helpers/rwxMiscHelpers';
 
 let animeCounter = [];
 
@@ -27,7 +28,7 @@ class rwxPhotoTiles extends Roseworx.Core {
 		});
 	}
 
-	changeTile(id, photoNumber, effect)
+	goToTile(id, photoNumber, effect)
 	{
 		const IME = this.getIME(id);
 		IME && IME.changeBackground(photoNumber, effect);
@@ -38,8 +39,6 @@ class rwxPhotoTile {
   constructor(el, effect, auto, autoTimeout, noThumbnails)
   {
   	this.el = el;
-
-
   	this.photos = [...el.children]//[...el.querySelectorAll('img')];
   	if(this.photos.length == 0)return;
   	this.effectInit = effect;

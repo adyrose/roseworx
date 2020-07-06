@@ -7,6 +7,7 @@ class rwxTabs extends Roseworx.Core {
 	constructor()
 	{
 		super();
+		this.customEvents = true;
 	}
 
 	execute()
@@ -25,18 +26,12 @@ class rwxTabs extends Roseworx.Core {
 		const IME = this.getIME(id);
 		IME && IME.changeTab(tabNumber);		
 	}
-
-	addTabChangeEvent(id, tabNumber, cb, type="show")
-	{
-		if(!tabNumber || !cb){return;}
-		const IME = this.getIME(id);
-		IME && IME.addTabChangeEvent(tabNumber, cb, type);		
-	}
 }
 
-class rwxTab {
+class rwxTab extends Roseworx.Component {
 	constructor(el)
 	{
+		super();
 		this.tabs = [...el.children].filter((c)=>c.classList.contains('rwx-tabs-tab'));
 		if(this.tabs.length == 0){return;}
 		this.el = el;
@@ -44,8 +39,10 @@ class rwxTab {
 		this.hideTab = this.hideTab.bind(this);
 		this.tabHeaders = [];
 		this.activeTab = 1;
-		this.tabShowChangeEvents = [];
-		this.tabHideChangeEvents = [];
+
+		this.declareEvent('tabShow');
+		this.declareEvent('tabHide');
+
 		this.autoActiveTabFromLocationHash();
 		this.createTabs();
 	}
@@ -119,12 +116,6 @@ class rwxTab {
 		}
 	}
 
-	addTabChangeEvent(tabNumber, cb, type)
-	{
-		type == 'show' && this.tabShowChangeEvents.push({tabNumber, cb});
-		type == 'hide' && this.tabHideChangeEvents.push({tabNumber, cb});
-	}
-
 	resetAnimationFlags()
 	{
 		this.shownScale = false;
@@ -152,19 +143,11 @@ class rwxTab {
 		this.bullet.style.width = `${rect.width}px`;
 	}
 
-	runTabEvents(type, number)
-	{
-		if(this[type].length == 0)return;
-		const changeEvents = this[type].filter((tce)=>tce.tabNumber == number);
-		if(changeEvents.length == 0)return;
-		changeEvents.map((ch)=>ch.cb());
-	}
-
 	tabShown()
 	{
 		this.animating = false;
 		this.tabHeaders[this.activeTab-1].setAttribute('aria-selected', 'true');
-		this.runTabEvents('tabShowChangeEvents', this.activeTab);
+		this.executeEvent('tabShow', this.activeTab);
 	}
 
 	tabHidden()
@@ -177,7 +160,7 @@ class rwxTab {
 		this.tabs[this.activeTab-1].style.display = "none";
 		this.tabs[this.activeTab-1].removeAttribute('style');
 		this.showTab();
-		this.runTabEvents('tabHideChangeEvents', cache);
+		this.executeEvent('tabHide', cache);
 	}
 
 	showTab()

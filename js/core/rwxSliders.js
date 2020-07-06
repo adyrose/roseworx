@@ -4,6 +4,7 @@ class rwxSliders extends Roseworx.Core {
 	constructor()
 	{
 		super();
+		this.customEvents = true;
 	}
 
 	execute()
@@ -29,9 +30,10 @@ class rwxSliders extends Roseworx.Core {
 
 }
 
-class rwxSlider {
+class rwxSlider extends Roseworx.Component {
 	constructor(el, vertical, autoSlide, counters, reeling, autoSlideTimeout)
 	{
+		super();
 		this.slides = [...el.children].filter((c)=>c.classList.contains('rwx-slider-slide'));
 		if(this.slides.length == 0)return;
 		this.reeling = reeling;
@@ -40,6 +42,10 @@ class rwxSlider {
 		this.direction = vertical ? "Y" : "X";
 		this.autoSlideLoop = this.autoSlideLoop.bind(this);
 		this.autoSlideTimeout = autoSlideTimeout * 60;
+
+		this.declareEvent('slideShow');
+		this.declareEvent('slideHide');
+
 		autoSlide && this.autoSlideLoop();
 		counters && this.createCounter(el);
 		vertical && this.setToHighest(el);
@@ -106,9 +112,13 @@ class rwxSlider {
 		return (number > this.slides.length || number < 0) ? 1 : number;
 	}
 
-	slideComplete()
+	slideComplete(slidOut, slidIn)
 	{
-
+		//the CSS transition takes 0.7 seconds , no way to know when complete unless using timeout
+		setTimeout(()=>{
+			this.executeEvent('slideShow', slidIn);
+			this.executeEvent('slideHide', slidOut);
+		}, 700);
 	}
 
 	goToSlide(number)
@@ -116,7 +126,9 @@ class rwxSlider {
 		let num = this.isSlideNumberInRange(number);
 		if(this.reeling)
 		{
-			this.slides.map((s)=>window.requestAnimationFrame(()=>{s.style.transform = `translate${this.direction}(-${(num-1)*100}%)`}));
+			this.slides.map((s)=>window.requestAnimationFrame(()=>{
+				s.style.transform = `translate${this.direction}(-${(num-1)*100}%)`;
+			}));
 		}
 		else
 		{
@@ -145,6 +157,7 @@ class rwxSlider {
 			});
 		}
 		this.counters && this.counters.map((d,i)=>(i==(num-1) ? d.classList.add('active') : d.classList.remove('active')));
+		this.slideComplete(this.currentSlide, num);
 		this.currentSlide = num;
 	}
 }

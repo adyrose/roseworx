@@ -1,10 +1,10 @@
 import rwxMisc from './helpers/rwxMiscHelpers';
 class Core {
-	constructor()
+	constructor(enableCustomEvents = false)
 	{
 		this.internalMap = {};
 		this.resourceName = this.constructor.name;		
-		if(!this.execute){console.warn(`[rwx] ${this.resourceName} - No execute method.`); return;}
+		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
 		this.execute = this.execute.bind(this);
 		window.addEventListener('load', this.execute);
 	}
@@ -34,7 +34,7 @@ class Core {
 		{
 			if(Object.keys(this.internalMap).length > 0)
 			{
-				console.warn(`[rwx] ${this.resourceName} - No element found with id - ${id} \n[rwx] Possible ID's on this page are - ${Object.keys(this.internalMap).join(', ')}`);
+				this.error(`No element found with id - ${id} \n[rwx] Possible ID's on this page are - ${Object.keys(this.internalMap).join(', ')}`);
 			}
 			return false;
 		}		
@@ -42,17 +42,42 @@ class Core {
 
 	addEvent(elid, id, type, event)
 	{
-		if(!id || !event || !this.customEvents){return;}
+		if(!id || !event){return;}
 		const IME = this.getIME(elid);
+		if(IME && !IME.customEventsEnabled)return;
 		IME && IME.addEvent(id, event, type);		
+	}
+
+	error(msg) {
+		rwxError(msg, `{Core} (${this.resourceName})`)
 	}
 }
 
 class Component {
-	constructor()
+	constructor(opts)
 	{
 		this.resourceName = this.constructor.name;
-		this.availableEvents = [];
+
+		if(opts)
+		{
+			if(opts.enableCustomEvents)
+			{
+				this.customEventsEnabled = true;
+				this.availableEvents = [];
+			}
+
+			if(opts.enableAnimationLoop)
+			{
+				this.animateLoop = this.animateLoop.bind(this);
+				this.stopAnimation = true;
+			}
+
+			if(opts.enableResizeDebounce)
+			{
+				this.resizeDebounce();
+				this.debounceThreshold = 250;
+			}
+		}
 	}
 
 	declareEvent(name)
@@ -64,7 +89,7 @@ class Component {
 	addEvent(id, event, type)
 	{
 		if(!this.availableEvents.includes(type)) {
-			console.warn(`[rwx] ${this.resourceName} - No Custom event found with name - ${type}`);
+			this.error(`No custom event found with name - ${type}`)
 			return;
 		}
 		this[type].push({id, event});
@@ -77,6 +102,51 @@ class Component {
 		if(changeEvents.length == 0)return;
 		changeEvents.map((ce)=>ce.event());
 	}
+
+	resizeDebounce()
+	{
+	  window.addEventListener('resize', ()=>{
+			this.debounce && clearTimeout(this.debounce)
+			this.debounce = setTimeout(()=>{
+				if(!this.resize){
+					this.error('No resize method (this.resize) defined on instance.');
+					return;
+				}
+				this.resize();
+			}, this.debounceThreshold);
+		});
+	}
+
+	animateLoop()
+	{
+		if(!this.canvas) {
+			this.error('No canvas element (this.canvas) defined on instance.');
+			return;
+		}
+		if(!this.c) {
+			this.error('No canvas 2d context (this.c) defined on instance.');
+			return;
+		}
+		if(!this.animate) {
+			this.error('No animate method (this.animate) defined on instance.');
+			return;			
+		}
+    if(!this.stopAnimation)
+    {
+      requestAnimationFrame(this.animateLoop);
+      this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			this.animate();    
+    }
+	}
+
+	error(msg)
+	{
+		rwxError(msg, `{Component} (${this.resourceName})`)
+	}
+}
+
+const rwxError = (err, resource) =>{
+	console.warn(`[rwx] ${resource} - ${err}`)
 }
 
 export default {Core, Component};

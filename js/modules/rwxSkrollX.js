@@ -1,51 +1,42 @@
 require('../../scss/modules/rwx-skrollx.scss');
-import { rwxCore } from '../rwxCore';
+import { rwxCore, rwxComponent } from '../rwxCore';
 
 class rwxSkrollX extends rwxCore {
 	constructor()
 	{
-		super();
-		this.setTrigger(150);
-		this.calculateScroll = this.calculateScroll.bind(this);
+		super('[rwxsx]');
+	}
+
+	execute(el)
+	{
+		const trigger = el.hasAttribute('data-rwxsx-trigger') ? el.getAttribute('data-rwxsx-trigger') : false;
+		const delay = el.hasAttribute('data-rwxsx-delay') ? el.getAttribute('data-rwxsx-delay') : false;
+		return new rwxSkrollXItem(el, trigger, delay);
+	}
+}
+
+class rwxSkrollXItem extends rwxComponent {
+	constructor(el, trigger, delay)
+	{
+		super({enableScrollIntoView: true});
+		trigger && this.setScrollTrigger(trigger);
+		this.el = el;
+		this.delay = delay;
 		this.doneFlag = 'rwxsx-end';
 	}
 
-	setTrigger(val)
+	scroll()
 	{
-		this.trigger = window.innerHeight - val;
-	}
-
-	setConfig(obj)
-	{
-		if(obj.trigger)this.setTrigger(obj.trigger);
-	}
-
-	execute()
-	{
-		this.elements = [...document.querySelectorAll('[rwxsx]')];
-		setTimeout(()=>{
-			this.calculateScroll();
-		}, 500);
-		window.addEventListener('scroll', this.calculateScroll);
-	}
-
-	calculateScroll()
-	{
-		this.elements.map((el)=>{
-			if(el.classList.contains(this.doneFlag)){return;}
-			let t = el.getBoundingClientRect().top;
-			if(t<this.trigger)
-			{
-				if(el.hasAttribute('data-rwxsx-delay'))
-				{
-					setTimeout(()=>{el.classList.add(this.doneFlag);}, el.getAttribute('data-rwxsx-delay')*1000);
-				}
-				else
-				{
-					el.classList.add(this.doneFlag);
-				}
-			}
-		})
+		if(this.delay)
+		{
+			setTimeout(()=>{this.el.classList.add(this.doneFlag);}, this.delay*1000);
+		}
+		else
+		{
+			this.el.classList.add(this.doneFlag);
+		}
+		this.stopScroll = true;
+		//when comes to have animations repeated again when scrolled out of view above line will change
 	}
 }
 

@@ -73,7 +73,6 @@ class rwxComponent {
 	constructor(opts)
 	{
 		this.resourceName = this.constructor.name;
-
 		if(opts)
 		{
 			if(opts.enableCustomEvents)
@@ -90,8 +89,16 @@ class rwxComponent {
 
 			if(opts.enableResizeDebounce)
 			{
-				this.resizeDebounce();
 				this.debounceThreshold = 250;
+				this.resizeDebounce();
+			}
+
+			if(opts.enableScrollIntoView)
+			{
+				this.stopScroll = false;
+				this.setScrollTrigger(200);
+				this.scrollEvent = this.scrollEvent.bind(this);
+				this.scrollIntoView();
 			}
 		}
 	}
@@ -119,13 +126,57 @@ class rwxComponent {
 		changeEvents.map((ce)=>ce.event());
 	}
 
+	setScrollTrigger(val)
+	{
+		this.scrollTriggerOffset = window.innerHeight - val;
+	}
+
+	scrollIntoView()
+	{
+		this.scrollErrorReported = false;
+		setTimeout(()=>{this.scrollEvent();}, 500);
+		window.addEventListener('scroll', this.scrollEvent);
+	}
+
+	scrollEvent() {
+		if(this.stopScroll){return;}
+		if(!this.scroll)
+		{
+			if(!this.scrollErrorReported)
+			{
+				this.error('No scroll method (this.scroll) defined on instance.');
+				this.scrollErrorReported = true;
+			}
+			return;
+		}
+		if(!this.el)
+		{
+			if(!this.scrollErrorReported)
+			{
+				this.error('No element (this.el) defined on instance.');
+				this.scrollErrorReported = true;
+			}
+			return;
+		}
+		let t = this.el.getBoundingClientRect().top;
+		if(t<this.scrollTriggerOffset)
+		{
+			this.scroll();
+		}
+	}
+
 	resizeDebounce()
 	{
+		this.debounceErrorReported = false;
 	  window.addEventListener('resize', ()=>{
 			this.debounce && clearTimeout(this.debounce)
 			this.debounce = setTimeout(()=>{
 				if(!this.resize){
-					this.error('No resize method (this.resize) defined on instance.');
+					if(!this.debounceErrorReported)
+					{
+						this.error('No resize method (this.resize) defined on instance.');
+						this.debounceErrorReported = true;
+					}
 					return;
 				}
 				this.resize();

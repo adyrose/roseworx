@@ -1,12 +1,25 @@
 import rwxMisc from './helpers/rwxMiscHelpers';
 class rwxCore {
-	constructor(enableCustomEvents = false)
+	constructor(selector)
 	{
 		this.internalMap = {};
+		this.id
 		this.resourceName = this.constructor.name;		
 		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
 		this.execute = this.execute.bind(this);
-		window.addEventListener('load', this.execute);
+		window.addEventListener('load', ()=>{
+			if(selector)
+			{
+				[...document.querySelectorAll(selector)].map((el) => {
+					const cpnt = this.execute(el);
+					this.addIME(el.id, cpnt);
+				});
+			}
+			else
+			{
+				this.execute();
+			}
+		});
 	}
 
 	getIMES()
@@ -20,6 +33,9 @@ class rwxCore {
 		if(!toUse)
 		{
 			toUse = rwxMisc.uniqueId();
+		}
+		else if(this.internalMap[toUse]){
+			this.error(`Duplicate ID #${id} found. Things may not work as expected, please use unique ID's per Component.`)
 		}
 		this.internalMap[toUse] = obj;
 	}

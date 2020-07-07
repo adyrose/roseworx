@@ -4,48 +4,45 @@ import rwxMist from '../common/rwxMist';
 class rwxTables extends rwxCore {
 	constructor()
 	{
-		super();
+		super('[rwx-table]');
 	}
 	
-	execute()
+	execute(el)
 	{
-		const tables = [...document.querySelectorAll('[rwx-table]')];
-		tables.map((t)=>{
-			const dual = t.classList.contains('dual-headings');
-			const vertical = t.classList.contains('vertical');
-			const verticalLine = t.classList.contains('vertical-line');
-			const noMist = t.hasAttribute('data-rwx-table-no-mist');
-			const noStick = t.hasAttribute('data-rwx-table-no-stick');
+		const dual = el.classList.contains('dual-headings');
+		const vertical = el.classList.contains('vertical');
+		const verticalLine = el.classList.contains('vertical-line');
+		const noMist = el.hasAttribute('data-rwx-table-no-mist');
+		const noStick = el.hasAttribute('data-rwx-table-no-stick');
 
-			let mist, stick;
+		let mist, stick;
 
-			if(!noMist)
+		if(!noMist)
+		{
+			mist  = new rwxMist(el);
+		}
+
+		if(!noStick)
+		{
+			if(vertical)
 			{
-				mist  = new rwxMist(t);
+				stick = new rwxVerticalStickyTableHeader(el, 30);
 			}
-
-			if(!noStick)
+			else if(dual)
 			{
-				if(vertical)
-				{
-					stick = new rwxVerticalStickyTableHeader(t, 30);
-				}
-				else if(dual)
-				{
-					stick = new rwxDualStickyTableHeader(t, 30, verticalLine);
-				}
-				else
-				{
-					stick = new rwxHorizontalStickyTableHeader(t, 30);
-				}
+				stick = new rwxDualStickyTableHeader(el, 30, verticalLine);
 			}
+			else
+			{
+				stick = new rwxHorizontalStickyTableHeader(el, 30);
+			}
+		}
 
-			t.addEventListener('scroll', ()=>{
-				!noStick && stick.update();
-			});
+		el.addEventListener('scroll', ()=>{
+			!noStick && stick.update();
+		});
+		return stick;
 
-			return;
-		})
 	}
 }
 

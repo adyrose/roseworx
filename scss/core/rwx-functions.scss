@@ -1,7 +1,7 @@
 @function safeHexForSvg($color)
 {
 	@if $color == 'none' {
-		@return $color;
+		@return 'none';
 	}
   @return '%23' + str-slice('#{$color}', 2, -1)
 }

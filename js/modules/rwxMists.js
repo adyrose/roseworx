@@ -4,15 +4,11 @@ import rwxMist from '../common/rwxMist';
 class rwxMists extends rwxCore {
 	constructor()
 	{
-		super();
+		super('[rwx-mist]');
 	}
-	execute()
+	execute(el)
 	{
-		const mists = [...document.querySelectorAll('[rwx-mist]')];
-		mists.map((m)=>{
-			new rwxMist(m);
-			return;
-		});
+		return new rwxMist(el);
 	}
 }
 

@@ -1,6 +1,16 @@
 const rwxMisc = 
 {
-	uniqueId: ()=>{return "_"+Math.random().toString(36).substr(2,12)},
+  uniqueIdList: [],
+
+	uniqueId: ()=>{
+    const id = "_"+Math.random().toString(36).substr(2,12);
+    if(rwxMisc.uniqueIdList.includes(id))
+    {
+      return rwxMisc.uniqueId();
+    }
+    rwxMisc.uniqueIdList.push(id);
+    return id;
+  },
 
   setCookie: (c_name, value, exdays) => {
     var exdate = new Date();

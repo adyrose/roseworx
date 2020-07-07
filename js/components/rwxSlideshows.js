@@ -6,16 +6,12 @@ import rwxMisc from '../helpers/rwxMiscHelpers';
 class rwxSlideshows extends rwxCore {
 	constructor()
 	{
-		super();
+		super('[rwx-slideshow]');
 	}
 
-	execute()
+	execute(el)
 	{
-		const slideshows = [...document.querySelectorAll('[rwx-slideshow]')];
-		slideshows.map((s)=>{
-			const Slideshow = new rwxSlideshow(s);
-		 	return;
-		});
+		return new rwxSlideshow(el);
 	}
 }
 

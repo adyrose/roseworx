@@ -1,29 +1,25 @@
 import { rwxCore, rwxComponent } from '../rwxCore';
 import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxCanvas from '../helpers/rwxCanvasHelpers';
+import rwxMisc from '../helpers/rwxMiscHelpers';
 
 class rwxCountOMeters extends rwxCore {
 	constructor()
 	{
-		super();
+		super('[rwx-countometer]');
 	}
 
-	execute()
+	execute(el)
 	{
-		const countometers = [...document.querySelectorAll('[rwx-countometer]')];
-		if(countometers.length === 0){return;}
-		countometers.map((com, index)=> {
-			let value = com.hasAttribute('data-rwx-countometer-value');
-			if(!value)return;
-			value = com.getAttribute('data-rwx-countometer-value')
-			const CountOMeter = new rwxCountOMeter(com, value, `CountMeter${index}`);
-		 	return;
-		});		
+		let value = el.hasAttribute('data-rwx-countometer-value');
+		if(!value)return;
+		value = el.getAttribute('data-rwx-countometer-value')		
+		return new rwxCountOMeter(el, value);	
 	}
 }
 
 class rwxCountOMeter extends rwxComponent{
-	constructor(el, value, uniqueID)
+	constructor(el, value)
 	{
 		super({enableAnimationLoop: true, enableResizeDebounce: true})
 		this.el = el;
@@ -52,7 +48,6 @@ class rwxCountOMeter extends rwxComponent{
 		this.createCanvas();
 		this.calculateSize();
 
-		this.uniqueID = uniqueID;
 		this.animeCounter = [];
 		this.value = value
     this.rating = this.value/10*2;
@@ -130,7 +125,7 @@ class rwxCountOMeter extends rwxComponent{
       }
       if(firstblood)
       {
-      	this.particles.push(new Particle(x, y, moveToX, moveToY, particleRadius, this.colors[p], this.c, `${this.uniqueID}Particle${p}`));
+      	this.particles.push(new Particle(x, y, moveToX, moveToY, particleRadius, this.colors[p], this.c));
       }
       else
       {
@@ -201,15 +196,15 @@ function renderText(numberValue, c, width, height, fontSize)
   }
 }
 
-function Particle(x, y, moveToX, moveToY, radius, color, c, uniqueID)
+function Particle(x, y, moveToX, moveToY, radius, color, c)
 {
-  this.uniqueID = uniqueID;
+  this.uniqueID = rwxMisc.uniqueId();
   this.radius  = radius;
   this.update = function() {
   	if(!this.xDone && !this.yDone)
   	{
-  		this.x = rwxAnimate.fromTo(x, moveToX, `${uniqueID}x`, 'easeOutQuint', 1000, ()=>{this.xDone = true});
-  		this.y = rwxAnimate.fromTo(y, moveToY, `${uniqueID}y`, 'easeOutQuint', 1000, ()=>{this.yDone = true});
+  		this.x = rwxAnimate.fromTo(x, moveToX, `${this.uniqueID}x`, 'easeOutQuint', 1000, ()=>{this.xDone = true});
+  		this.y = rwxAnimate.fromTo(y, moveToY, `${this.uniqueID}y`, 'easeOutQuint', 1000, ()=>{this.yDone = true});
   	}
   	this.draw();
   }

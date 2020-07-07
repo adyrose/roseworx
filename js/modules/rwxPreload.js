@@ -2,7 +2,7 @@ require('../../scss/modules/rwx-preload.scss');
 
 import { rwxCore } from '../rwxCore';
 
-class rwxPreload extends rwxCore{
+class rwxPreload extends rwxCore {
 	constructor()
 	{
 		super();

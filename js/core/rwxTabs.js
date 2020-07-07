@@ -6,17 +6,12 @@ import rwxMist from '../common/rwxMist';
 class rwxTabs extends rwxCore {
 	constructor()
 	{
-		super();
+		super('[rwx-tabs]');
 	}
 
-	execute()
+	execute(el)
 	{
-		const tabs = [...document.querySelectorAll('[rwx-tabs]')];
-		tabs.map((t)=>{
-			const Tab = new rwxTab(t);
-			this.addIME(t.id,Tab);
-		 	return;
-		});
+		return new rwxTab(el);
 	}
 
 	goToTab(id, tabNumber)

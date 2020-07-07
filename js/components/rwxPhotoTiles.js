@@ -9,22 +9,16 @@ import rwxCanvas from '../helpers/rwxCanvasHelpers';
 class rwxPhotoTiles extends rwxCore {
 	constructor()
 	{
-		super();
+		super('[rwx-phototile]');
 	}
 
-	execute()
+	execute(el)
 	{
-		const phototiles = [...document.querySelectorAll('[rwx-phototile]')];
-		if(phototiles.length === 0){return;}
-		phototiles.map((pt, index)=> {
-			const effect = pt.hasAttribute('data-rwx-phototile-effect') ? pt.getAttribute('data-rwx-phototile-effect') : 'random';
-			const auto = pt.hasAttribute('data-rwx-phototile-auto')
-			const autoTimeout = auto ? pt.getAttribute('data-rwx-phototile-auto') : false;
-			const noThumbnails = pt.hasAttribute('data-rwx-phototile-no-thumbnails');
-			const PhotoTile = new rwxPhotoTile(pt, effect, auto, autoTimeout ? autoTimeout : 5, noThumbnails, `PhotoTile${index}`);
-			this.addIME(pt.id, PhotoTile);
-		 	return;
-		});
+		const effect = el.hasAttribute('data-rwx-phototile-effect') ? el.getAttribute('data-rwx-phototile-effect') : 'random';
+		const auto = el.hasAttribute('data-rwx-phototile-auto')
+		const autoTimeout = auto ? el.getAttribute('data-rwx-phototile-auto') : false;
+		const noThumbnails = el.hasAttribute('data-rwx-phototile-no-thumbnails');
+		return new rwxPhotoTile(el, effect, auto, autoTimeout ? autoTimeout : 5, noThumbnails);
 	}
 
 	goToTile(id, photoNumber, effect)
@@ -35,11 +29,10 @@ class rwxPhotoTiles extends rwxCore {
 }
 
 class rwxPhotoTile extends rwxComponent {
-  constructor(el, effect, auto, autoTimeout, noThumbnails, uniqueID)
+  constructor(el, effect, auto, autoTimeout, noThumbnails)
   {
   	super({enableAnimationLoop: true, enableResizeDebounce: true});
   	this.el = el;
-  	this.uniqueID = uniqueID;
   	this.photos = [...el.children]//[...el.querySelectorAll('img')];
   	if(this.photos.length == 0)return;
   	this.effectInit = effect;
@@ -201,7 +194,7 @@ class rwxPhotoTile extends rwxComponent {
 
       if(this.firstblood)
       {
-        let tile = new Tile(this.c, obj.value, obj.changeType, obj.sx, obj.sy, obj.sw, obj.sh, obj.dx, obj.dy, obj.dw, obj.dh, obj.timeout, `${this.uniqueID}${index}`);        
+        let tile = new Tile(this.c, obj.value, obj.changeType, obj.sx, obj.sy, obj.sw, obj.sh, obj.dx, obj.dy, obj.dw, obj.dh, obj.timeout);        
         this.tileMatrix.push(tile);
         tile[changeType]();        
       }
@@ -311,9 +304,9 @@ class rwxPhotoTile extends rwxComponent {
   }
 }
 
-function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, uniqueID)
+function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
 {
-	this.uniqueID = uniqueID;
+	this.uniqueID = rwxMisc.uniqueId();;
   this.timeoutCounter = 0;
   this.duration = 500;
   this.slideDirections = ['slideLeft', 'slideRight', 'slideUp', 'slideDown'];

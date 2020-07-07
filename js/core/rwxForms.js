@@ -3,18 +3,12 @@ import { rwxCore } from '../rwxCore';
 class rwxForms extends rwxCore {
 	constructor()
 	{
-		super();
+		super('[rwx-form]');
 	}
 
-	execute()
+	execute(el)
 	{
-		const forms = [...document.querySelectorAll('[rwx-form]')];
-		if(forms.length === 0){return;}
-		forms.map((f)=> {
-			const Form = new rwxForm(f);
-			this.addIME(f.id,Form);
-		 	return;
-		});
+		return new rwxForm(el);
 	}
 
 	customSubmitFn(id, submitFunction)

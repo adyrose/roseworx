@@ -3,22 +3,17 @@ import { rwxCore, rwxComponent } from '../rwxCore';
 class rwxSliders extends rwxCore {
 	constructor()
 	{
-		super();
+		super('[rwx-slider]');
 	}
 
-	execute()
+	execute(el)
 	{
-		const sliders = [...document.querySelectorAll('[rwx-slider]')];
-		sliders.map((s)=>{
-			const counters = s.hasAttribute('data-rwx-slider-counters');
-			const autoSlide = s.hasAttribute('data-rwx-slider-auto-slide');
-			const autoSlideTimeout = autoSlide ? s.getAttribute('data-rwx-slider-auto-slide') : false;
-			const reeling = s.hasAttribute('data-rwx-slider-reeling');
-			const vertical = s.hasAttribute('data-rwx-slider-vertical');
-			const Slider = new rwxSlider(s, vertical, autoSlide, counters, reeling, autoSlideTimeout ? autoSlideTimeout : 5);
-			this.addIME(s.id,Slider);
-		 	return;
-		});
+		const counters = el.hasAttribute('data-rwx-slider-counters');
+		const autoSlide = el.hasAttribute('data-rwx-slider-auto-slide');
+		const autoSlideTimeout = autoSlide ? el.getAttribute('data-rwx-slider-auto-slide') : false;
+		const reeling = el.hasAttribute('data-rwx-slider-reeling');
+		const vertical = el.hasAttribute('data-rwx-slider-vertical');
+	 	return new rwxSlider(el, vertical, autoSlide, counters, reeling, autoSlideTimeout ? autoSlideTimeout : 5);
 	}
 
 	goToSlide(id, slideNumber)

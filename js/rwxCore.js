@@ -117,6 +117,12 @@ class rwxComponent {
 		});
 	}
 
+	startAnimation()
+	{
+		this.stopAnimation = false;
+		this.animateLoop();
+	}
+
 	animateLoop()
 	{
 		if(!this.canvas) {

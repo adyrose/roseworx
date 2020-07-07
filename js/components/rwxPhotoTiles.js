@@ -34,7 +34,7 @@ class rwxPhotoTiles extends rwxCore {
 	}
 }
 
-class rwxPhotoTile extends Roseworx.Component {
+class rwxPhotoTile extends rwxComponent {
   constructor(el, effect, auto, autoTimeout, noThumbnails, uniqueID)
   {
   	super({enableAnimationLoop: true, enableResizeDebounce: true});
@@ -211,8 +211,7 @@ class rwxPhotoTile extends Roseworx.Component {
         if(index == matrix.length-1)
         {
           this.resetAnimation();
-          this.stopAnimation = false;
-          this.animateLoop();
+          this.startAnimation();
         }
       }        
     }
@@ -298,15 +297,15 @@ class rwxPhotoTile extends Roseworx.Component {
       {
         tile.nextMatrix = this.nextTileMatrix[index];
       }
-      if(tile.animeDone && !this.animeCounter.includes(index))
+      if(tile.animeDone && !this.animeCounter.includes(tile.uniqueID))
       {
-        this.animeCounter.push(index);
+        this.animeCounter.push(tile.uniqueID);
       }
       tile[this.effect]();
     }
     if(this.animeCounter.length == this.tileMatrix.length)
     {
-    	// run custom events
+    	// run custom events if any
       this.resetAnimation();
     }
   }

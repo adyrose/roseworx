@@ -1,2 +1,5 @@
 Tables
 when scrolling on mobile DRAG, the misting does no dissapear
+
+photoTiles
+Sometimes the slide (maybe others) back in is alot faster than it should be - cant recreate other than it happening randomely

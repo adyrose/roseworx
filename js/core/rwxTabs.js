@@ -1,13 +1,12 @@
-import Roseworx from '../rwxCore';
+import { rwxCore, rwxComponent } from '../rwxCore';
 import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxDOM from '../helpers/rwxDOMHelpers';
 import rwxMist from '../common/rwxMist';
 
-class rwxTabs extends Roseworx.Core {
+class rwxTabs extends rwxCore {
 	constructor()
 	{
 		super();
-		this.customEvents = true;
 	}
 
 	execute()
@@ -28,10 +27,10 @@ class rwxTabs extends Roseworx.Core {
 	}
 }
 
-class rwxTab extends Roseworx.Component {
+class rwxTab extends rwxComponent {
 	constructor(el)
 	{
-		super();
+		super({enableCustomEvents: true});
 		this.tabs = [...el.children].filter((c)=>c.classList.contains('rwx-tabs-tab'));
 		if(this.tabs.length == 0){return;}
 		this.el = el;

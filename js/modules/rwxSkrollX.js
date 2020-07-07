@@ -1,7 +1,7 @@
 require('../../scss/modules/rwx-skrollx.scss');
-import Roseworx from '../rwxCore';
+import { rwxCore } from '../rwxCore';
 
-class rwxSkrollX extends Roseworx.Core{
+class rwxSkrollX extends rwxCore {
 	constructor()
 	{
 		super();

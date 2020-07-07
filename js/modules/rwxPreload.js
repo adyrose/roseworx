@@ -1,8 +1,8 @@
 require('../../scss/modules/rwx-preload.scss');
 
-import Roseworx from '../rwxCore';
+import { rwxCore } from '../rwxCore';
 
-class rwxPreload extends Roseworx.Core{
+class rwxPreload extends rwxCore{
 	constructor()
 	{
 		super();

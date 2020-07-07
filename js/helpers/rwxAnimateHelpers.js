@@ -1,3 +1,5 @@
+import { rwxError } from '../rwxCore';
+
 const rwxAnimateHelpers = {
   EasingFunctions: {
     linear: function (t) { return t },
@@ -18,7 +20,7 @@ const rwxAnimateHelpers = {
   sanitizeEasing(easing, id) {
     if(!rwxAnimateHelpers.EasingFunctions[easing] && !this[`${id}Easing`]){
       this[`${id}Easing`] = true;
-      console.warn(`[rwx] rwxAnimate Helpers - no '${easing}'' easing function for id - ${id}, falling back to 'linear' timing.`);
+      rwxError(`no '${easing}'' easing function for id - ${id}, falling back to 'linear' timing.`, '(rwxAnimateHelpers)');
       return 'linear';
     }
     return easing;  
@@ -27,7 +29,7 @@ const rwxAnimateHelpers = {
   sanitizeDuration(duration, id) {
     if(!Number.isInteger(duration) && !this[`${id}Duration`]){ 
       this[`${id}Duration`] = true;
-      console.warn(`[rwx] rwxAnimate Helpers - duration for id - ${id} must be an integer, falling back to '1000'.`);
+      rwxError(`duration for id - ${id} must be an integer, falling back to '1000'.`, '(rwxAnimateHelpers)');
       return 1000;
     }
     return duration;  

@@ -1,7 +1,7 @@
-import Roseworx from '../rwxCore';
+import { rwxCore } from '../rwxCore';
 import rwxMist from '../common/rwxMist';
 
-class rwxMists extends Roseworx.Core{
+class rwxMists extends rwxCore {
 	constructor()
 	{
 		super();

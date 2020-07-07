@@ -1,9 +1,9 @@
 require('../../scss/components/rwxSlideshow.scss');
 
-import Roseworx from '../rwxCore';
+import { rwxCore } from '../rwxCore';
 import rwxMisc from '../helpers/rwxMiscHelpers';
 
-class rwxSlideshows extends Roseworx.Core {
+class rwxSlideshows extends rwxCore {
 	constructor()
 	{
 		super();

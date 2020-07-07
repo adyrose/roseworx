@@ -1,11 +1,12 @@
 require('../../scss/components/rwxPhotoTiles.scss');
 
-import Roseworx from '../rwxCore';
+import { rwxCore, rwxComponent } from '../rwxCore';
 import rwxMath from '../helpers/rwxMathHelpers';
 import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxMisc from '../helpers/rwxMiscHelpers';
+import rwxCanvas from '../helpers/rwxCanvasHelpers';
 
-class rwxPhotoTiles extends Roseworx.Core {
+class rwxPhotoTiles extends rwxCore {
 	constructor()
 	{
 		super();
@@ -13,9 +14,9 @@ class rwxPhotoTiles extends Roseworx.Core {
 
 	execute()
 	{
-		const phototile = [...document.querySelectorAll('[rwx-phototile]')];
-		if(phototile.length === 0){return;}
-		phototile.map((pt, index)=> {
+		const phototiles = [...document.querySelectorAll('[rwx-phototile]')];
+		if(phototiles.length === 0){return;}
+		phototiles.map((pt, index)=> {
 			const effect = pt.hasAttribute('data-rwx-phototile-effect') ? pt.getAttribute('data-rwx-phototile-effect') : 'random';
 			const auto = pt.hasAttribute('data-rwx-phototile-auto')
 			const autoTimeout = auto ? pt.getAttribute('data-rwx-phototile-auto') : false;
@@ -33,9 +34,10 @@ class rwxPhotoTiles extends Roseworx.Core {
 	}
 }
 
-class rwxPhotoTile {
+class rwxPhotoTile extends Roseworx.Component {
   constructor(el, effect, auto, autoTimeout, noThumbnails, uniqueID)
   {
+  	super({enableAnimationLoop: true, enableResizeDebounce: true});
   	this.el = el;
   	this.uniqueID = uniqueID;
   	this.photos = [...el.children]//[...el.querySelectorAll('img')];
@@ -45,7 +47,6 @@ class rwxPhotoTile {
   	this.calculateSize(el);
   	this.photoLoop(el, noThumbnails);
 
-		this.animate = this.animate.bind(this);
 		this.autoLoop = this.autoLoop.bind(this);
 		this.counter = 0;
     this.firstblood = true;
@@ -68,20 +69,17 @@ class rwxPhotoTile {
 
     this.changeBackground(1, this.effect);
 
-    window.addEventListener('resize', ()=>{
-			this.debounce && clearTimeout(this.debounce)
-			this.debounce = setTimeout(()=>{
-				this.calculateSize();
-				this.changeBackground(this.currentPhotoNumber, 'none', true);
-			}, 250);
-		});
-
     if(auto)
     {
     	this.autoLoopInterval = autoTimeout * 60;
     	this.autoLoop();
     }
+  }
 
+  resize()
+  {
+		this.calculateSize();
+		this.changeBackground(this.currentPhotoNumber, 'none', true); 	
   }
 
 	isPhotoNumberInRange(number)
@@ -145,8 +143,7 @@ class rwxPhotoTile {
   	if(maxWidth > rect.width){maxWidth = rect.width;}
   	if(maxWidth < maxHeight){maxHeight = maxWidth;}
 
-  	this.canvas.width = maxWidth;
-  	this.canvas.height = maxHeight;
+  	rwxCanvas.scale(this.canvas, this.c, maxWidth, maxHeight);
   }
 
   createCanvas(el)
@@ -161,7 +158,7 @@ class rwxPhotoTile {
   {
   	if(!force)
   	{
-  		if(this.currentPhotoNumber == photoNumber || this.readytoanimatein)return;
+  		if(this.currentPhotoNumber == photoNumber || !this.stopAnimation)return;
   	}
    	photoNumber = this.isPhotoNumberInRange(photoNumber)
     this.currentPhotoNumber = photoNumber;
@@ -214,8 +211,8 @@ class rwxPhotoTile {
         if(index == matrix.length-1)
         {
           this.resetAnimation();
-          this.readytoanimatein = true;
-          this.animate();
+          this.stopAnimation = false;
+          this.animateLoop();
         }
       }        
     }
@@ -288,34 +285,29 @@ class rwxPhotoTile {
 
   resetAnimation()
   {
-    this.readytoanimatein = false;
+    this.stopAnimation = true;
     this.animeCounter = [];
     this.tileMatrix.map((t)=>{t.reset()});    
   }
 
   animate()
   {
+    for(let [index,tile] of this.tileMatrix.entries())
+    {
+      if(!tile.nextMatrix)
+      {
+        tile.nextMatrix = this.nextTileMatrix[index];
+      }
+      if(tile.animeDone && !this.animeCounter.includes(index))
+      {
+        this.animeCounter.push(index);
+      }
+      tile[this.effect]();
+    }
     if(this.animeCounter.length == this.tileMatrix.length)
     {
+    	// run custom events
       this.resetAnimation();
-    }
-
-    if(this.readytoanimatein)
-    {
-      requestAnimationFrame(this.animate);
-      this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      for(let [index,tile] of this.tileMatrix.entries())
-      {
-        if(!tile.nextMatrix)
-        {
-          tile.nextMatrix = this.nextTileMatrix[index];
-        }
-        if(tile.animeDone && !this.animeCounter.includes(index))
-        {
-          this.animeCounter.push(index);
-        }
-        tile[this.effect]();
-      }    
     }
   }
 }

@@ -1,5 +1,5 @@
 import rwxMisc from './helpers/rwxMiscHelpers';
-class Core {
+class rwxCore {
 	constructor(enableCustomEvents = false)
 	{
 		this.internalMap = {};
@@ -53,7 +53,7 @@ class Core {
 	}
 }
 
-class Component {
+class rwxComponent {
 	constructor(opts)
 	{
 		this.resourceName = this.constructor.name;
@@ -149,4 +149,4 @@ const rwxError = (err, resource) =>{
 	console.warn(`[rwx] ${resource} - ${err}`)
 }
 
-export default {Core, Component};
+export {rwxCore, rwxComponent, rwxError};

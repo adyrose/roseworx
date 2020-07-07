@@ -1,6 +1,6 @@
-import Roseworx from '../rwxCore';
+import { rwxCore } from '../rwxCore';
 
-class rwxForms extends Roseworx.Core {
+class rwxForms extends rwxCore {
 	constructor()
 	{
 		super();

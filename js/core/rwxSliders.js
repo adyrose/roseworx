@@ -1,10 +1,9 @@
-import Roseworx from '../rwxCore';
+import { rwxCore, rwxComponent } from '../rwxCore';
 
-class rwxSliders extends Roseworx.Core {
+class rwxSliders extends rwxCore {
 	constructor()
 	{
 		super();
-		this.customEvents = true;
 	}
 
 	execute()
@@ -30,10 +29,10 @@ class rwxSliders extends Roseworx.Core {
 
 }
 
-class rwxSlider extends Roseworx.Component {
+class rwxSlider extends rwxComponent {
 	constructor(el, vertical, autoSlide, counters, reeling, autoSlideTimeout)
 	{
-		super();
+		super({enableCustomEvents: true});
 		this.slides = [...el.children].filter((c)=>c.classList.contains('rwx-slider-slide'));
 		if(this.slides.length == 0)return;
 		this.reeling = reeling;

@@ -25,7 +25,7 @@ class rwxSkrollXItem extends rwxComponent {
 		this.doneFlag = 'rwxsx-end';
 	}
 
-	scroll()
+	scrolledIntoView()
 	{
 		if(this.delay)
 		{

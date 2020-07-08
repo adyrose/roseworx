@@ -1,1 +1,207 @@
-rwxGridGalleries.scss
+@import '../core/rwx-variables';
+@import '../core/rwx-mixins';
+
+@include component-spacing('rwx-grid-gallery');
+.rwx-grid-gallery
+{
+	&-item
+	{
+		display: flex;
+  	align-items: stretch;
+  	overflow: hidden;
+	}
+
+	&-perspective, &-transform, &-transform-face, &-teaser {
+	  width: 100%;
+	  display: flex;
+	}
+
+	&-perspective
+	{
+  	width: 100%;
+  	perspective: 600px;
+  	&:hover .rwx-grid-gallery-overlay
+  	{
+		  filter: blur(0px);
+		  transform: scale(1.1);
+		  transition: all 1s;  		
+  	}
+	}
+
+	&-transform
+	{
+	  transition: transform 1s;
+	  transform-style: preserve-3d;
+	}
+
+	&-transform-face
+	{
+		opacity: 0;
+	}
+
+	&-teaser
+	{
+		cursor: pointer;
+	  position: relative;
+	  width: 100%;
+	  z-index: 5;
+	}
+
+	&-heading
+	{
+	  z-index: 10;
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  transform: translate(-50%, -50%);
+	  font-size: 20px;
+	  text-align: center;
+	  background: rgba(0, 0, 0, 0.75);
+	  padding: 10px;
+	  color: white;
+	}
+
+	&-overlay
+	{
+		transition: all 1s;
+	  filter: blur(1.5px);
+	  padding: 10px;
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  bottom: 0;
+	  left: 0;
+	  background-color:#f47740;
+	  background-size: cover;
+	  background-position:center;		
+	}
+
+	@supports (display: grid) {
+    display: grid;
+    grid-gap: 30px;
+		grid-template-columns: repeat(8, 1fr);
+    grid-auto-rows: 5vw;
+
+		@include snap-down-from('sm')
+		{
+			&-item
+			{
+				grid-column: 1/3;
+			}
+		}
+	
+		@include snap-down-from('md')
+		{
+	     grid-template-columns: repeat(2, 1fr);
+	     grid-auto-rows: 300px;
+	    &-item:nth-child(3n) {
+	      grid-column: 1/3;
+	    }
+		}
+
+	  $items: (
+			1: ('column': '1/5', 'row': '1/4'),
+			2: ('column': '7/9', 'row': '3/7'),
+			3: ('column': '5/9', 'row': '1/3'),
+			4: ('column': '4/8', 'row': '7/10'),
+			5: ('column': '1/5', 'row': '4/4'),
+			6: ('column': '1/4', 'row': '5/8'),
+			7: ('column': '5/7', 'row': '3/5'),
+			8: ('column': '1/4', 'row': '8/10'),
+			9: ('column': '4/7', 'row': '5/7'),
+			10: ('column': '8/9', 'row': '7/10'),
+			11: ('column': '1/3', 'row': '10/14'),
+			12: ('column': '3/6', 'row': '10/13'),
+			13: ('column': '6/9', 'row': '10/13'),
+			14: ('column': '3/9', 'row': '13/13'),
+		);
+
+		@each $n, $props in $items
+		{
+			&-item:nth-child(#{$n})
+			{
+				@include snap-up-from('md')
+				{
+					grid-column: #{map-get($props, 'column')};
+					grid-row: #{map-get($props, 'row')};
+				}
+			}
+			&.start &-item:nth-child(#{$n})
+			{
+				$animation: 'spinGridItem';
+				@if $n % 2 == 0 {$animation: 'spinGridItem2'}
+				
+				.rwx-grid-gallery-transform-face
+				{
+					animation: #{$animation} 2s ease #{$n/2}s forwards;
+				}
+			}
+		}
+
+	}
+}
+
+.ie {
+	.rwx-grid-gallery
+	{
+	  display: flex;
+	  flex-wrap: wrap;
+	  justify-content: space-between;
+		&-item
+		{
+		  min-height: 300px;
+		  flex: 1 0 30%;
+		  padding: 30px;	
+		  @include snap-down-from('md')
+		  {
+		  	flex: 50%;
+		  }	
+		  @include snap-down-from('sm')
+		  {
+		  	flex: 100%;
+		  }
+		}
+	}
+}
+.ie.threed-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.ie.threed-grid .threed-grid-item {
+  min-height: 300px;
+  flex: 1 0 30%;
+  padding: 30px;
+}
+@media only screen and (max-width: 990px) {
+  .ie.threed-grid .threed-grid-item {
+    flex: 50%;
+  }
+}
+
+@keyframes spinGridItem2 {
+  0% {
+    transform: rotateX(0deg) scale(0.3);
+  }
+  70% {
+    opacity: 1;
+    transform: rotateX(360deg) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(360deg) scale(1);
+  }
+}
+@keyframes spinGridItem {
+  0% {
+    transform: rotateY(0deg) scale(0.3);
+  }
+  70% {
+    opacity: 1;
+    transform: rotateY(360deg) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(360deg) scale(1);
+  }
+}

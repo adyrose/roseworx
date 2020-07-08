@@ -83,8 +83,8 @@ class rwxComponent {
 
 			if(opts.enableAnimationLoop)
 			{
-				this.animateLoop = this.animateLoop.bind(this);
 				this.stopAnimation = true;
+				this.animateLoop = this.animateLoop.bind(this);
 			}
 
 			if(opts.enableResizeDebounce)
@@ -98,7 +98,7 @@ class rwxComponent {
 				this.stopScroll = false;
 				this.setScrollTrigger(200);
 				this.scrollEvent = this.scrollEvent.bind(this);
-				this.scrollIntoView();
+				this.scroll();
 			}
 		}
 	}
@@ -131,7 +131,7 @@ class rwxComponent {
 		this.scrollTriggerOffset = window.innerHeight - val;
 	}
 
-	scrollIntoView()
+	scroll()
 	{
 		this.scrollErrorReported = false;
 		setTimeout(()=>{this.scrollEvent();}, 500);
@@ -140,11 +140,11 @@ class rwxComponent {
 
 	scrollEvent() {
 		if(this.stopScroll){return;}
-		if(!this.scroll)
+		if(!this.scrolledIntoView)
 		{
 			if(!this.scrollErrorReported)
 			{
-				this.error('No scroll method (this.scroll) defined on instance.');
+				this.error('No scrolledIntoView method (this.scrolledIntoView) defined on instance.');
 				this.scrollErrorReported = true;
 			}
 			return;
@@ -161,7 +161,7 @@ class rwxComponent {
 		let t = this.el.getBoundingClientRect().top;
 		if(t<this.scrollTriggerOffset)
 		{
-			this.scroll();
+			this.scrolledIntoView();
 		}
 	}
 
@@ -192,6 +192,7 @@ class rwxComponent {
 
 	animateLoop()
 	{
+
 		if(!this.canvas) {
 			this.error('No canvas element (this.canvas) defined on instance.');
 			return;

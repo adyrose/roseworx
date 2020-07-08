@@ -79,7 +79,7 @@ sup, p.small, strong.small, span.small, li.small
 
 a
 {
-  &:not(.rwx-button)
+  &:not(.rwx-button):not(.no-decoration)
   {
     text-decoration:none;
     color:$font-link-color;

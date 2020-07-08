@@ -60,7 +60,7 @@ class rwxCountOMeter extends rwxComponent{
 		this.makeText(true);
 	}
 
-	scroll()
+	scrolledIntoView()
 	{
 		this.startAnimation();
 		this.stopScroll = true;
@@ -155,11 +155,14 @@ class rwxCountOMeter extends rwxComponent{
     }
     for(let sp=0;sp<this.particleCounter;sp++)
     {
-      if(this.particles[sp].xDone && this.particles[sp].yDone && !this.animeCounter.includes(this.particles[sp].uniqueID))
-      {
-        this.animeCounter.push(this.particles[sp].uniqueID);
-      }
-      this.particles[sp].update();
+    	if(this.particles[sp])
+    	{
+	      if(this.particles[sp].xDone && this.particles[sp].yDone && !this.animeCounter.includes(this.particles[sp].uniqueID))
+	      {
+	        this.animeCounter.push(this.particles[sp].uniqueID);
+	      }
+	      this.particles[sp].update();
+    	}
     }
     if(this.particleCounter<this.rating)
     {

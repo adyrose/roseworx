@@ -1,11 +1,11 @@
 @mixin button($color)
 {
+	color: $color;
+	border: 1px solid $color;
+	box-shadow: 2px 2px $color;
+	background-color:white;
 	&:not(:disabled)
 	{
-		color: $color;
-		border: 1px solid $color;
-		box-shadow: 2px 2px $color;
-		background-color:white;
 		&:hover, &:focus
 		{
 			background-color:$color;
@@ -13,21 +13,23 @@
 			border: 1px solid $color;
 			color:$white;
 		}
-	}	
+	}
 	&:disabled
 	{
-		background-color: rgba($color, 0.3);
+		color: $grey;
+		border: 1px solid $grey;
+		box-shadow: 2px 2px $grey;
 	}
 }
 
 @mixin invertedButton($color)
 {
+	background-color:$color;
+	box-shadow:none;
+	border: 1px solid $color;
+	color:$white;
 	&:not(:disabled)
 	{
-		background-color:$color;
-		box-shadow:none;
-		border: 1px solid $color;
-		color:$white;
 		&:hover, &:focus
 		{
 			color: $color;
@@ -36,9 +38,11 @@
 			background-color:white;
 		}
 	}
+
 	&:disabled
 	{
-		background-color: rgba($color, 0.3);
+		background-color:$grey;
+		border: 1px solid $grey;
 	}		
 }
 

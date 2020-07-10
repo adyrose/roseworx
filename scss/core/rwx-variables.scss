@@ -13,7 +13,7 @@ $light-blue: #3399ff !default;
 $turquoise: #39eeb2 !default;
 $green: #1c7503 !default;
 $light-green: #3eee3e !default;
-$yellow: #f3f30f !default;
+$yellow: #ebe134 !default;
 $purple: #731773 !default;
 $pink: #ff33cc !default;
 $brown: #9a3300 !default;
@@ -87,6 +87,10 @@ $icons: (
 		'viewbox': "40 40",
 		'svg': "<path d='m 20 8 l 14 24 l -26 0 l 12 -24 l 1 2' stroke-width='2px' />",
 		'canhavefill': true
+	),
+	'copy': (
+		'viewbox': "40 40",
+		'svg': "<path d='m 18 4 h 17 t 1 1 v 20 t -1 1 h -17 t -1 -1 v -20 t 1 -1 h 2' /> <path d='m 17 14 h -12 t -1 1 v 20 t 1 1 h 16 t 1 -1 v -9' />"
 	)
 );
 
@@ -136,8 +140,6 @@ $font-link-color: $theme-color-tertiary !default;
 $list-item-counter-color: $theme-color-tertiary !default;
 $card-background-color: $theme-color-secondary !default;
 $card-border-color: $theme-color-base !default;
-$card-indent-color: $theme-color-tertiary !default;
-$card-icon-color: $white !default;
 $secton-seperators: true !default;
 $section-seperator-color: $theme-color-tertiary !default;
 

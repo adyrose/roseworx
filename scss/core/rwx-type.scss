@@ -294,9 +294,9 @@ $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
   text-align:right !important;
 }
 
-$cards: ("help", "note", "warning", "hint", "feature");
+$cards: ("help": $orange, "note": $light-blue, "warning": $red, "hint": $yellow, "feature": $light-green);
 
-@each $card in $cards
+@each $card, $color in $cards
 {
   p.#{$card}
   {
@@ -314,7 +314,7 @@ $cards: ("help", "note", "warning", "hint", "feature");
       position:absolute;
       top:20px;
       left:10px;
-      background: icon(#{$card}, $card-icon-color); 
+      background: icon(#{$card}, $white); 
       z-index:2;    
     }
     &:after
@@ -326,7 +326,7 @@ $cards: ("help", "note", "warning", "hint", "feature");
       height:100%;
       width:50px;
       z-index:1;
-      background-color:$card-indent-color;
+      background-color: rgba($color, 0.6);
     }
   }
 }

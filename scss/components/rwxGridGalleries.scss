@@ -2,6 +2,23 @@
 @import '../core/rwx-mixins';
 
 @include component-spacing('rwx-grid-gallery');
+
+.ie.rwx-grid-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.ie.rwx-grid-gallery .rwx-grid-gallery-item {
+  min-height: 300px;
+  flex: 1 0 30%;
+  padding: 30px;
+}
+@include snap-down-from('md') {
+  .ie.rwx-grid-gallery .rwx-grid-gallery {
+    flex: 50%;
+  }
+}
+
 .rwx-grid-gallery
 {
 	&-item
@@ -162,21 +179,6 @@
 		  }
 		}
 	}
-}
-.ie.threed-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-.ie.threed-grid .threed-grid-item {
-  min-height: 300px;
-  flex: 1 0 30%;
-  padding: 30px;
-}
-@media only screen and (max-width: 990px) {
-  .ie.threed-grid .threed-grid-item {
-    flex: 50%;
-  }
 }
 
 @keyframes spinGridItem2 {

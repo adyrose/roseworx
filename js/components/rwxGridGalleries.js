@@ -5,6 +5,7 @@ class rwxGridGalleries extends rwxCore {
 	constructor()
 	{
 		super('[rwx-grid-gallery]');
+    window.navigator.userAgent.indexOf("MSIE ") > 0 && document.body.classList.add('ie');
 	}
 
 	execute(el)

@@ -83,9 +83,10 @@ class rwxCountOMeter extends rwxComponent{
 	calculateSize(el)
 	{
 		let meas = this.el.getBoundingClientRect();
-		rwxCanvas.scale(this.canvas, this.c, meas.width, meas.width/2);
-		this.width = this.canvas.width;
-		this.height = this.canvas.height;
+		let pixelRatio = rwxCanvas.scale(this.canvas, this.c, meas.width, meas.width/2);
+
+		this.width = (this.canvas.width / pixelRatio);
+		this.height = (this.canvas.height / pixelRatio);
 	}
 
 	makeText(firstblood = false)
@@ -116,6 +117,7 @@ class rwxCountOMeter extends rwxComponent{
         radians,
         moveToX,
         moveToY;
+
 
     for(let p=0;p<this.rating;p++)
     {

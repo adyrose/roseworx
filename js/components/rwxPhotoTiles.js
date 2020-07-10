@@ -136,7 +136,9 @@ class rwxPhotoTile extends rwxComponent {
   	if(maxWidth > rect.width){maxWidth = rect.width;}
   	if(maxWidth < maxHeight){maxHeight = maxWidth;}
 
-  	rwxCanvas.scale(this.canvas, this.c, maxWidth, maxHeight);
+  	this.pixelRatio = rwxCanvas.scale(this.canvas, this.c, maxWidth, maxHeight);
+  	this.width = this.canvas.width / this.pixelRatio;
+  	this.height = this.canvas.height / this.pixelRatio;
   }
 
   createCanvas(el)
@@ -194,7 +196,7 @@ class rwxPhotoTile extends rwxComponent {
 
       if(this.firstblood)
       {
-        let tile = new Tile(this.c, obj.value, obj.changeType, obj.sx, obj.sy, obj.sw, obj.sh, obj.dx, obj.dy, obj.dw, obj.dh, obj.timeout);        
+        let tile = new Tile(this.c, obj.value, obj.changeType, obj.sx, obj.sy, obj.sw, obj.sh, obj.dx, obj.dy, obj.dw, obj.dh, obj.timeout, this.pixelRatio);        
         this.tileMatrix.push(tile);
         tile[changeType]();        
       }
@@ -214,8 +216,8 @@ class rwxPhotoTile extends rwxComponent {
   calculateColorMatrix()
   {
     let colorMatrix = [];
-    let xincrement = this.canvas.width / this.numberOfXTiles;
-    let yincrement = this.canvas.height / this.numberOfYTiles;
+    let xincrement = this.width / this.numberOfXTiles;
+    let yincrement = this.height / this.numberOfYTiles;
     for(let y=0;y<this.numberOfYTiles;y++)
     {
       for(let x=0;x<this.numberOfXTiles;x++)
@@ -241,20 +243,20 @@ class rwxPhotoTile extends rwxComponent {
     let sw = img.naturalWidth;
     let sy = 0;
     let sh = img.naturalHeight;
-    if(img.naturalWidth > this.canvas.width)
+    if(img.naturalWidth > this.width)
     {
-      sx = (img.naturalWidth - this.canvas.width) / 2;
-      sw = this.canvas.width;
+      sx = (img.naturalWidth - this.width) / 2;
+      sw = this.width;
     }
-    if(img.naturalHeight > this.canvas.height)
+    if(img.naturalHeight > this.height)
     {
-      sy = (img.naturalHeight - this.canvas.height) / 2;
-      sh = this.canvas.height;
+      sy = (img.naturalHeight - this.height) / 2;
+      sh = this.height;
     }
     let xincrement = sw / this.numberOfXTiles;
     let yincrement = sh / this.numberOfYTiles;
-    let xOffset = img.naturalWidth < this.canvas.width ? (this.canvas.width-img.naturalWidth)/2 : 0;
-    let yOffset = img.naturalHeight < this.canvas.height ? (this.canvas.height-img.naturalHeight)/2 : 0;
+    let xOffset = img.naturalWidth < this.width ? (this.width-img.naturalWidth)/2 : 0;
+    let yOffset = img.naturalHeight < this.height ? (this.height-img.naturalHeight)/2 : 0;
     let imageMatrix = [];
     for(let y=0;y<this.numberOfYTiles;y++)
     {
@@ -304,7 +306,7 @@ class rwxPhotoTile extends rwxComponent {
   }
 }
 
-function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
+function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pixelRatio)
 {
 	this.uniqueID = rwxMisc.uniqueId();;
   this.timeoutCounter = 0;
@@ -312,7 +314,7 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
   this.slideDirections = ['slideLeft', 'slideRight', 'slideUp', 'slideDown'];
   this.scaleFactor = 2;
 
-  Object.assign(this, {value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout});
+  Object.assign(this, {value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pixelRatio});
 
   this.reset = function() {
     this.shrunk = false;
@@ -424,7 +426,7 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout)
       }
     } 
     this[this.changeType]();
-    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
     this.timeoutCounter++;      
   }
 

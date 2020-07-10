@@ -126,8 +126,9 @@ class rwxVerticalStickyTableHeader
 			widths.push(el2.getBoundingClientRect().width + extra + 4);
 			document.body.removeChild(el2);
 			return;
-		})
-		return Math.max(...widths);
+		});
+		return Math.max(...widths) > 150 ? 150 : Math.max(...widths);
+		//return Math.max(...widths);
 	}
 
 	update()

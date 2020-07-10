@@ -61,6 +61,8 @@ $grid-classes:
 			position:relative;
 			@include snap-down-from('md')
 			{
+				padding-top:$grid-item-gutter;
+				padding-bottom:$grid-item-gutter;
 				width:100%;
 			}
 		}

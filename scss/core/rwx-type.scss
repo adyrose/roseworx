@@ -5,30 +5,97 @@ body {
   color: $font-color-base;
 }
 
-$headings: ("h1": $h1-size, "h2": $h2-size, "h3": $h3-size, "h4": $h4-size, "h5": $h5-size, "h6": $h6-size);
-
-@each $selector, $size in $headings
-{
-  .#{$selector}, #{$selector}
+@mixin additionalheadingstyle {
+  &.underline
   {
-    font-size: $size;
-    @extend .rwxt-bold;
-    font-family: $font-heading;
-    margin-bottom: 1.3rem;
-    line-height: $size + 0.55rem;
-    &.underline
-    {
-      text-decoration:underline;
-    }
-    &.no-underline
-    {
-      text-decoration:none;
-    }
-    @if $underline-headings
-    {
-      text-decoration: underline;
-    }
+    text-decoration:underline;
   }
+  &.no-underline
+  {
+    text-decoration:none;
+  }
+  @if $underline-headings
+  {
+    text-decoration: underline;
+  }
+}
+
+@mixin headingstyle {
+  font-family: $font-heading;
+  margin-bottom: 1.3rem;
+  @extend .rwxt-bold;  
+}
+
+@mixin h1 {
+  @include headingstyle;
+  font-size: $h1-size;
+  line-height: $h1-size + 0.55rem;  
+}
+
+@mixin h2 {
+  @include headingstyle;
+  font-size: $h2-size;
+  line-height: $h2-size + 0.55rem;  
+}
+
+@mixin h3 {
+  @include headingstyle;
+  font-size: $h3-size;
+  line-height: $h3-size + 0.55rem;  
+}
+
+@mixin h4 {
+  @include headingstyle;
+  font-size: $h4-size;
+  line-height: $h4-size + 0.55rem;  
+}
+
+@mixin h5 {
+  @include headingstyle;
+  font-size: $h5-size;
+  line-height: $h5-size + 0.55rem;  
+}
+
+@mixin h6 {
+  @include headingstyle;
+  font-size: $h6-size;
+  line-height: $h6-size + 0.55rem;  
+}
+
+h1, .h1
+{
+  @include h1;
+  @include additionalheadingstyle;
+}
+
+h2, .h2
+{
+  @include h2;
+  @include additionalheadingstyle;
+}
+
+h3, .h3
+{
+  @include h3;
+  @include additionalheadingstyle;
+}
+
+h4, .h4
+{
+  @include h4;
+  @include additionalheadingstyle;
+}
+
+h5, .h5
+{
+  @include h5;
+  @include additionalheadingstyle;
+}
+
+h6, .h6
+{
+  @include h6;
+  @include additionalheadingstyle;
 }
 
 @if $secton-seperators
@@ -165,7 +232,7 @@ ul
       counter-increment: ulnumbered;
       content: counter(ulnumbered)".";
       color: $list-item-counter-color;
-      @extend .h3;
+      @include h3;
       top:0px;
     }
   }

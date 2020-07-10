@@ -48,7 +48,7 @@
 	min-height:$button-size;
 	padding:0.75rem 1.5rem 0.75rem 1.5rem;
 	transition: all 0.7s $transition-base;
-	@extend .h6;
+	@include h6;
 	cursor:pointer;
 	&:hover, &:focus
 	{

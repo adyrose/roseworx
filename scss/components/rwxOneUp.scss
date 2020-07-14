@@ -1,0 +1,98 @@
+.rwx-one-up
+{
+	position:absolute;
+	&-image
+	{
+	  max-width: 100%;
+	  height: auto;
+	  width:75px;
+	  opacity:0.5;
+	  @media screen and (min-width : 900px)
+	  {
+	    width:125px;
+	  }
+	}
+	&-container
+	{
+		overflow:hidden;
+	}
+	&-scale.go
+	{
+	  animation: 1.5s oneUpScale ease-in-out forwards;
+	  &.ungo
+	  {
+	    animation: 1s oneUpScale2 ease-in-out forwards;
+	  }
+	}
+
+	&-rotate.go
+	{
+	  animation: 1.5s oneUpRotate cubic-bezier(0,0,.28,.88) forwards;
+	  &.ungo
+	  {
+	    animation: 1s oneUpRotate2 cubic-bezier(0,0,.28,.88) forwards;
+	  }
+	}
+
+	&-color.go
+	{
+	  animation: 1.5s oneUpColor linear forwards;
+	  &.ungo
+	  {
+	    animation: 1s oneUpColor2 linear reverse forwards;
+	  }
+	}	
+}
+
+
+@keyframes oneUpScale2 {
+  50%
+  {
+    transform: scale(1.5);
+  }
+  100%
+  {
+    transform: scale(1);
+  }
+}
+
+@keyframes oneUpRotate2 {
+  100%
+  {
+    transform: rotateY(720deg);
+  }
+}
+
+@keyframes oneUpColor2 {
+  100%
+  {
+    filter: brightness(0) saturate(100%) invert(13%) sepia(75%) saturate(6047%) hue-rotate(358deg) brightness(95%) contrast(124%);
+    opacity:1;
+  }
+}
+
+@keyframes oneUpScale {
+  50%
+  {
+    transform: scale(1.5);
+  }
+  100%
+  {
+    transform: scale(1)
+  }
+}
+
+@keyframes oneUpRotate {
+  100%
+  {
+    transform: rotateY(-720deg);
+  }
+}
+
+@keyframes oneUpColor {
+  100%
+  {
+    filter: brightness(0) saturate(100%) invert(13%) sepia(75%) saturate(6047%) hue-rotate(358deg) brightness(95%) contrast(124%);
+    opacity:1;
+  }
+}

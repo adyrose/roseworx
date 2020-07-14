@@ -1,0 +1,11 @@
+A Core js file is an **enhancement** on something which works as standard with css only.
+
+A Component js file needs an element in a certain structure physically in the dom which **requires** javascript in order to function.
+
+A Module js file is Javascript which does something "in the background" and doesnt specifically require a physical element in the dom.
+
+Core js is automatically included and ran on the initial import of roseworx, Components and Modules need importing specifically.
+
+
+Extendable Classes
+

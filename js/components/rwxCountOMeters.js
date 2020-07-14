@@ -6,22 +6,22 @@ import rwxMisc from '../helpers/rwxMiscHelpers';
 class rwxCountOMeters extends rwxCore {
 	constructor()
 	{
-		super('[rwx-countometer]');
+		super('[rwx-countometer]', true);
 	}
 
-	execute(el)
+	execute(el, mc)
 	{
 		let value = el.hasAttribute('data-rwx-countometer-value');
 		if(!value)return;
 		value = el.getAttribute('data-rwx-countometer-value')		
-		return new rwxCountOMeter(el, value);	
+		return new rwxCountOMeter(el, value, mc);	
 	}
 }
 
 class rwxCountOMeter extends rwxComponent{
-	constructor(el, value)
+	constructor(el, value, manualControl)
 	{
-		super({enableAnimationLoop: true, enableResizeDebounce: true, enableScrollIntoView: true})
+		super({enableAnimationLoop: true, enableResizeDebounce: true, enableScrollIntoView: !manualControl})
 		this.el = el;
 		this.colors = [
 	    "#ff0000",

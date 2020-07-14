@@ -4,20 +4,20 @@ import { rwxCore, rwxComponent } from '../rwxCore';
 class rwxGridGalleries extends rwxCore {
 	constructor()
 	{
-		super('[rwx-grid-gallery]');
+		super('[rwx-grid-gallery]', true);
     window.navigator.userAgent.indexOf("MSIE ") > 0 && document.body.classList.add('ie');
 	}
 
-	execute(el)
+	execute(el, mc)
 	{
-		return new rwxGridGallery(el);
+		return new rwxGridGallery(el, mc);
 	}
 }
 
 class rwxGridGallery extends rwxComponent {
-	constructor(el)
+	constructor(el, manualControl)
 	{
-		super({enableScrollIntoView:true});
+		super({enableScrollIntoView: !manualControl});
 		this.el = el;
 		this.items = [...this.el.querySelectorAll('.rwx-grid-gallery-item')];
 		if(this.items.length == 0)return;

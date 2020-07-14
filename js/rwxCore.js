@@ -1,17 +1,16 @@
 import rwxMisc from './helpers/rwxMiscHelpers';
 class rwxCore {
-	constructor(selector)
+	constructor(selector, canHaveManualControl=false)
 	{
 		this.internalMap = {};
-		this.id
-		this.resourceName = this.constructor.name;		
+		this.resourceName = this.constructor.name;
 		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
 		this.execute = this.execute.bind(this);
 		window.addEventListener('load', ()=>{
 			if(selector)
 			{
 				[...document.querySelectorAll(selector)].map((el) => {
-					const cpnt = this.execute(el);
+					const cpnt = canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
 					this.addIME(el.id, cpnt);
 				});
 			}
@@ -21,6 +20,12 @@ class rwxCore {
 			}
 		});
 	}
+
+  commence(id)
+  {
+    const IME = this.getIME(id);
+    IME && IME.scrolledIntoView();    
+  }
 
 	getIMES()
 	{

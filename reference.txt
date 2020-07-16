@@ -8,4 +8,31 @@ Core js is automatically included and ran on the initial import of roseworx, Com
 
 
 Extendable Classes
+	Core
 
+	super(selector, manualControl);
+	Constructor takes 2 arguments;
+		- selector - the core will loop through any dom elements on the page with the specified selector and run an "execute" method (defined on the derived class) with the dom element as a parameter. The execute method will return a class instance of a component. The core will then check to see if the element has an ID attribute (if not it generates a random one) and puts that in an internal mapping object so the component class instance can be referenced by an ID.
+
+		- manualControl - (defaulted to false) - for components which rely on being scrolledIntoView in order to initiate , can set this to true in order to enable manual control. If set to true, the execute method will be called with a second boolean value (weather or not the element has a data-rwx-manual-control attribute).
+
+	Exposed methods
+
+		- commence - if manualControl has been specified, this will run the scrolledIntoView method for the particular id
+
+
+
+	Component
+	super({enableCustomEvents, enableAnimationLoop, enableResizeDebounce, enableScrollIntoView})
+
+		- enableCustomEvents - Allows users to declare custom events which will be called by the component at specified points.
+
+		- enableAnimationLoop - Will set up an animation loop and call an .animate method defined on the derived class (this.animate), if there is a this.c and this.canvas defined on the derived class, it will clear it on each animation frame.
+
+		- enableResizeDebounce - Will set up a debounce method on the resize event and call a .resize method defined on the derived class when the debounce has stopped (requires this.resize)
+
+		- enableScrollIntoView - When the component or element has scrolled in to view, will run a scrolledIntoView method defined on the derived class (requires this.scrolledIntoView, this.el)
+
+	Exposed methods
+
+		- startAnimation - restarts the animation loop

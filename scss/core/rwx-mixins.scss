@@ -81,3 +81,50 @@
 		@warn "`#{$breakpoint} is not a valid breakpoint. Available breakpoints are: #{map-keys($breakpoints)}`"
 	}
 }
+
+@mixin zOpaque
+{
+	opacity: 0;
+	z-index:-1;
+	&.zOpaqueIn
+	{
+		animation: opaqueIn 1s ease-in forwards;
+	}
+	&.zOpaqueOut
+	{
+		animation: opaqueOut 1s ease-in forwards;
+	}
+}
+
+@keyframes opaqueIn
+{
+	0% {
+		opacity:0;
+		z-index:-1;
+	}
+	1% {
+		z-index: 9999;
+	}
+	100% {
+		opacity:1;
+		z-index:9999;
+	}
+}
+
+@keyframes opaqueOut
+{
+	0% {
+		opacity:1;
+		z-index:9999;
+	}
+  99%
+  {
+    opacity:0;
+    z-index:9999;
+  }
+  100%
+  {
+    opacity:0;
+    z-index:-1;
+  }
+}

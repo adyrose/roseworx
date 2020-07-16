@@ -6,6 +6,7 @@ body {
 }
 
 @mixin additionalheadingstyle {
+  margin-bottom: 1.3rem;
   &.underline
   {
     text-decoration:underline;
@@ -22,7 +23,6 @@ body {
 
 @mixin headingstyle {
   font-family: $font-heading;
-  margin-bottom: 1.3rem;
   @extend .rwxt-bold;  
 }
 

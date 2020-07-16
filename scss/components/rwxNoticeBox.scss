@@ -1,0 +1,78 @@
+@import '../core/rwx-variables';
+
+$rwx-notice-box-background-color: $orange !default;
+$rwx-notice-box-text-color: $white !default;
+$rwx-notice-box-text-size: 1.6rem !default;
+$rwx-notice-position: "bottom-left" !default;
+
+$bouncemeasure:50px;
+$bouncepadding: 20px;
+$bounce-in-timing: cubic-bezier(.71,-0.63,.19,.88);
+$bounce-out-timing: cubic-bezier(.72,-0.07,.38,1.52);
+
+$positions: ('top-left', 'top-right', 'bottom-left', 'bottom-right');
+
+.rwx-notice-box
+{
+	&.--top-left
+	{
+  	top:-$bouncemeasure;
+  	left:-$bouncemeasure;
+	  padding-left:$bouncemeasure+$bouncepadding;
+	  padding-top:$bouncemeasure+$bouncepadding;
+	  padding-right:$bouncepadding;
+	  padding-bottom:$bouncepadding;
+	  transform: translate(-100%,-100%);
+	  border-bottom-right-radius:10px;
+	}
+	&.--top-right
+	{
+		top:-$bouncemeasure;
+  	right:-$bouncemeasure;
+	  padding-top:$bouncemeasure+$bouncepadding;
+	  padding-right:$bouncemeasure+$bouncepadding;
+	  padding-bottom:$bouncepadding;
+	  padding-left:$bouncepadding;
+	  transform: translate(100%,-100%);
+	  border-bottom-left-radius:10px;
+	}
+	&.--bottom-left
+	{
+  	bottom:-$bouncemeasure;
+  	left:-$bouncemeasure;
+	  padding-left:$bouncemeasure+$bouncepadding;
+	  padding-bottom:$bouncemeasure+$bouncepadding;
+	  padding-right:$bouncepadding;
+	  padding-top:$bouncepadding;
+	  transform: translate(-100%,100%);
+	  border-top-right-radius:10px;
+	}
+	&.--bottom-right
+	{
+  	bottom:-$bouncemeasure;
+  	right:-$bouncemeasure;
+	  padding-right:$bouncemeasure+$bouncepadding;
+	  padding-bottom:$bouncemeasure+$bouncepadding;
+	  padding-left:$bouncepadding;
+	  padding-top:$bouncepadding;
+	  transform: translate(100%,100%);
+	  border-top-left-radius:10px;
+	}
+
+  z-index:9999;
+  background-color:$rwx-notice-box-background-color;
+  position:fixed;
+  transition: 1s transform $bounce-in-timing;
+
+	span.value {
+		font-size: $rwx-notice-box-text-size;
+		color:$rwx-notice-box-text-color;
+	}
+
+  text-align:center;
+  &.show
+  {
+    transition: 1s transform $bounce-out-timing;
+    transform: translate(0%,0%);
+  }
+}

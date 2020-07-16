@@ -2,7 +2,7 @@ import rwxMisc from './helpers/rwxMiscHelpers';
 class rwxCore {
 	constructor(selector, canHaveManualControl=false)
 	{
-		this.internalMap = {};
+		if(selector)this.internalMap = {};
 		this.resourceName = this.constructor.name;
 		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
 		this.execute = this.execute.bind(this);
@@ -197,15 +197,6 @@ class rwxComponent {
 
 	animateLoop()
 	{
-
-		if(!this.canvas) {
-			this.error('No canvas element (this.canvas) defined on instance.');
-			return;
-		}
-		if(!this.c) {
-			this.error('No canvas 2d context (this.c) defined on instance.');
-			return;
-		}
 		if(!this.animate) {
 			this.error('No animate method (this.animate) defined on instance.');
 			return;			
@@ -213,7 +204,7 @@ class rwxComponent {
     if(!this.stopAnimation)
     {
       requestAnimationFrame(this.animateLoop);
-      this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      (this.c && this.canvas) && this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			this.animate();    
     }
 	}

@@ -1,0 +1,40 @@
+@import '../core/rwx-mixins';
+@import '../core/rwx-variables';
+
+$rwx-slide-ticker-background-color: $orange !default;
+$rwx-slide-ticker-text-color: $white !default;
+
+.rwx-slide-ticker
+{
+	@include full-size;
+	@include flex-center;
+	@include zOpaque;
+	overflow:hidden;
+	background: rgba($rwx-slide-ticker-background-color, 0.7);
+	cursor:pointer;
+	&-item
+	{
+		font-size:6rem;
+		&.go
+		{
+			span
+			{
+				color:$rwx-slide-ticker-text-color;
+  			display: inline-block;
+  			animation: wiggle 0.5s ease-in-out infinite;
+			}
+		}
+	}
+}
+
+@keyframes wiggle {
+  33% {
+    transform: rotate(-20deg) skew(10deg, 10deg);
+  }
+  66% {
+    transform: rotate(20deg) skew(-10deg, -10deg);
+  }
+  100% {
+    transform: rotate(0deg) skew(0deg, 0deg);
+  }
+}

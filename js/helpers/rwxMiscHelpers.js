@@ -51,6 +51,15 @@ const rwxMisc =
         [a[i], a[j]] = [a[j], a[i]];
     }
   },
+
+  zOpaqueIn:(el) => {
+    el.classList.contains('zOpaqueOut') && el.classList.remove('zOpaqueOut');
+    el.classList.add('zOpaqueIn');
+  },
+
+  zOpaqueOut:(el) => {
+    el.classList.add('zOpaqueOut');
+  }
 }
 
 export default rwxMisc;

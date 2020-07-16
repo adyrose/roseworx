@@ -8,4 +8,8 @@
 	{
 		color:$color !important;
 	}
+	.rwxc-border-#{$selector}
+	{
+		border: 1px solid $color;
+	}
 }

@@ -1,0 +1,108 @@
+@import '../core/rwx-mixins';
+@import '../core/rwx-variables';
+
+$rwx-duo-selector-left-background-color: $orange !default;
+$rwx-duo-selector-right-background-color: $light-blue !default;
+
+$animation-easing: cubic-bezier(.01,.89,.53,.98);
+
+.rwx-duo-selector
+{
+	@include full-size;
+	display:flex;
+	overflow:hidden;
+	z-index:-1;
+	@include snap-down-from('md')
+	{
+		flex-direction:column;
+	}
+	&.active
+	{
+		z-index:9999;
+	}
+	&-item
+	{
+		padding-left: 60px;
+		padding-right: 60px;
+		z-index:9999;
+		flex: 1 1 50%;
+		@include flex-center;
+		animation: slideIn 1s $animation-easing forwards;
+		&:nth-child(1)
+		{
+			transform:translateX(-100%);
+			background: rgba($rwx-duo-selector-left-background-color, 0.7);
+			&.remove
+			{
+				animation: slideOutLeft 1s $animation-easing forwards;
+			}
+		}
+		&:nth-child(2)
+		{
+			transform:translateX(100%);
+			background: rgba($rwx-duo-selector-right-background-color, 0.7);
+			&.remove
+			{
+				animation: slideOutRight 1s $animation-easing forwards;
+			}
+		}
+		&-button
+		{
+			position: relative;
+			cursor:pointer;
+			text-align:center;
+			.text
+			{
+				word-break:break-word;
+				font-size: 2.28rem;
+    		line-height: 2.83rem;
+				text-align:center;
+			}
+			svg
+			{
+				position:absolute;
+			}
+			.shape
+			{
+				stroke-width:6px;
+				fill:transparent;
+				stroke: $black;
+				transition: 1s all ease;
+			}
+			&:hover, &.active
+			{
+				.shape
+				{
+					stroke-dasharray: 50 0;
+					stroke-width: 3px;
+					stroke-dashoffset: 0;
+					stroke: $white;
+				}
+			}
+		}
+	}
+}
+
+@keyframes slideIn {
+	100% {
+		transform: translateX(0%);
+	}
+}
+
+@keyframes slideOutRight {
+	0% {
+		transform: translateX(0%);
+	}
+	100% {
+		transform: translateX(100%);
+	}	
+}
+
+@keyframes slideOutLeft {
+	0% {
+		transform: translateX(0%);
+	}
+	100% {
+		transform: translateX(-100%);
+	}	
+}

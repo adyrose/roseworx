@@ -46,7 +46,7 @@
 	}		
 }
 
-.rwx-button, button:not(.no-styles)
+.rwx-button, button:not(.no-decoration)
 {
 	display:inline-block;
 	min-height:$button-size;
@@ -77,7 +77,7 @@
 	}
 }
 
-button.no-styles
+button.no-decoration
 {
 	appearance:none;
 	background:none;

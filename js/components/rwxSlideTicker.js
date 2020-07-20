@@ -42,6 +42,8 @@ class rwxSlideTicker extends rwxCore {
 
 	setValue(value)
 	{
+		this.el.setAttribute('tabIndex', 1);
+		this.el.focus();
 		this.reset();
 		let letterArray = [...value];
 		let container, span, text;

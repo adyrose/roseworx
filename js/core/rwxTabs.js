@@ -79,7 +79,7 @@ class rwxTab extends rwxComponent {
 				let button = document.createElement('button');
 				let text = document.createTextNode(t.getAttribute('data-rwx-tabs-title'));
 				button.appendChild(text);
-				button.classList.add('no-styles');
+				button.classList.add('no-decoration');
 				button.setAttribute('role', 'tab');
 				button.setAttribute('aria-selected', 'false');
 				button.addEventListener('click', ()=>{ this.changeTab(i+1); });

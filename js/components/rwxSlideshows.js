@@ -60,14 +60,14 @@ class rwxSlideshow {
 
 
      const ps = document.createElement('button');
-     ps.classList.add('no-styles')
+     ps.classList.add('no-decoration')
      ps.classList.add('prev-slide');
      ps.addEventListener('click', this.prevslide);
      this.prevslidebutton = ps;
 
      const ns = document.createElement('button');
      ns.classList.add('next-slide');
-     ns.classList.add('no-styles');
+     ns.classList.add('no-decoration');
      ns.addEventListener('click', this.nextslide);
      this.nextslidebutton = ns;
 

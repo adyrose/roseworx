@@ -21,7 +21,7 @@ $slidedowntime: 0.5s;
 		font-size: 1.52rem;
     line-height: 2.07rem;
     transition: all 0.5s $transition-base;
-    &:hover
+    &:hover, &.active
     {
     	transition: all 0.5s $transition-base;
 			color: $rwx-tombola-color;

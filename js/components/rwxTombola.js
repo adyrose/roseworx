@@ -21,6 +21,20 @@ class rwxTombola extends rwxCore {
   	this.stopNode.addEventListener('click', this.stopSpin);
   }
 
+  accessible()
+  {
+  	this.el.setAttribute('tabIndex', 1);
+  	this.el.focus();
+  	this.keyDown = (ev)=>{ev.preventDefault(); (ev.keyCode == 32 || ev.keyCode == 13) && this.stopSpin();}
+  	this.el.addEventListener('keydown', this.keyDown);
+  }
+
+  unaccessible()
+  {
+  	this.el.removeAttribute('tabIndex');
+  	this.el.removeEventListener('keydown', this.keyDown);
+  }
+
   setConfig(c)
   {
   	if(!c){this.error('setConfig - requires an object'); return;}
@@ -34,8 +48,8 @@ class rwxTombola extends rwxCore {
   	this.tombola = document.createElement('div');
   	this.tombola.classList.add('rwx-tombola');
   	this.tombola.id = "rwx-tombola";
-    this.tombolaBackground = document.createElement('div');
-    this.tombolaBackground.classList.add('rwx-tombola-background');
+    this.el = document.createElement('div');
+    this.el.classList.add('rwx-tombola-background');
     this.tombolaContainer = document.createElement('div');
     this.tombolaContainer.classList.add('rwx-tombola-container');
     this.stopNode = document.createElement('div');
@@ -45,9 +59,9 @@ class rwxTombola extends rwxCore {
     this.stopText.appendChild(document.createTextNode("Stop"));
     this.stopNode.appendChild(this.stopText);
     this.tombolaContainer.appendChild(this.tombola);
-    this.tombolaBackground.appendChild(this.tombolaContainer);
-    this.tombolaBackground.appendChild(this.stopNode);
-    document.body.appendChild(this.tombolaBackground);
+    this.el.appendChild(this.tombolaContainer);
+    this.el.appendChild(this.stopNode);
+    document.body.appendChild(this.el);
   }
 
   setOptions(arr)
@@ -81,6 +95,7 @@ class rwxTombola extends rwxCore {
     }
     else
     {
+    	this.stopNode.classList.add('active');
       this.pickWinner();
     }
   }
@@ -97,12 +112,12 @@ class rwxTombola extends rwxCore {
 
   setValues(options)
   {
-  	if(!this.validateOptions(options)) return;
-    if(this.spinning){return;}
+  	if(!this.validateOptions(options) || this.spinning)return;
     this.spinning=true;
     this.setOptions(options);
     this.reset();
-    this.tombolaBackground.classList.add('appear');
+    this.el.classList.add('appear');
+    this.accessible();
     this.spin();
     this.countdownInterval = setInterval(()=>{
 
@@ -139,9 +154,11 @@ class rwxTombola extends rwxCore {
   spin()
   {
     if(this.stop){
-      this.tombolaBackground.classList.remove('appear');
+      this.el.classList.remove('appear');
       this.spinning=false;
       this.callback(this.items[this.winner].getAttribute('data-value'));
+      this.stopNode.classList.remove('active');
+      this.unaccessible();
       return;
     }
     window.requestAnimationFrame(this.spin);
@@ -155,8 +172,6 @@ class rwxTombola extends rwxCore {
         this.mask.innerHTML = this.items[this.winner].innerHTML;
       }
       this.tombolaContainer.scrollTop = rwxAnimate.fromTo(this.currentScroll, this.scrollToWinner, 'rwxTombola', 'easeOutQuad', 3000, ()=>{this.stop = true;})
-      // let val = this.easingFunction('easeOutQuad', 'stop', 3000);
-      // this.tombolaContainer.scrollTop = this.currentScroll + (this.scrollToWinner - this.currentScroll) * val;
     }
     else
     {

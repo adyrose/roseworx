@@ -60,7 +60,7 @@
 		position:absolute;
 		justify-content:center;
 		display:flex;
-		&-counter, &-counter.no-styles
+		&-counter, &-counter.no-decoration
 		{
 			flex-shrink:0;
 			cursor:pointer;

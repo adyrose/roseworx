@@ -65,7 +65,7 @@ class rwxSlider extends rwxComponent {
 		this.slides.map((s,i) => {
 			let dot = document.createElement('button');
 			dot.classList.add('rwx-slider-counters-counter');
-			dot.classList.add('no-styles');
+			dot.classList.add('no-decoration');
 			(this.currentSlide == i+1) && dot.classList.add('active');
 			dot.addEventListener('click', ()=>{if(i+1 == this.currentSlide)return; this.goToSlide(i+1); this.counter=0;});
 			dot.addEventListener('keyup', (e)=>{

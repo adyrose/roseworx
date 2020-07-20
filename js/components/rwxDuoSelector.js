@@ -7,12 +7,40 @@ class rwxDuoSelector extends rwxCore {
 		this.svgPaddingX = 60;
 		this.svgPaddingY = 40;
 		this.items = [];
+		this.buttons = [];
+		this.activeButton = 0;
 	}
 
 	execute()
 	{
 		this.htmlDefinition();
 	}
+
+  accessible()
+  {
+  	this.el.setAttribute('tabIndex', 1);
+  	this.el.focus();
+  	this.keyDown = (ev)=>{
+  		ev.preventDefault(); 
+  		if(ev.keyCode == 37 || ev.keyCode == 39 || ev.keyCode == 9)
+  		{
+  			this.buttons[this.activeButton].classList.remove('active');
+  			this.activeButton = this.activeButton == 0 ? 1 : 0;
+  			this.buttons[this.activeButton].classList.add('active');
+  		}
+  		if(ev.keyCode == 32 || ev.keyCode == 13)
+  		{
+  			this.buttons[this.activeButton].click();
+  		}
+  	}
+  	this.el.addEventListener('keydown', this.keyDown);
+  }
+
+  unaccessible()
+  {
+  	this.el.removeAttribute('tabIndex');
+  	this.el.removeEventListener('keydown', this.keyDown);
+  }
 
 	htmlDefinition()
 	{
@@ -25,10 +53,14 @@ class rwxDuoSelector extends rwxCore {
 	selected(val)
 	{
 		this.callback(val);
+		this.opened = false;
+		this.unaccessible();
 		this.items.map(dpi=>dpi.classList.add('remove'));
 		setTimeout(()=>{
 			this.el.innerHTML = "";
 			this.items = [];
+			this.buttons.map((b)=>b.classList.remove('active'));
+			this.buttons = [];
 			this.el.classList.remove('active');
 		}, 1000);
 	}
@@ -44,35 +76,37 @@ class rwxDuoSelector extends rwxCore {
 
 	setValues(options)
 	{
-		if(!this.validateOptions(options)) return;
+		if(!this.validateOptions(options) || this.opened) return;
 		options = options.slice(0,2);
-		let btns = [];
 		let el, btn, btnText;
+		this.opened = true;
 		this.el.classList.add('active');
+		this.accessible();
 		for(let item of options)
 		{
 			el = document.createElement('div');
 			el.classList.add('rwx-duo-selector-item');
 			btn = document.createElement('div');
 			btn.classList.add('rwx-duo-selector-item-button');
-			btnText = document.createElement('span');
+			btnText = document.createElement('button');
+			btnText.classList.add('no-decoration');
 			btnText.innerText = item.displayName;
 			btnText.classList.add('text');
 			btn.addEventListener('click', ()=>{this.selected(item.value)});
 			btn.appendChild(btnText);
 			el.appendChild(btn);
-			btns.push(btn);
+			this.buttons.push(btn);
 			this.items.push(el);
 			this.el.appendChild(el);
 		}
-		this.createSVGS(btns);
+		this.createSVGS();
 		return new Promise((resolve, reject)=>{this.callback = resolve;})
 	}
 
-	createSVGS(btns)
+	createSVGS()
 	{
 		window.requestAnimationFrame(()=>{
-			btns.map((b)=>{
+			this.buttons.map((b)=>{
 				let rect = b.getBoundingClientRect();
 				let svgWidth = rect.width + this.svgPaddingX;
 				let svgHeight = rect.height + this.svgPaddingY;

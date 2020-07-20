@@ -1,4 +1,5 @@
 import { rwxCore } from '../rwxCore';
+import rwxAnimateableBorder from '../common/rwxAnimateableBorder';
 
 class rwxDuoSelector extends rwxCore {
 	constructor()
@@ -8,7 +9,7 @@ class rwxDuoSelector extends rwxCore {
 		this.svgPaddingY = 40;
 		this.items = [];
 		this.buttons = [];
-		this.activeButton = 0;
+		this.activeButton = 1;
 	}
 
 	execute()
@@ -24,13 +25,13 @@ class rwxDuoSelector extends rwxCore {
   		ev.preventDefault(); 
   		if(ev.keyCode == 37 || ev.keyCode == 39 || ev.keyCode == 9)
   		{
-  			this.buttons[this.activeButton].classList.remove('active');
+  			this.buttons[this.activeButton].unactive();
   			this.activeButton = this.activeButton == 0 ? 1 : 0;
-  			this.buttons[this.activeButton].classList.add('active');
+  			this.buttons[this.activeButton].active();
   		}
   		if(ev.keyCode == 32 || ev.keyCode == 13)
   		{
-  			this.buttons[this.activeButton].click();
+  			this.buttons[this.activeButton].target.click();
   		}
   	}
   	this.el.addEventListener('keydown', this.keyDown);
@@ -59,7 +60,7 @@ class rwxDuoSelector extends rwxCore {
 		setTimeout(()=>{
 			this.el.innerHTML = "";
 			this.items = [];
-			this.buttons.map((b)=>b.classList.remove('active'));
+			this.buttons.map((b)=>b.unactive());
 			this.buttons = [];
 			this.el.classList.remove('active');
 		}, 1000);
@@ -79,6 +80,7 @@ class rwxDuoSelector extends rwxCore {
 		if(!this.validateOptions(options) || this.opened) return;
 		options = options.slice(0,2);
 		let el, btn, btnText;
+		let btns = [];
 		this.opened = true;
 		this.el.classList.add('active');
 		this.accessible();
@@ -95,46 +97,14 @@ class rwxDuoSelector extends rwxCore {
 			btn.addEventListener('click', ()=>{this.selected(item.value)});
 			btn.appendChild(btnText);
 			el.appendChild(btn);
-			this.buttons.push(btn);
+			btns.push(btn);
 			this.items.push(el);
 			this.el.appendChild(el);
 		}
-		this.createSVGS();
-		return new Promise((resolve, reject)=>{this.callback = resolve;})
-	}
-
-	createSVGS()
-	{
 		window.requestAnimationFrame(()=>{
-			this.buttons.map((b)=>{
-				let rect = b.getBoundingClientRect();
-				let svgWidth = rect.width + this.svgPaddingX;
-				let svgHeight = rect.height + this.svgPaddingY;
-				let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-				svg.setAttributeNS(null, 'width', svgWidth);
-				svg.setAttributeNS(null, 'height', svgHeight);
-				svg.style.top = `-${this.svgPaddingY/2}px`;
-				svg.style.left = `-${this.svgPaddingX/2}px`;
-				let rectangle = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-				rectangle.classList.add('shape');
-				rectangle.setAttributeNS(null, 'width', svgWidth);
-				rectangle.setAttributeNS(null, 'height', svgHeight);
-				rectangle.setAttributeNS(null, 'stroke-dasharray', `${svgHeight} ${svgWidth}`);
-				rectangle.setAttributeNS(null, 'stroke-dashoffset', `-${svgWidth * 2}`);
-				svg.appendChild(rectangle);
-				b.appendChild(svg);
-				return;
-			});
+			btns.map((b)=>{this.buttons.push(new rwxAnimateableBorder(b));});
 		});
-	}
-
-	createButtonDefinition(width, height)
-	{
-		return `
-			<svg height="${height}" width="${width}" xmlns="http://www.w3.org/2000/svg">
-				<rect class="shape" height="${height}" width="${width}" />
-			</svg>
-		`;
+		return new Promise((resolve, reject)=>{this.callback = resolve;})
 	}
 }
 

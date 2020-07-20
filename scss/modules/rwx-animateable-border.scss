@@ -1,0 +1,25 @@
+@import '../core/rwx-variables';
+.rwx-animateable-border
+{
+	svg
+	{
+		position:absolute;
+		rect
+		{
+			stroke-width:6px;
+			fill:transparent;
+			stroke: $black;
+			transition: 1s all ease;
+		}
+		&.active
+		{
+			rect
+			{
+				stroke-dasharray: 50 0;
+				stroke-width: 3px;
+				stroke-dashoffset: 0;
+				stroke: $white;
+			}			
+		}
+	}
+}

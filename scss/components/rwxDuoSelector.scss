@@ -59,27 +59,27 @@ $animation-easing: cubic-bezier(.01,.89,.53,.98);
     		font-weight:bold;
 				text-align:center;
 			}
-			svg
-			{
-				position:absolute;
-			}
-			.shape
-			{
-				stroke-width:6px;
-				fill:transparent;
-				stroke: $black;
-				transition: 1s all ease;
-			}
-			&:hover, &.active
-			{
-				.shape
-				{
-					stroke-dasharray: 50 0;
-					stroke-width: 3px;
-					stroke-dashoffset: 0;
-					stroke: $white;
-				}
-			}
+			// svg
+			// {
+			// 	position:absolute;
+			// }
+			// .shape
+			// {
+			// 	stroke-width:6px;
+			// 	fill:transparent;
+			// 	stroke: $black;
+			// 	transition: 1s all ease;
+			// }
+			// &:hover, &.active
+			// {
+			// 	.shape
+			// 	{
+			// 		stroke-dasharray: 50 0;
+			// 		stroke-width: 3px;
+			// 		stroke-dashoffset: 0;
+			// 		stroke: $white;
+			// 	}
+			// }
 		}
 	}
 }

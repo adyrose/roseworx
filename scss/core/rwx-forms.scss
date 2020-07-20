@@ -47,7 +47,6 @@
 			font: inherit;
 			&:focus
 			{
-				outline:none;
 				@include focus-ring;
 			}
 			&[readonly]

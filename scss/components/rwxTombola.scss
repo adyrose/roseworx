@@ -1,0 +1,77 @@
+@import '../core/rwx-variables';
+@import '../core/rwx-mixins';
+
+$rwx-tombola-background-color: $blue !default;
+$rwx-tombola-color: $orange !default;
+$rwx-tombola-item-color: $black !default;
+
+$item-height: 160px;
+$slidedowntime: 0.5s;
+
+.rwx-tombola
+{
+	&-stopper
+	{
+		cursor:pointer;
+		margin-top:100px;
+		color: $rwx-tombola-background-color;
+		background-color: $rwx-tombola-color;
+		padding:30px;
+		border-radius:15px;
+		font-size: 1.52rem;
+    line-height: 2.07rem;
+    transition: all 0.5s $transition-base;
+    &:hover
+    {
+    	transition: all 0.5s $transition-base;
+			color: $rwx-tombola-color;
+			background-color: rgba($rwx-tombola-background-color, 0.3);
+			border: 1px solid $rwx-tombola-color;  	
+    }
+	}
+	&-background
+	{
+		@include full-size;
+		@include flex-center;
+		opacity:0;
+		flex-direction:column;
+		z-index:$top-layer-z;
+		overflow:hidden;
+		background: rgba($rwx-tombola-background-color, 0.7);
+		transform: translateY(-100%);
+		transition: all 1s $slidedowntime ease-in;
+		&.appear
+		{
+			opacity:1;
+			transition: all $slidedowntime ease-out;
+			transform: translateY(0);
+		}
+	}
+	&-container
+	{
+		box-shadow: 4px 4px 0px 7px rgba($rwx-tombola-color, 0.7);
+		border-radius:15px;
+		overflow:hidden;
+		height:$item-height;
+		min-width:400px;
+	}
+  @include flex-center;
+  flex-direction:column;	
+  &-item
+  {
+  	padding-left: 20px;
+  	padding-right: 20px;
+  	word-break:break-word;
+    height:100%;
+    width:100%;
+    @include flex-center;
+    flex-direction:column;
+    span
+    {
+			font-size: 2.28rem;
+  		line-height: 2.83rem;
+  		font-weight:bold;
+  		color:$rwx-tombola-item-color;
+    }
+  }
+}

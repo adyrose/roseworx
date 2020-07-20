@@ -1,8 +1,7 @@
-@import '../core/rwx-mixins';
 @import '../core/rwx-variables';
+@import '../core/rwx-mixins';
 @import '../core/rwx-functions';
 
-@include component-spacing('rwx-slideshow');
 .rwx-slideshow
 {
 	@include full-size;
@@ -58,7 +57,7 @@
 
   .next-slide, .prev-slide
   {
-    z-index:9999;
+    z-index:$top-layer-z;
     position:absolute;
     cursor:pointer;
     background:rgba(255,255,255,0.5);

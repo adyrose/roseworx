@@ -33,9 +33,18 @@ class rwxDuoSelector extends rwxCore {
 		}, 1000);
 	}
 
+	validateOptions(options)
+	{
+		if(!options){this.error('setValues - requires an array of objects.'); return false;}
+		if(options.length < 2){this.error('setValues - requires at least 2 objects.'); return false;}
+		if(options.length > 2){this.error('setValues - only accepts 2 objects, using first 2.');}
+		if(!options[0].value || !options[0].displayName || !options[1].value || !options[1].displayName){this.error('setValues - value and displayName required.'); return false;}
+		return true;
+	}
+
 	setValues(options)
 	{
-		if(options.length > 2){this.error('Only 2 options allowed, using first 2 options.');}
+		if(!this.validateOptions(options)) return;
 		options = options.slice(0,2);
 		let btns = [];
 		let el, btn, btnText;

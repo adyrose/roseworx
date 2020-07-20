@@ -30,13 +30,17 @@
 		{
 			-webkit-appearance: none;
 		}
+		input,select
+		{
+			min-height:$form-item-size;
+			height:$form-item-size;
+		}
 		input, select, textarea
 		{
 			order:2;
 			color: $form-color-base;
 			padding-left:15px;
-			min-height:$form-item-size;
-			height:$form-item-size;
+			padding-right:15px;
 			width:100%;
 			border:1px solid $form-color-secondary;
 			transition: 0.5s border $transition-base;

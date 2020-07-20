@@ -59,7 +59,7 @@ $positions: ('top-left', 'top-right', 'bottom-left', 'bottom-right');
 	  border-top-left-radius:10px;
 	}
 
-  z-index:9999;
+  z-index:$top-layer-z;
   background-color:$rwx-notice-box-background-color;
   position:fixed;
   transition: 1s transform $bounce-in-timing;

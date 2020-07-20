@@ -26,6 +26,10 @@
 		display: flex;
   	align-items: stretch;
   	overflow: hidden;
+  	&:focus
+  	{
+  		@include focus-ring;
+  	}
 	}
 
 	&-perspective, &-transform, &-transform-face, &-teaser {

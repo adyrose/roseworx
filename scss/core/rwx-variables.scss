@@ -179,11 +179,5 @@ $tabs-title-size: $h5-size !default;
 $tabs-active-color: $theme-color-tertiary !default;
 $tabs-seperator-color: $theme-color-secondary !default;
 
-/*
-
-** Only takes effect is js imported
-
-*/
-
-$slideshow-color: blue !default;
-
+// Z's
+$top-layer-z: 9999;

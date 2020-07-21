@@ -34,7 +34,7 @@ class rwxNoticeBox extends rwxCore {
 	setConfig(c)
 	{
 		if(!c){this.error('setConfig - requires an object'); return;}
-		if(c.delay !== undefined && !isNaN(c.delay)){this.noticeBoxDelay = c.delay;}
+		if(c.delay !== undefined && typeof(c.delay) == 'number'){this.noticeBoxDelay = c.delay;}
 		if(c.position !== undefined && this.positions.includes(c.position)){this.setPosition(c.position)}
 	}
 

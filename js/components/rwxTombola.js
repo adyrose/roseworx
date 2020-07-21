@@ -41,7 +41,7 @@ class rwxTombola extends rwxCore {
   	if(!c){this.error('setConfig - requires an object'); return;}
   	if(c.stopText !== undefined){this.stopText.innerText = c.stopText; this.button.recalculate();}
   	if(c.autoStop !== undefined){this.autoStop = Boolean(c.autoStop);}
-  	if(c.timeBeforeAutoStop !== undefined && !isNaN(c.timeBeforeAutoStop)){this.timeBeforeAutoStop = c.timeBeforeAutoStop;}
+  	if(c.timeBeforeAutoStop !== undefined && typeof(c.timeBeforeAutoStop) == 'number'){this.timeBeforeAutoStop = c.timeBeforeAutoStop;}
   }
 
   htmlDefinition()

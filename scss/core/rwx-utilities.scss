@@ -1,6 +1,13 @@
 .rwxu-hide
 {
 	display:none;
+	&-md
+	{
+		@include snap-down-from('md')
+		{
+			display: none;
+		}
+	}
 }
 
 .rwxu-flex-center

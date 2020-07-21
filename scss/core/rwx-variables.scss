@@ -13,7 +13,7 @@ $light-blue: #3399ff !default;
 $turquoise: #39eeb2 !default;
 $green: #1c7503 !default;
 $light-green: #3eee3e !default;
-$yellow: #ebe134 !default;
+$yellow: #FCE205 !default;
 $purple: #731773 !default;
 $pink: #ff33cc !default;
 $brown: #9a3300 !default;
@@ -37,8 +37,8 @@ $colors: ('black':$black,
 
 $icons: (
 	'tick': (
-		'viewbox': "20 20", 
-		'svg': "<polyline points='2,12 7,17 18,4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px' />"
+		'viewbox': "40 40", 
+		'svg': "<polyline points='4,24 14,34 36,8' stroke-linecap='round' stroke-linejoin='round' stroke-width='3px' />"
 	),
 	'select-list': (
 		'viewbox': "40 40", 
@@ -47,25 +47,26 @@ $icons: (
 	),
 	'help': (
 		'viewbox': "40 40",
-		'svg': "<path d='m 12 12 c 0 -20 33 -3 8 8 l 0 7' stroke-linecap='round' stroke-linejoin='round' stroke-width='4px' /><circle cx='20' cy='37' r='1.5' stroke-width='3' />"
+		'svg': "<path d='m 12 12 c 0 -20 33 -3 8 8 l 0 7' stroke-linecap='round' stroke-linejoin='round' stroke-width='3px' /><circle cx='20' cy='37' r='1' stroke-width='2' />"
 	),
 	'note': (
 		'viewbox': "40 40",
-		'svg': "<path d='m 18 0 l 4 0 l -2 25 l -2 -25' stroke-linecap='round' stroke-width='4px' /><circle cx='20' cy='37' r='1.5' stroke-width='3' />"
+		'svg': "<path d='m 18 0 l 4 0 l -2 27 l -2 -27' stroke-linecap='round' stroke-width='4px' /><circle cx='20' cy='37' r='1.5' stroke-width='3' />"
 	),
 	'warning': (
 		'viewbox': "40 40",
-		'svg': "<path d='m 20 2 l 18 36 l -36 0 l 18 -36 l 18 36' stroke-linejoin='round' stroke-width='2px' /><circle cx='20' cy='32' r='1' stroke-width='2' /><path d='m 19 16 l 2 0 l -1 12 l -1 -12' stroke-linecap='round' stroke-width='3px' />",
-		'canhavefill': true
+		'svg': "<path d='m 20 2 l 18 36 l -36 0 l 18 -36 l 18 36' stroke-linejoin='round' stroke-width='2px' /><circle cx='20' cy='32' r='1' stroke-width='2' /><path d='m 19 16 l 2 0 l -1 12 l -1 -12' stroke-linecap='round' stroke-width='2px' />",
+		'canhavefill': true,
+		'fillneedsstroke': true
 	),
 	'hint': (
 		'viewbox': "40 40",
-		'svg': "<path d='m 17 32 c -30 -32 36 -32 6 0 m 0 1 l -6 0 m 0 2 l 6 0 m 0 2 l -6 0 m 0 2 l 6 0 m -11 -9 l -5 5 m 0 -13 l -5 2 m 5 -12 l -5 -2 m 12 -4 l -3 -5 m 14 5 l 3 -5 m 5 11 l 4 -2 m -4 12 l 5 1 m -10 7 l 5 5' stroke-width='3px' />",
+		'svg': "<path d='m 17 32 c -30 -32 36 -32 6 0 m 0 1 l -6 0 m 0 2 l 6 0 m 0 2 l -6 0 m 0 2 l 6 0 m -11 -9 l -5 5 m 0 -13 l -5 2 m 5 -12 l -5 -2 m 12 -4 l -3 -5 m 14 5 l 3 -5 m 5 11 l 4 -2 m -4 12 l 5 1 m -10 7 l 5 5' stroke-width='2.5px' />",
 		'canhavefill': true
 	),
 	'feature': (
 		'viewbox': "46 46",
-		'svg': "<path d='m 17.5 17.5 l 5 -13 l 4 13 l 14 0 l -10 9 l 5 14 l -13 -8 l -13 8 l 5 -14 l -10 -9 l 13 0 l 5 -13' stroke-width='3px' />",
+		'svg': "<path d='m 17.5 17.5 l 5 -13 l 4 13 l 14 0 l -10 9 l 5 14 l -13 -8 l -13 8 l 5 -14 l -10 -9 l 13 0 l 5 -13' stroke-width='2.5px' />",
 		'canhavefill': true
 	),
 	'rchev' : (
@@ -90,9 +91,14 @@ $icons: (
 	),
 	'copy': (
 		'viewbox': "40 40",
-		'svg': "<path d='m 18 4 h 17 t 1 1 v 20 t -1 1 h -17 t -1 -1 v -20 t 1 -1 h 2' /> <path d='m 17 14 h -12 t -1 1 v 20 t 1 1 h 16 t 1 -1 v -9' />"
+		'svg': "<path d='m 17 14 h -12 t -1 1 v 20 t 1 1 h 16 t 1 -1 v -9' stroke-width='2px' /><path d='m 18 4 h 17 t 1 1 v 20 t -1 1 h -17 t -1 -1 v -20 t 1 -1 h 2' stroke-width='2px' />",
+		'canhavefill': true,
+		'fillneedsstroke': true
 	)
 );
+$allowIcons: true !default;
+$allowColoredIcons: true !default;
+$allowSizedIcons: true !default;
 
 //theme
 $theme-color-base: $dark-grey !default;

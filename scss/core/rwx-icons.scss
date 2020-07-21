@@ -1,48 +1,69 @@
 $iconsizes: ('xs': 1rem, 'sm': 2rem, 'lg': 4rem, 'xl': 5rem);
 
-@each $iconname, $stuff in $icons
+@if $allowIcons
 {
-	$icon:null;
-	$canhavefill: false;
-	@if map-has-key($icons, $iconname) {
-		$icon: map-get($icons, $iconname);
-		@if map-get($icon, 'canhavefill')
-		{
-			$canhavefill: true;
-		}
-	}
-
-	.rwxi-#{$iconname}
+	@each $iconname, $stuff in $icons
 	{
-		background: icon($iconname) no-repeat;
-		width:3rem;
-		height:3rem;
-		display:inline-block;
-		@each $size, $measurement in $iconsizes
-		{
-			&.--#{$size}
+		$icon:null;
+		$canhavefill: false;
+		$fillneedsstroke: false;
+		@if map-has-key($icons, $iconname) {
+			$icon: map-get($icons, $iconname);
+			@if map-get($icon, 'canhavefill')
 			{
-				width: $measurement;
-				height: $measurement;
+				$canhavefill: true;
+			}
+			@if map-get($icon, 'fillneedsstroke')
+			{
+				$fillneedsstroke: true;
 			}
 		}
-		@each $modifier, $color in $colors
+
+		.rwxi-#{$iconname}
 		{
-			&.--#{$modifier}
+			background: icon($iconname) no-repeat;
+			width:3rem;
+			height:3rem;
+			display:inline-block;
+			@if $allowSizedIcons
 			{
-				background: icon($iconname, $color) no-repeat;
-			}
-			@if $canhavefill
-			{
-				&.--#{$modifier}-fill
+				@each $size, $measurement in $iconsizes
 				{
-					background: icon($iconname, $theme-color-base, $color) no-repeat;
-				}
-				@each $modifier2, $color2 in $colors
-				{
-					&.--#{$modifier}.--#{$modifier2}-fill
+					&.--#{$size}
 					{
-						background: icon($iconname, $color, $color2) no-repeat;
+						width: $measurement;
+						height: $measurement;
+					}
+				}
+			}
+			@if $allowColoredIcons
+			{
+				@each $modifier, $color in $colors
+				{
+					&.--#{$modifier}
+					{
+						background: icon($iconname, $color) no-repeat;
+					}
+
+					@if $canhavefill
+					{
+						&.--#{$modifier}-fill
+						{
+							@if $fillneedsstroke
+							{
+								background: icon($iconname, $theme-color-base, $color) no-repeat;
+							}
+							@else
+							{
+								background: icon($iconname, $color, $color) no-repeat;
+							}
+						}
+					}
+					@else {
+						&.--#{$modifier}-fill
+						{
+							background: icon($iconname, $color) no-repeat;
+						}						
 					}
 				}
 			}

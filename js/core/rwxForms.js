@@ -13,6 +13,7 @@ class rwxForms extends rwxCore {
 
 	customSubmitFn(id, submitFunction)
 	{
+		if(typeof(submitFunction) !== 'function'){this.error('customSubmitFn - second parameter needs to be a function.'); return;}
 		const IME = this.getIME(id);
 		if(IME)IME.customSubmit = submitFunction;
 	}

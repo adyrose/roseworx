@@ -17,7 +17,7 @@ class rwxNumberSwitchers extends rwxCore {
 
 	switch(id, value)
 	{
-		if(!value){return;}
+		if(typeof(value) !== 'number'){this.error('switch - second parameter needs to be a number.'); return;}
 		const IME = this.getIME(id);
 		IME && IME.switch(value);		
 	}

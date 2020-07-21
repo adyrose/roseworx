@@ -12,17 +12,27 @@ class rwxAnimateableBorder {
 		this.paddingY = 40;
 		this.active = this.active.bind(this);
 		this.unactive = this.unactive.bind(this);
-		this.measurements();
+		window.requestAnimationFrame(()=>{
+			this.measurements();
+		});
 	}
 
 	active()
 	{
+		this.activated = true;
 		this.el.classList.add('active');
 	}
 
 	unactive()
 	{
+		this.unactivated = true;
 		this.el.classList.remove('active');
+	}
+
+	recalculate()
+	{
+		this.target.removeChild(this.el);
+		this.measurements();
 	}
 
 	measurements()
@@ -41,8 +51,6 @@ class rwxAnimateableBorder {
 		rectangle.setAttributeNS(null, 'stroke-dasharray', `${svgHeight} ${svgWidth}`);
 		rectangle.setAttributeNS(null, 'stroke-dashoffset', `-${svgWidth * 2}`);
 		svg.appendChild(rectangle);
-		svg.addEventListener('mouseover', this.active);
-		svg.addEventListener('mouseleave', this.unactive);
 		this.el = svg;
 		this.target.appendChild(svg);
 	}

@@ -2,6 +2,7 @@ import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxMath from '../helpers/rwxMathHelpers';
 
 import { rwxCore } from '../rwxCore';
+import rwxAnimateableBorder from '../common/rwxAnimateableBorder';
 
 class rwxTombola extends rwxCore {
   constructor()
@@ -38,7 +39,7 @@ class rwxTombola extends rwxCore {
   setConfig(c)
   {
   	if(!c){this.error('setConfig - requires an object'); return;}
-  	if(c.stopText !== undefined){this.stopText.innerText = c.stopText;}
+  	if(c.stopText !== undefined){this.stopText.innerText = c.stopText; this.button.recalculate();}
   	if(c.autoStop !== undefined){this.autoStop = Boolean(c.autoStop);}
   	if(c.timeBeforeAutoStop !== undefined && !isNaN(c.timeBeforeAutoStop)){this.timeBeforeAutoStop = c.timeBeforeAutoStop;}
   }
@@ -54,14 +55,16 @@ class rwxTombola extends rwxCore {
     this.tombolaContainer.classList.add('rwx-tombola-container');
     this.stopNode = document.createElement('div');
     this.stopNode.classList.add('rwx-tombola-stopper');
-    this.stopText = document.createElement('span');
-    this.stopText.setAttribute('aria-role', 'button');
-    this.stopText.appendChild(document.createTextNode("Stop"));
+    this.stopText = document.createElement('button');
+    this.stopText.classList.add('no-decoration');
+    this.stopText.classList.add('text');
+    this.stopText.innerText = "Stop";
     this.stopNode.appendChild(this.stopText);
     this.tombolaContainer.appendChild(this.tombola);
     this.el.appendChild(this.tombolaContainer);
     this.el.appendChild(this.stopNode);
     document.body.appendChild(this.el);
+    this.button = new rwxAnimateableBorder(this.stopNode);
   }
 
   setOptions(arr)
@@ -95,7 +98,7 @@ class rwxTombola extends rwxCore {
     }
     else
     {
-    	this.stopNode.classList.add('active');
+    	this.button.active();
       this.pickWinner();
     }
   }
@@ -157,7 +160,7 @@ class rwxTombola extends rwxCore {
       this.el.classList.remove('appear');
       this.spinning=false;
       this.callback(this.items[this.winner].getAttribute('data-value'));
-      this.stopNode.classList.remove('active');
+      this.button.unactive();
       this.unaccessible();
       return;
     }

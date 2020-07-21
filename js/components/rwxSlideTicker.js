@@ -42,6 +42,7 @@ class rwxSlideTicker extends rwxCore {
 
 	setValue(value)
 	{
+		if(typeof(value) !== 'string'){this.error('setValue - parameter needs to be a string.'); return;}
 		this.el.setAttribute('tabIndex', 1);
 		this.el.focus();
 		this.reset();

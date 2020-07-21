@@ -23,6 +23,7 @@ class rwxPhotoTiles extends rwxCore {
 
 	goToTile(id, photoNumber, effect)
 	{
+    if(typeof(photoNumber) !== 'number'){this.error('goToTile - second parameter needs to be a number.'); return;}
 		const IME = this.getIME(id);
 		IME && IME.changeBackground(photoNumber, effect);
 	}

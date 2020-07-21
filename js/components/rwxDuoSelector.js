@@ -101,9 +101,7 @@ class rwxDuoSelector extends rwxCore {
 			this.items.push(el);
 			this.el.appendChild(el);
 		}
-		window.requestAnimationFrame(()=>{
-			btns.map((b)=>{this.buttons.push(new rwxAnimateableBorder(b));});
-		});
+		btns.map((b)=>{this.buttons.push(new rwxAnimateableBorder(b));});
 		return new Promise((resolve, reject)=>{this.callback = resolve;})
 	}
 }

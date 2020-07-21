@@ -12,22 +12,13 @@ $slidedowntime: 0.5s;
 {
 	&-stopper
 	{
-		cursor:pointer;
 		margin-top:100px;
-		color: $rwx-tombola-background-color;
-		background-color: $rwx-tombola-color;
-		padding:30px;
-		border-radius:15px;
-		font-size: 1.52rem;
-    line-height: 2.07rem;
-    transition: all 0.5s $transition-base;
-    &:hover, &.active
-    {
-    	transition: all 0.5s $transition-base;
-			color: $rwx-tombola-color;
-			background-color: rgba($rwx-tombola-background-color, 0.3);
-			border: 1px solid $rwx-tombola-color;  	
-    }
+		cursor:pointer;
+		.text
+		{
+			font-size: 1.52rem;
+	    line-height: 2.07rem;
+		}
 	}
 	&-background
 	{

@@ -120,6 +120,7 @@ class rwxComponent {
 			this.error(`No custom event found with name - ${type}`)
 			return;
 		}
+		if(typeof(event) !== 'function'){this.error('addEvent - event parameter must be a function.'); return;}
 		this[type].push({id, event});
 	}
 

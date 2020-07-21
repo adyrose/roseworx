@@ -16,7 +16,7 @@ class rwxTabs extends rwxCore {
 
 	goToTab(id, tabNumber)
 	{
-		if(typeof(tabNumber) !== 'number'){this.error('goToTab - second parameter needs to be a number.'); return;}
+		if(!this.validateParameter(tabNumber, 'number', 'goToTab'))return;
 		const IME = this.getIME(id);
 		IME && IME.changeTab(tabNumber);		
 	}

@@ -18,7 +18,7 @@ class rwxSliders extends rwxCore {
 
 	goToSlide(id, slideNumber)
 	{
-		if(typeof(slideNumber) !== 'number'){this.error('goToSlide - second parameter needs to be a number.'); return;}
+		if(!this.validateParameter(slideNumber, 'number', 'goToSlide'))return;
 		const IME = this.getIME(id);
 		IME && IME.goToSlide(slideNumber);		
 	}

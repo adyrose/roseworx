@@ -23,8 +23,9 @@ class rwxPhotoTiles extends rwxCore {
 
 	goToTile(id, photoNumber, effect)
 	{
-    if(typeof(photoNumber) !== 'number'){this.error('goToTile - second parameter needs to be a number.'); return;}
+    if(!this.validateParameter(photoNumber, 'number', 'goToTile'))return;
 		const IME = this.getIME(id);
+    if(IME && !IME.fx.includes(effect)){this.error(`${effect} is not a valid effect, picking random one.`)}
 		IME && IME.changeBackground(photoNumber, effect);
 	}
 }

@@ -7,6 +7,17 @@ A Module js file is Javascript which does something "in the background" and does
 Core js is automatically included and ran on the initial import of roseworx, Components and Modules need importing specifically.
 
 
+Exposed methods
+rwxNumberSwitcher - switch
+rwxDuoSelector - setValues
+rwxNoticeBox - setValue, setConfig
+rwxPhotoTiles - goToTile
+rwxSlideTicker - setValue
+rwxTombola - setConfig, setValues
+rwxTabs - goToTab, addEvent
+rwxSliders - goToSlide, addEvent
+rwxForms - customSubmitFn
+
 Extendable Classes
 	Core
 

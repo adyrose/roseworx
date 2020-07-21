@@ -21,6 +21,12 @@ class rwxCore {
 		});
 	}
 
+	validateParameter(value, type, caller)
+	{
+		if(typeof(value) !== type){this.error(`<${caller}> expected parameter of type ${type} but got ${typeof(value)}.`); return false;}
+		return true;
+	}
+
   commence(id)
   {
     const IME = this.getIME(id);
@@ -63,7 +69,7 @@ class rwxCore {
 
 	addEvent(elid, id, type, event)
 	{
-		if(!id || !event){return;}
+		if(!id || !event || !this.validateParameter(event, 'function', 'addEvent'))return;
 		const IME = this.getIME(elid);
 		if(IME && !IME.customEventsEnabled)return;
 		IME && IME.addEvent(id, event, type);		

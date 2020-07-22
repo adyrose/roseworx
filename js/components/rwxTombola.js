@@ -2,7 +2,7 @@ import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxMath from '../helpers/rwxMathHelpers';
 
 import { rwxCore } from '../rwxCore';
-import rwxAnimateableBorder from '../common/rwxAnimateableBorder';
+import rwxAnimatedBorder from '../common/rwxAnimatedBorder';
 
 class rwxTombola extends rwxCore {
   constructor()
@@ -64,7 +64,7 @@ class rwxTombola extends rwxCore {
     this.el.appendChild(this.tombolaContainer);
     this.el.appendChild(this.stopNode);
     document.body.appendChild(this.el);
-    this.button = new rwxAnimateableBorder(this.stopNode);
+    this.button = new rwxAnimatedBorder(this.stopNode);
   }
 
   setOptions(arr)

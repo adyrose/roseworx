@@ -1,5 +1,8 @@
 @import '../core/rwx-variables';
 @import '../core/rwx-mixins';
+$rwx-animated-border-from-color: $black !default;
+$rwx-animated-border-to-color: $white !default;
+@import '../effects/rwx-animated-border';
 
 $rwx-tombola-background-color: $blue !default;
 $rwx-tombola-color: $orange !default;

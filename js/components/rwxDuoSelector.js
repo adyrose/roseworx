@@ -1,5 +1,5 @@
 import { rwxCore } from '../rwxCore';
-import rwxAnimateableBorder from '../common/rwxAnimateableBorder';
+import rwxAnimatedBorder from '../common/rwxAnimatedBorder';
 
 class rwxDuoSelector extends rwxCore {
 	constructor()
@@ -101,7 +101,7 @@ class rwxDuoSelector extends rwxCore {
 			this.items.push(el);
 			this.el.appendChild(el);
 		}
-		btns.map((b)=>{this.buttons.push(new rwxAnimateableBorder(b));});
+		btns.map((b)=>{this.buttons.push(new rwxAnimatedBorder(b));});
 		return new Promise((resolve, reject)=>{this.callback = resolve;})
 	}
 }

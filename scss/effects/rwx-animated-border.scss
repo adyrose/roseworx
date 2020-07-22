@@ -1,0 +1,28 @@
+@import '../core/rwx-variables';
+$rwx-animated-border-from-color: $blue !default;
+$rwx-animated-border-to-color: $orange !default;
+$rwx-animated-border-size: 5px !default;
+.rwx-animateable-border
+{
+	svg
+	{
+		position:absolute;
+		rect
+		{
+			stroke-width:$rwx-animated-border-size;
+			fill:transparent;
+			stroke: $rwx-animated-border-from-color;
+			transition: 1s all ease;
+		}
+		&.active, &:hover
+		{
+			rect
+			{
+				stroke-dasharray: 50 0;
+				stroke-width: $rwx-animated-border-size;
+				stroke-dashoffset: 0;
+				stroke: $rwx-animated-border-to-color;
+			}			
+		}
+	}
+}

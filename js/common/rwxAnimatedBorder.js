@@ -1,8 +1,6 @@
-require('../../scss/modules/rwx-animateable-border.scss');
-
 import { rwxCore } from '../rwxCore';
 
-class rwxAnimateableBorder {
+class rwxAnimatedBorder {
 	constructor(el)
 	{
 		this.target = el;
@@ -56,4 +54,4 @@ class rwxAnimateableBorder {
 	}
 }
 
-export default rwxAnimateableBorder;
+export default rwxAnimatedBorder;

@@ -1,5 +1,3 @@
-require('../../scss/modules/rwx-mist.scss');
-
 import { rwxComponent } from '../rwxCore';
 
 class rwxMist extends rwxComponent {
@@ -7,6 +5,7 @@ class rwxMist extends rwxComponent {
 	{
 		super({enableResizeDebounce: true})
 		this.el = el;
+		this.update = this.update.bind(this);
 		this.calculate();
 		el.addEventListener('scroll', this.update);
 	}
@@ -33,7 +32,6 @@ class rwxMist extends rwxComponent {
 				this.rightMist = false;
 			}
 		}
-
 		if(this.el.scrollHeight > this.el.offsetHeight){
 			if(!this.bottomMist)
 			{
@@ -49,7 +47,6 @@ class rwxMist extends rwxComponent {
 				this.bottomMist = false;
 			}
 		}
-		this.update = this.update.bind(this);
 	}
 
 	update()
@@ -57,20 +54,20 @@ class rwxMist extends rwxComponent {
 		if(this.rightMist)
 		{
 			if((this.el.scrollLeft + this.el.offsetWidth) < this.el.scrollWidth){
-				this.rightMist.style.display = "block"; 
+				this.rightMist.classList.remove('hide');
 				this.rightMist.style.right = -this.el.scrollLeft + "px";
 				this.rightMist.style.height = this.el.scrollHeight + "px";
 			}
-			else{this.rightMist.style.display = "none";}
+			else{this.rightMist.classList.add('hide');}
 		}
 		if(this.bottomMist)
 		{
 			if((this.el.scrollTop + this.el.offsetHeight) < this.el.scrollHeight){
-				this.bottomMist.style.display = "block";
+				this.bottomMist.classList.remove('hide');
 				this.bottomMist.style.width = this.el.scrollWidth + "px";
 				this.bottomMist.style.bottom = -this.el.scrollTop + "px";
 			}
-			else{this.bottomMist.style.display = "none";}
+			else{this.bottomMist.classList.add('hide');}
 		}
 	}
 }

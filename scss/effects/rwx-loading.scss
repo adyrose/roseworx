@@ -1,4 +1,6 @@
-.rwx-loading
+$rwx-loading-background-color: $grey !default;
+$rwx-loading-color: $white !default;
+[rwx-loading]
 {
 	overflow:hidden;
 	position:relative;
@@ -8,7 +10,7 @@
 		overflow:hidden;
 		z-index:9998;
 		@include full-size;
-		background: rgba($grey, 0.5);
+		background: rgba($rwx-loading-background-color, 0.5);
 	}
 	&:after
 	{
@@ -18,7 +20,7 @@
 		position:absolute;
 		height:200%;
 		width:200%;
-		background:linear-gradient(to bottom, rgba($grey,0), rgba($white,0) 40%, rgba($white,1) 50%, rgba($white,0) 60%, rgba($grey,0));
+		background:linear-gradient(to bottom, rgba($rwx-loading-background-color,0), rgba($rwx-loading-color,0) 40%, rgba($rwx-loading-color,1) 50%, rgba($rwx-loading-color,0) 60%, rgba($rwx-loading-background-color,0));
 		transform:rotate(-45deg);
 	}
 }

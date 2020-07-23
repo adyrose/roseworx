@@ -53,21 +53,15 @@ class rwxMist extends rwxComponent {
 	{
 		if(this.rightMist)
 		{
-			if((this.el.scrollLeft + this.el.offsetWidth) < this.el.scrollWidth){
-				this.rightMist.classList.remove('hide');
-				this.rightMist.style.right = -this.el.scrollLeft + "px";
-				this.rightMist.style.height = this.el.scrollHeight + "px";
-			}
-			else{this.rightMist.classList.add('hide');}
+			(this.el.scrollLeft + this.el.offsetWidth) < this.el.scrollWidth ? this.rightMist.classList.remove('hide') : this.rightMist.classList.add('hide');
+			this.rightMist.style.right = -this.el.scrollLeft + "px";
+			this.rightMist.style.height = this.el.scrollHeight + "px";
 		}
 		if(this.bottomMist)
 		{
-			if((this.el.scrollTop + this.el.offsetHeight) < this.el.scrollHeight){
-				this.bottomMist.classList.remove('hide');
-				this.bottomMist.style.width = this.el.scrollWidth + "px";
-				this.bottomMist.style.bottom = -this.el.scrollTop + "px";
-			}
-			else{this.bottomMist.classList.add('hide');}
+			(this.el.scrollTop + this.el.offsetHeight) < this.el.scrollHeight ? this.bottomMist.classList.remove('hide') : this.bottomMist.classList.add('hide');
+			this.bottomMist.style.width = this.el.scrollWidth + "px";
+			this.bottomMist.style.bottom = -this.el.scrollTop + "px";
 		}
 	}
 }

@@ -50,15 +50,6 @@ const rwxMisc =
         const j = Math.floor(Math.random() * (i + 1));
         [a[i], a[j]] = [a[j], a[i]];
     }
-  },
-
-  zOpaqueIn:(el) => {
-    el.classList.contains('zOpaqueOut') && el.classList.remove('zOpaqueOut');
-    el.classList.add('zOpaqueIn');
-  },
-
-  zOpaqueOut:(el) => {
-    el.classList.add('zOpaqueOut');
   }
 }
 

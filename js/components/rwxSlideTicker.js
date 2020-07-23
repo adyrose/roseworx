@@ -1,5 +1,5 @@
 import { rwxCore } from '../rwxCore';
-import rwxMisc from '../helpers/rwxMiscHelpers';
+import rwxFade from '../effects/rwxFade';
 
 class rwxSlideTicker extends rwxCore {
 	constructor()
@@ -37,7 +37,7 @@ class rwxSlideTicker extends rwxCore {
 
 	closeEarly()
 	{
-		rwxMisc.zOpaqueOut(this.el);
+		rwxFade.fadeOut(this.el);
 	}
 
 	setValue(value)
@@ -67,13 +67,13 @@ class rwxSlideTicker extends rwxCore {
 	{
 		if(this.letters.length == 0){this.error("No Word Set"); return;}
 		if(this.letters.length > 25){this.error("Maxium character length is 25"); return;}
-		rwxMisc.zOpaqueIn(this.el);
+		rwxFade.fadeIn(this.el);
 		let interval = setInterval(()=>{
 			if(this.counter == this.letters.length)
 			{
 				clearInterval(interval);
 				setTimeout(()=>{
-					rwxMisc.zOpaqueOut(this.el);
+					rwxFade.fadeOut(this.el);
 				}, this.timeout);
 				return;
 			}

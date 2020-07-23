@@ -1,0 +1,44 @@
+$rwx-fade-layer: 9999 !default;
+
+.rwx-fade-in
+{
+	animation: fadeIn 1s ease-in forwards;
+}
+
+.rwx-fade-out
+{
+	animation: fadeOut 1s ease-in forwards;
+}
+
+@keyframes fadeIn
+{
+	0% {
+		opacity:0;
+		z-index:-1;
+	}
+	1% {
+		z-index: $rwx-fade-layer;
+	}
+	100% {
+		opacity:1;
+		z-index:$rwx-fade-layer;
+	}
+}
+
+@keyframes fadeOut
+{
+	0% {
+		opacity:1;
+		z-index:$rwx-fade-layer;
+	}
+  99%
+  {
+    opacity:0;
+    z-index:$rwx-fade-layer;
+  }
+  100%
+  {
+    opacity:0;
+    z-index:-1;
+  }
+}

@@ -8,7 +8,8 @@ $rwx-slide-ticker-text-color: $white !default;
 {
 	@include full-size;
 	@include flex-center;
-	@include zOpaque;
+	opacity: 0;
+	z-index:-1;
 	overflow:hidden;
 	background: rgba($rwx-slide-ticker-background-color, 0.7);
 	cursor:pointer;

@@ -5,8 +5,6 @@ class rwxDuoSelector extends rwxCore {
 	constructor()
 	{
 		super();
-		this.svgPaddingX = 60;
-		this.svgPaddingY = 40;
 		this.items = [];
 		this.buttons = [];
 		this.activeButton = 1;

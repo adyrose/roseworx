@@ -10,8 +10,8 @@ class rwxCore {
 			if(selector)
 			{
 				[...document.querySelectorAll(selector)].map((el) => {
-					const cpnt = canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
-					this.addIME(el.id, cpnt);
+					const mc = canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
+					this.addIME(el.id, mc);
 				});
 			}
 			else
@@ -46,7 +46,7 @@ class rwxCore {
 			toUse = rwxMisc.uniqueId();
 		}
 		else if(this.internalMap[toUse]){
-			this.error(`Duplicate ID #${id} found. Things may not work as expected, please use unique ID's per Component.`)
+			this.error(`Duplicate ID #${id} detected. Things may not work as expected, please use unique ID's per Component.`)
 		}
 		this.internalMap[toUse] = obj;
 	}
@@ -61,7 +61,7 @@ class rwxCore {
 		{
 			if(Object.keys(this.internalMap).length > 0)
 			{
-				this.error(`No element found with id - ${id} \n[rwx] Possible ID's on this page are - ${Object.keys(this.internalMap).join(', ')}`);
+				this.error(`No element detected with id - ${id} \n[rwx] Possible ID's on this page are - ${Object.keys(this.internalMap).join(', ')}`);
 			}
 			return false;
 		}		
@@ -123,7 +123,7 @@ class rwxComponent {
 	addEvent(id, event, type)
 	{
 		if(!this.availableEvents.includes(type)) {
-			this.error(`No custom event found with name - ${type}`)
+			this.error(`No custom event detected with name - ${type}`)
 			return;
 		}
 		if(typeof(event) !== 'function'){this.error('addEvent - event parameter must be a function.'); return;}

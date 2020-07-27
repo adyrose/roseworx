@@ -12,13 +12,13 @@ class rwxCountOMeters extends rwxCore {
 	execute(el, mc)
 	{
 		let value = el.hasAttribute('data-rwx-countometer-value');
-		if(!value)return;
-		value = el.getAttribute('data-rwx-countometer-value')		
+		if(!value){this.error('There is no value (data-rwx-countometer-value) attribute detected on the rwx-countometer element.'); return;}
+		value = el.getAttribute('data-rwx-countometer-value');
 		return new rwxCountOMeter(el, value, mc);	
 	}
 }
 
-class rwxCountOMeter extends rwxComponent{
+class rwxCountOMeter extends rwxComponent {
 	constructor(el, value, manualControl)
 	{
 		super({enableAnimationLoop: true, enableResizeDebounce: true, enableScrollIntoView: !manualControl})
@@ -46,7 +46,7 @@ class rwxCountOMeter extends rwxComponent{
 	    "#2fff00"
 		];
 		this.createCanvas();
-		this.calculateSize();
+		this.sizeCanvas();
 
 		this.animeCounter = [];
 		this.value = value
@@ -68,19 +68,19 @@ class rwxCountOMeter extends rwxComponent{
 
 	resize()
 	{
-		this.calculateSize();
+		this.sizeCanvas();
 		this.makeParticles();
 		this.makeText();
 	}
 
-	createCanvas(el)
+	createCanvas()
 	{
 		this.canvas = document.createElement('canvas');
 		this.c = this.canvas.getContext('2d');
 		this.el.appendChild(this.canvas);
 	}
 
-	calculateSize(el)
+	sizeCanvas()
 	{
 		let meas = this.el.getBoundingClientRect();
 		let pixelRatio = rwxCanvas.scale(this.canvas, this.c, meas.width, meas.width/2);

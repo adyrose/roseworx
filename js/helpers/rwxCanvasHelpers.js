@@ -40,7 +40,7 @@ const rwxCanvas =
     ctx.lineWidth = depth;
     ctx.stroke();
     ctx.closePath();    
-  }
+  },
 
  	// not sure how to put into test
 	//   resolveCollision(object, otherobject) {

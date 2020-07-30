@@ -19,6 +19,17 @@ const rwxGeometry = {
     return (a1 * c1 + u * b * (c1 - c) + a * Math.log((2 * u + u1 + c1) / (u1 + c))) / (4 * a1);
   },
   
+  getAngle(centerX, centerY, posX, posY) {
+    // returns an objects angle based on its coordinates and a center point
+    let x = centerX - posX;
+    let y = centerY - posY;
+
+    let theta = Math.atan2(-y, -x);
+    theta *= 180 / Math.PI;
+    if (theta < 0) theta += 360;
+    return theta;
+  },
+
   getDistance: (p1, p2)=>{
     return Math.sqrt(Math.pow((p2.x-p1.x), 2) + Math.pow((p2.y-p1.y), 2));
   },

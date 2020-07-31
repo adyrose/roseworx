@@ -10,26 +10,35 @@ class rwxBitSwarms extends rwxCore {
 	constructor()
 	{
 		super('[rwx-bit-swarm]');
+		this.orientations = ['horizontal', 'vertical', 'slanted', 'wrap'];
+		this.shapes = ['circle', 'square'];
+		this.orientationDefault = 'horizontal';
+		this.shapeDefault = 'circle';
 	}
 
 	execute(el, mc)
 	{
 		let bits = el.hasAttribute('data-rwx-bit-swarm-value');
 		if(!bits){this.error('There is no value (data-rwx-bit-swarm-value) attribute detected on the rwx-bit-swarm element.'); return;}
+		let orientation = el.hasAttribute('data-rwx-bit-swarm-orientation') ? el.getAttribute('data-rwx-bit-swarm-orientation') : this.orientationDefault;
+		let shape = el.hasAttribute('data-rwx-bit-swarm-shape') ? el.getAttribute('data-rwx-bit-swarm-shape') : this.shapeDefault;
+		if(!this.orientations.includes(orientation)){this.error(`${orientation} is not a valid orientation. Valid orientations include ['${this.orientations.join("', '")}']. Using '${this.orientationDefault}'.`); orientation = this.orientationDefault;}
+		if(!this.shapes.includes(shape)){this.error(`${shape} is not a valid shape. Valid shapes include ['${this.shapes.join("', '")}']. Using '${this.shapeDefault}'.`); shape = this.shapeDefault;}
 		bits = el.getAttribute('data-rwx-bit-swarm-value');
-		return new rwxBitSwarm(el, bits);
+		return new rwxBitSwarm(el, bits, orientation, shape);
 	}
 }
 
 class rwxBitSwarm extends rwxComponent {
-	constructor(el, bits)
+	constructor(el, bits, orientation, shape)
 	{
 		super({enableResizeDebounce: true, enableAnimationLoop: true})
 		this.el = el;
 		this.letters = [];
 		this.letterTimeoutStart = 20;
 		this.timeoutCounter = 0;
-		this.shape = "square";
+		this.shape = shape;
+		this.orientation = orientation;
 		this.sizes = {
 			'sm': {
 				particleSize: 2,
@@ -62,27 +71,132 @@ class rwxBitSwarm extends rwxComponent {
 		this.calculateSize();
 		this.split(bits.toUpperCase());
 		this.startAnimation();
+		this.addMouseEvent();
 	}
 
 	split(bits)
 	{
 		const letters = [...bits];
-		const notAllowed = letters.filter((l)=>!Object.keys(rwxBitSwarmLetterMatrix).includes(l));
-		if(notAllowed.length > 0){this.error(`[${notAllowed}] ${notAllowed.length > 1 ? 'are not supported bits' : 'is not a supported bit'}. Supported bits are [${Object.keys(rwxBitSwarmLetterMatrix)}]. CASE INSENSITIVE.`); return;}
-		const center = this.calculateCenter(letters.length);
-		let bitx = center.x;
+		const allowed = Object.keys(rwxBitSwarmLetterMatrix);
+		if(this.orientation == 'wrap'){allowed.push(' ')}
+		const notAllowed = letters.filter((l)=>!allowed.includes(l));
+		if(notAllowed.length > 0){this.error(`[${notAllowed}] ${notAllowed.length > 1 ? 'are not supported bits' : 'is not a supported bit'}. Supported bits are [${Object.keys(rwxBitSwarmLetterMatrix)}]. CASE INSENSITIVE. Note - ' ' spaces are only allowed if the 'wrap' orientation is specified.`); return;}
+		this.calculatePosition(true, letters);
+	}
+
+
+	calculatePosition(firstblood=false, letters)
+	{
+		let dimensions = [];
+		let counter = 0;
+		if(this.orientation == "wrap" && (letters.includes(' ') || letters.filter((l)=>l.ignoreME).length>0))
+		{
+			let words = [];
+			if(firstblood){words = letters.join('').split(' ');}
+			else
+			{
+				let splitIndexes = letters.map((l, i) => l.ignoreME ? i : -1).filter(index => index !== -1);
+				splitIndexes.push(letters.length);
+				splitIndexes.map((si, i)=>{
+					let fi = i==0 ? 0 : splitIndexes[i-1]+1;
+					words.push(letters.slice(fi, si));
+				});
+			}
+			dimensions = words.map((w,i)=>this.calculateDimensions(w.length, i, words.length));
+		}
+		else
+		{
+			dimensions.push(this.calculateDimensions(letters.length));
+		}
+		let bitx = dimensions[counter].x;
+		let bity = dimensions[counter].y;
 		letters.map((l, i)=>{
-			this.letters.push(new rwxBitSwarmLetter(rwxBitSwarmLetterMatrix[l], bitx, center.y, this.size.bitSize, this.size.particleSize, this.size.particleGap, this.shape, this.c, this.canvas, this.width, this.height, `letter${i}`));
-			bitx += (this.size.bitSize + this.size.bitSpacing);
+			if(firstblood)
+			{
+				if(l==" "){
+					this.letters.push({ignoreME: true, update: ()=>{}})
+					counter+=1; 
+					bitx=dimensions[counter].x; 
+					bity=dimensions[counter].y; 
+					return;
+				}
+				else {
+					this.letters.push(new rwxBitSwarmLetter(rwxBitSwarmLetterMatrix[l], bitx, bity, this.size.bitSize, this.size.particleSize, this.size.particleGap, this.shape, this.c, this.canvas, this.width, this.height, `letter${i}`));
+				}
+			}
+			else
+			{
+				if(l.ignoreME){	
+					counter+=1; 
+					bitx=dimensions[counter].x; 
+					bity=dimensions[counter].y; 
+					return;
+				};
+				l.bitSize = this.size.bitSize;
+				l.boundary = l.bitSize;
+				l.particleSize = this.size.particleSize;
+				l.particleGap = this.size.particleGap;
+				l.xpos = bitx;
+				l.ypos = bity;
+				l.createParticleData();				
+			}
+	
+			bitx += dimensions[counter].bitXPlus;
+			bity += dimensions[counter].bitYPlus;
 			return;
 		});
 	}
 
-	calculateCenter(bitlength)
+	calculateDimensions(bitlength, index=0, length=0)
 	{
-		let x = (this.width/2) - (((bitlength*this.size.bitSize) + ((bitlength-1)*this.size.bitSpacing))/2) ;
-		let y = (this.height/2) - (this.size.bitSize/2);
-		return {x, y};
+		let x, y, bitYPlus, bitXPlus;
+
+		if(this.orientation == "slanted")
+		{
+			bitXPlus = (this.size.bitSize + this.size.bitSpacing);
+			bitYPlus = this.size.bitSpacing+20;
+			y = (this.height/2) - ((this.size.bitSpacing+20)*bitlength)/2;
+			x = (this.width/2) - (((bitlength*this.size.bitSize) + ((bitlength-1)*this.size.bitSpacing))/2);
+		}
+		else if(this.orientation == "wrap")
+		{
+			bitXPlus = (this.size.bitSize + this.size.bitSpacing);
+			bitYPlus = 0;
+			y = (this.height/2) - (((length*this.size.bitSize) + ((length-1)*this.size.bitSpacing))/2) + (index * (this.size.bitSize + this.size.bitSpacing));
+			x = (this.width/2) - (((bitlength*this.size.bitSize) + ((bitlength-1)*this.size.bitSpacing))/2);
+		}
+		else if (this.orientation == "vertical")
+		{
+			bitXPlus = 0;
+			bitYPlus = (this.size.bitSize + this.size.bitSpacing);
+			x = (this.width/2) - (this.size.bitSize/2);
+			y = (this.height/2) - (((bitlength*this.size.bitSize) + ((bitlength-1)*this.size.bitSpacing))/2);
+		}
+		else if(this.orientation == "horizontal")
+		{
+			bitXPlus = (this.size.bitSize + this.size.bitSpacing);
+			bitYPlus = 0;
+			y = (this.height/2) - (this.size.bitSize/2);
+			x = (this.width/2) - (((bitlength*this.size.bitSize) + ((bitlength-1)*this.size.bitSpacing))/2);
+		}
+
+		return {x, y, bitXPlus, bitYPlus};
+	}
+
+	addMouseEvent()
+	{
+		this.mouse = {
+			x:this.width/2,
+			y:this.height/2
+		};
+		this.moused = this.moused.bind(this);
+		window.addEventListener('mousemove', this.moused);
+	}
+
+	moused(e)
+	{
+		let lastmouse = this.mouse;
+		this.mouse = {x:e.clientX, y:e.clientY};
 	}
 
 	createCanvas()
@@ -131,17 +245,7 @@ class rwxBitSwarm extends rwxComponent {
 	{
 		this.sizeCanvas();
 		this.calculateSize();
-		const center = this.calculateCenter(this.letters.length);
-		let bitx = center.x;
-		for(let l of this.letters)
-		{
-			l.particleSize = this.size.particleSize;
-			l.particleGap = this.size.particleGap;
-			l.xpos = bitx;
-			l.ypos = center.y;
-			l.resizeUpdate();
-			bitx += (this.size.bitSize + this.size.bitSpacing);
-		}		
+		this.calculatePosition(false, this.letters);	
 	}
 
 	sizeCanvas()
@@ -153,6 +257,14 @@ class rwxBitSwarm extends rwxComponent {
 		this.c.fillStyle = this.bitColor;
 	}
 }
+
+	//elastic - widening and shrinking radius from current angle 
+	// All join together into "psringy box" either per lettter or whole thing
+	// Have some sort of natural state? rotating or floating
+	// letters slanted instead of horizontal - slanted / horizontal / vertical / wrap on space config options current code will error if space in bitString - only allow if wrap specified
+
+	// V2 If speed is less than somethig have the particles flow away from an invisible circle around the mouse with them all taking the closes point on that circumference to the center of the bitSize
+	// V2 if the speed is greater than use the resolve collision and have them shoot off into the distance based on speed of whack
 
 class rwxBitSwarmLetter {
 	constructor(matrix, xpos, ypos, bitSize, particleSize, particleGap, shape, c, canvas, width, height, uniqueID)
@@ -168,27 +280,18 @@ class rwxBitSwarmLetter {
 		this.rejiggleDuration = 3000;
 		this.dropDuration = 5000;
 		this.waveDuration = 5000;
-		this.boundary = this.bitSize*2;
+		this.boundary = this.bitSize;
 		this.createParticleData();
 		this.particleAnimationCount = [];
 		this.particleAnimationCount2 = [];
 		this.particleAnimationCount3 = [];
 		this.animations = ['start', 'rotate', 'explode', 'snake', 'rejiggle', 'drop'];
-		this.waveAnimation = true;
-		// this.dropAnimation = true;
-		//this.startAnimation = true;
+		//this.dropAnimation = true;
+		this.startAnimation = true;
 		//this.rotateAnimation = true;
 		//this.explodeAnimation = true;
 		//this.snakeAnimation = true;
 		//this.rejiggleAnimation = true;
-	}
-
-	resizeUpdate()
-	{
-		this.matrix.map((m,i)=>{
-			this.matrixParticles[i].finalx = this.xpos + (m.x * this.particleGap);
-			this.matrixParticles[i].finaly = this.ypos + (m.y * this.particleGap);
-		});
 	}
 
 	randomPositionInBoundary(xory)
@@ -236,10 +339,6 @@ class rwxBitSwarmLetter {
 				snakecpy,
 				snakecp2x,
 				snakecp2y,
-				//elastic - widening and shrinking radius from current angle 
-				// All join together into "psringy box" either per lettter or whole thing
-				// Have some sort of natural state? rotating or floating
-				// Hve them ping away from mouse on mousemove
 				droptopx: (this.xpos + (this.bitSize/2)),
 				droptopy: (this.ypos - this.boundary),
 				dropbottomx: (this.xpos + (this.bitSize/2)),
@@ -342,7 +441,7 @@ class rwxBitSwarmLetter {
 
 	newAnimation()
 	{
-		this.animationTimeout = rwxMath.randomInt((60*2),(60*10));
+		this.animationTimeout = rwxMath.randomInt((60*3),(60*15));
 		this.nextAnimation = this.animations[rwxMath.randomInt(1, this.animations.length-1)];
 	}
 

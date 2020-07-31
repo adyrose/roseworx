@@ -35,7 +35,7 @@ class rwxPhotoTile extends rwxComponent {
   {
   	super({enableAnimationLoop: true, enableResizeDebounce: true});
   	this.el = el;
-  	this.photos = [...el.children]//[...el.querySelectorAll('img')];
+  	this.photos = [...el.children];//[...el.querySelectorAll('img')];
   	if(this.photos.length == 0)return;
   	this.effectInit = effect;
   	this.createCanvas(el);

@@ -166,7 +166,8 @@ class rwxBitSwarmLetter {
 		this.particleTimeout = 5;
 		this.particleTimeoutTicker = 0;
 		this.startDuration = 4000;
-		this.rotateDuration = 5000;
+		this.swarmDuration = 6000;
+		this.cycloneDuration = 5000;
 		this.explodeDuration = 1500;
 		this.snakeDuration = 3000;
 		this.rejiggleDuration = 3000;
@@ -178,7 +179,7 @@ class rwxBitSwarmLetter {
 		this.particleAnimationCount = [];
 		this.particleAnimationCount2 = [];
 		this.particleAnimationCount3 = [];
-		this.animations = ['start', 'rotate', 'explode', 'snake', 'rejiggle', 'drop', 'fireworx'];
+		this.animations = ['start', 'cyclone', 'explode', 'snake', 'rejiggle', 'drop', 'fireworx', 'swarm'];
 		this.startAnimating('start');
 	}
 
@@ -210,8 +211,8 @@ class rwxBitSwarmLetter {
 			let centery = this.ypos + (this.bitSize/2);
 			let explodepoint = rwxGeometry.closestPointOnCircumference({x: m.x, y:m.y}, {x:centerx, y:centery}, this.boundary);
 			let distancefromcenter = rwxGeometry.getDistance({x:centerx, y:centery},{x:m.x, y:m.y});
-			let rotatedistancefromcenter = distancefromcenter + this.bitSize/2;
-			let rotateangle = rwxGeometry.getAngle(centerx, centery, m.x, m.y);
+			let cyclonedistancefromcenter = distancefromcenter + this.bitSize/2;
+			let cycloneangle = rwxGeometry.getAngle(centerx, centery, m.x, m.y);
 			this.matrixParticles.push({
 				finalx: m.x,
 				finaly: m.y,
@@ -231,6 +232,8 @@ class rwxBitSwarmLetter {
 				snakecpy,
 				snakecp2x,
 				snakecp2y,
+				swarmx: rwxMath.randomInt(0, this.width),
+				swarmy: rwxMath.randomInt(0, this.height),
 				droptopx: (this.xpos + (this.bitSize/2)),
 				droptopy: (this.ypos - this.boundary),
 				dropbottomx: (this.xpos + (this.bitSize/2)),
@@ -238,8 +241,8 @@ class rwxBitSwarmLetter {
 				fireworxbottomx: (this.xpos + (this.bitSize/2)),
 				fireworxbottomy: (this.ypos + this.boundary + this.bitSize),
 				distancefromcenter,
-				rotatedistancefromcenter,
-				rotateangle,
+				cyclonedistancefromcenter,
+				cycloneangle,
 				explodepointx: explodepoint.x,
 				explodepointy: explodepoint.y,
 				centerx,
@@ -263,8 +266,8 @@ class rwxBitSwarmLetter {
 					if(this.startAnimation && this.particleTimeoutTicker >= p.timeout){
 						vals = this.start(p,i)
 					}
-					else if(this.rotateAnimation && this.particleTimeoutTicker >= p.timeout){
-						vals = this.rotate(p,i);
+					else if(this.cycloneAnimation && this.particleTimeoutTicker >= p.timeout){
+						vals = this.cyclone(p,i);
 					}
 					else if(this.snakeAnimation && this.particleTimeoutTicker >= p.timeout) {
 						vals = this.snake(p,i);
@@ -280,6 +283,9 @@ class rwxBitSwarmLetter {
 					}
 					else if(this.fireworxAnimation) {
 						vals = this.fireworx(p,i);
+					}
+					else if(this.swarmAnimation) {
+						vals = this.swarm(p,i);
 					}
 					else if(this.particleTimeoutTicker < p.timeout && !this.startAnimation)
 					{
@@ -445,22 +451,34 @@ class rwxBitSwarmLetter {
 		return {x,y};
 	}
 
-	rotate(p, i)
+	cyclone(p, i)
 	{
-		let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlerotate${i}`, 'easeOutCubic', this.rotateDuration, ()=>{this.particleAnimationCount.push(i);});
-		let d = rwxAnimate.fromToCalc(p.distancefromcenter, p.rotatedistancefromcenter*2, val);
+		let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlecyclone${i}`, 'easeOutCubic', this.cycloneDuration, ()=>{this.particleAnimationCount.push(i);});
+		let d = rwxAnimate.fromToCalc(p.distancefromcenter, p.cyclonedistancefromcenter*2, val);
 		if(val>=0.5)
 		{
-			d = p.distancefromcenter + (p.rotatedistancefromcenter - (d-p.rotatedistancefromcenter));
+			d = p.distancefromcenter + (p.cyclonedistancefromcenter - (d-p.cyclonedistancefromcenter));
 		}
-		let x = p.centerx + Math.cos(rwxGeometry.toRadians(rwxAnimate.fromToCalc(0, 1080, val)+p.rotateangle)) * d;
-		let y = p.centery + Math.sin(rwxGeometry.toRadians(rwxAnimate.fromToCalc(0, 1080, val)+p.rotateangle)) * d;
+		let x = p.centerx + Math.cos(rwxGeometry.toRadians(rwxAnimate.fromToCalc(0, 1080, val)+p.cycloneangle)) * d;
+		let y = p.centery + Math.sin(rwxGeometry.toRadians(rwxAnimate.fromToCalc(0, 1080, val)+p.cycloneangle)) * d;
 		return {x,y};
 	}
 
 	start(p, i)
 	{
 		return rwxAnimate.fromToBezier({ x: p.startx, y: p.starty }, { x: p.startcpx, y: p.startcpy }, { x: p.startcp2x, y: p.startcp2y }, { x: p.finalx, y: p.finaly }, `${this.uniqueID}particlestart${i}`, 'easeOutQuart', this.startDuration, () => {this.particleAnimationCount.push(i);});	
+	}
+
+	swarm(p, i)
+	{
+		if(!this.particleAnimationCount2.includes(i))
+		{
+			return rwxAnimate.fromToBezier({ x: p.finalx, y: p.finaly }, { x: p.startcpx, y: p.startcpy }, { x: p.startcp2x, y: p.startcp2y }, { x: p.swarmx, y: p.swarmy }, `${this.uniqueID}particleSwarm1${i}`, 'easeInOutQuart', this.swarmDuration/2, () => {this.particleAnimationCount2.push(i);});	
+		}
+		else
+		{
+			return rwxAnimate.fromToBezier({ x: p.swarmx, y: p.swarmy }, { x: p.startcpx, y: p.startcpy }, { x: p.startcp2x, y: p.startcp2y }, { x: p.finalx, y: p.finaly }, `${this.uniqueID}particleSwarm2${i}`, 'easeInOutQuart', this.swarmDuration/2, () => {this.particleAnimationCount.push(i);});	
+		}
 	}
 
 	explode(p, i)

@@ -1,0 +1,7 @@
+@import '../core/rwx-variables';
+@import '../core/rwx-mixins';
+
+.rwx-bit-virus
+{
+	@include full-size;
+}

@@ -1,4 +1,6 @@
 import rwxMisc from './helpers/rwxMiscHelpers';
+import rwxCanvas from './helpers/rwxCanvasHelpers';
+
 class rwxCore {
 	constructor(selector, canHaveManualControl=false)
 	{
@@ -111,7 +113,21 @@ class rwxComponent {
 				this.scrollEvent = this.scrollEvent.bind(this);
 				this.scroll();
 			}
+
+			if(opts.enableMouseTracking)
+			{
+				this.mouse = {};
+				this.mousedEvent = this.mousedEvent.bind(this);
+				window.addEventListener('mousemove', this.mousedEvent);
+			}
 		}
+	}
+
+	mousedEvent(e)
+	{
+		this.lastmouse = this.mouse;
+		this.mouse = {x:e.clientX, y:e.clientY};
+		this.moused && this.moused();
 	}
 
 	declareEvent(name)

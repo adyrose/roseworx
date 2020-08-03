@@ -46,7 +46,6 @@ class rwxCountOMeter extends rwxComponent {
 	    "#2fff00"
 		];
 		this.createCanvas();
-		this.sizeCanvas();
 
 		this.animeCounter = [];
 		this.value = value
@@ -78,6 +77,7 @@ class rwxCountOMeter extends rwxComponent {
 		this.canvas = document.createElement('canvas');
 		this.c = this.canvas.getContext('2d');
 		this.el.appendChild(this.canvas);
+    this.sizeCanvas();
 	}
 
 	sizeCanvas()

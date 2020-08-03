@@ -1,6 +1,7 @@
 import {rwxError} from '../rwxCore';
 
 const rwxBitFontOrientationDefault = 'horizontal';
+const rwxBitFontOrientations = ['horizontal', 'vertical', 'slanted', 'wrap'];
 
 const rwxBitFontGetMatrix = (letters, orientation, width, height)=>{
 	if(!rwxBitFontOrientations.includes(orientation)){rwxError(`${orientation} is not a valid orientation. Valid orientations include ['${rwxBitFontOrientations.join("', '")}']. Using '${rwxBitFontOrientationDefault}'.`, 'rwxBitFont'); orientation = rwxBitFontOrientationDefault;}
@@ -32,7 +33,11 @@ const rwxBitFontGetMatrix = (letters, orientation, width, height)=>{
 			return;
 		}
 		else {
-			toReturn.push({bitx, bity, matrix:rwxBitFontMatrix[l], dimensions:size});
+			let matrix = [];
+			rwxBitFontMatrix[l].map((p)=>{
+				matrix.push({x: bitx + (p.x * size.particleGap), y: bity + (p.y * size.particleGap)});
+			});
+			toReturn.push({bitx, bity, matrix, dimensions:size});
 		}
 
 		bitx += dimensions[counter].bitXPlus;
@@ -106,8 +111,6 @@ const calculateSize = (w) =>
 		return rwxBitFontSizing.xl;
 	}
 }
-
-const rwxBitFontOrientations = ['horizontal', 'vertical', 'slanted', 'wrap'];
 
 const rwxBitFontSizing = {
 	'sm': {

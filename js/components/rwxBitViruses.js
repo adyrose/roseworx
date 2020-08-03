@@ -47,9 +47,8 @@ class rwxBitVirus extends rwxComponent {
 		this.shape = shape;
 		this.orientation = orientation;
 		this.bitColor = color;
-		this.letters = [];
+		this.particles = [];
 		this.createCanvas();
-		this.c.fillStyle = this.bitColor;
 		this.calculateParticlePoints(bits);
 	}
 
@@ -69,6 +68,14 @@ class rwxBitVirus extends rwxComponent {
 		let maxy = Math.max(...ys);
 		console.log(`minx: ${minx} maxx: ${maxx} miny: ${miny} maxy: ${maxy}`);
 
+		console.log(matrix);
+		matrix.map((m)=>{
+			m.matrix.map((mp)=>{
+				this.particles.push(new rwxParticle(mp.x, mp.y, m.dimensions.particleSize, this.shape, this.c))
+				return;
+			});
+			return;
+		})
 		// new rwxParticle(finalx, finaly, this.particleSize, this.shape, this.c);
 		// new rwxParticle(finalx, finaly, this.particleSize/2, this.shape, this.c);
 	}
@@ -97,11 +104,15 @@ class rwxBitVirus extends rwxComponent {
 		let pixelRatio = rwxCanvas.scale(this.canvas, this.c, meas.width, meas.height);
 		this.width = (this.canvas.width / pixelRatio);
 		this.height = (this.canvas.height / pixelRatio);
+		this.c.fillStyle = this.bitColor;
 	}
 
 	animate()
 	{
-		
+		for(let p of this.particles)
+		{
+			p.update(p.x, p.y);
+		}
 	}
 
 	resize()

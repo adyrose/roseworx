@@ -52,7 +52,6 @@ class rwxBitSwarm extends rwxComponent {
 		this.wordAnimationTimeout = 300;
 		this.wordAnimationTicker = 0;
 		this.createCanvas();
-		this.c.fillStyle = this.bitColor;
 		this.calculatePosition(true, bits);
 	}
 
@@ -72,6 +71,7 @@ class rwxBitSwarm extends rwxComponent {
 			}
 			else
 			{
+				this.letters[i].matrix = l.matrix;
 				this.letters[i].bitSize = l.dimensions.bitSize;
 				this.letters[i].boundary = this.letters[i].bitSize;
 				this.letters[i].particleSize = l.dimensions.particleSize;
@@ -95,9 +95,9 @@ class rwxBitSwarm extends rwxComponent {
 	{
 		let meas = this.el.getBoundingClientRect();
 		let pixelRatio = rwxCanvas.scale(this.canvas, this.c, meas.width, meas.height);
-
 		this.width = (this.canvas.width / pixelRatio);
 		this.height = (this.canvas.height / pixelRatio);
+		this.c.fillStyle = this.bitColor;
 	}
 
 	moused()
@@ -171,13 +171,14 @@ class rwxBitSwarmLetter {
 		this.snakeDuration = 3000;
 		this.rejiggleDuration = 3000;
 		this.dropDuration = 5000;
+		this.fireworxDuration = 5000;
 		this.waveDuration = 5000;
 		this.boundary = this.bitSize;
 		this.createParticleData();
 		this.particleAnimationCount = [];
 		this.particleAnimationCount2 = [];
 		this.particleAnimationCount3 = [];
-		this.animations = ['start', 'rotate', 'explode', 'snake', 'rejiggle', 'drop'];
+		this.animations = ['start', 'rotate', 'explode', 'snake', 'rejiggle', 'drop', 'fireworx'];
 		this.startAnimating('start');
 	}
 
@@ -196,7 +197,7 @@ class rwxBitSwarmLetter {
 	createParticleData()
 	{
 		this.matrixParticles = [];
-		// do here so all particles have same
+
 		const snakestartx = this.randomPositionInBoundary('x');
 		const snakestarty = this.randomPositionInBoundary('y');
 		const snakecpx = this.randomPositionInBoundary('x');
@@ -205,17 +206,15 @@ class rwxBitSwarmLetter {
 		const snakecp2y = this.randomPositionInBoundary('y');
 
 		this.matrix.map((m, i)=>{
-			let finalx = this.xpos + (m.x * this.particleGap);
-			let finaly = this.ypos + (m.y * this.particleGap);
 			let centerx = this.xpos + (this.bitSize/2);
 			let centery = this.ypos + (this.bitSize/2);
-			let explodepoint = rwxGeometry.closestPointOnCircumference({x: finalx, y:finaly}, {x:centerx, y:centery}, this.boundary);
-			let distancefromcenter = rwxGeometry.getDistance({x:centerx, y:centery},{x:finalx, y:finaly});
+			let explodepoint = rwxGeometry.closestPointOnCircumference({x: m.x, y:m.y}, {x:centerx, y:centery}, this.boundary);
+			let distancefromcenter = rwxGeometry.getDistance({x:centerx, y:centery},{x:m.x, y:m.y});
 			let rotatedistancefromcenter = distancefromcenter + this.bitSize/2;
-			let rotateangle = rwxGeometry.getAngle(centerx, centery, finalx, finaly);
+			let rotateangle = rwxGeometry.getAngle(centerx, centery, m.x, m.y);
 			this.matrixParticles.push({
-				finalx,
-				finaly,
+				finalx: m.x,
+				finaly: m.y,
 				startx: this.randomPositionInBoundary('x'),
 				starty: this.randomPositionInBoundary('y'),
 				startcpx: rwxMath.randomInt(0, this.width),//rwxMath.randomInt(0, this.width) //rwxMath.randomInt((this.xpos - (this.bitSize/20)), (this.xpos+this.bitSize+(this.bitSize/20))),
@@ -236,6 +235,8 @@ class rwxBitSwarmLetter {
 				droptopy: (this.ypos - this.boundary),
 				dropbottomx: (this.xpos + (this.bitSize/2)),
 				dropbottomy: (this.ypos + this.bitSize),
+				fireworxbottomx: (this.xpos + (this.bitSize/2)),
+				fireworxbottomy: (this.ypos + this.boundary + this.bitSize),
 				distancefromcenter,
 				rotatedistancefromcenter,
 				rotateangle,
@@ -244,7 +245,7 @@ class rwxBitSwarmLetter {
 				centerx,
 				centery,
 				timeout: i*this.particleTimeout,
-				particle: new rwxParticle(finalx, finaly, this.particleSize, this.shape, this.c);
+				particle: new rwxParticle(m.x, m.y, this.particleSize, this.shape, this.c)
 			});
 			return;
 		});
@@ -276,6 +277,9 @@ class rwxBitSwarmLetter {
 					}
 					else if(this.dropAnimation) {
 						vals = this.drop(p,i);
+					}
+					else if(this.fireworxAnimation) {
+						vals = this.fireworx(p,i);
 					}
 					else if(this.particleTimeoutTicker < p.timeout && !this.startAnimation)
 					{
@@ -328,6 +332,44 @@ class rwxBitSwarmLetter {
 	normal(p)
 	{
 		p.particle.update(p.finalx, p.finaly);
+	}
+
+	fireworx(p, i)
+	{
+		if(!this.particleAnimationCount2.includes(i))
+		{
+			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlefireworx${i}`, 'easeOutCubic', (this.fireworxDuration/5)*3, ()=>{this.particleAnimationCount2.push(i);})
+			let x = rwxAnimate.fromToCalc(p.finalx, p.fireworxbottomx, val);
+			let y = rwxAnimate.fromToCalc(p.finaly, p.fireworxbottomy, val);
+			return {x,y};
+		}
+		else
+		{
+			return this.fireworxStep2(p, i);
+		}
+	}
+
+	fireworxStep2(p, i)
+	{
+		if(!this.particleAnimationCount3.includes(i))
+		{
+			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlefireworx2${i}`, 'easeInQuint', (this.fireworxDuration/5), ()=>{this.particleAnimationCount3.push(i);})
+			let x = rwxAnimate.fromToCalc(p.fireworxbottomx, p.centerx, val);
+			let y = rwxAnimate.fromToCalc(p.fireworxbottomy, p.centery, val);
+			return {x,y};
+		}
+		else
+		{
+			return this.fireworxStep3(p, i);
+		}
+	}
+
+	fireworxStep3(p, i)
+	{
+		let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlefireworx3${i}`, 'easeOutQuint', (this.fireworxDuration/5), ()=>{this.particleAnimationCount.push(i);})
+		let x = rwxAnimate.fromToCalc(p.centerx, p.finalx, val);
+		let y = rwxAnimate.fromToCalc(p.centery, p.finaly, val);
+		return {x,y};
 	}
 
 	wave(p, i)

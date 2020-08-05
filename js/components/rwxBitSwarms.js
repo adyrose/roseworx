@@ -44,6 +44,7 @@ class rwxBitSwarm extends rwxComponent {
 		this.shape = shape;
 		this.orientation = orientation;
 		this.bitColor = color;
+		this.repeatAnimations = true;
 		this.letters = [];
 		this.animationsStarted = [];
 		this.letterAnimationTimeout = 20;
@@ -58,16 +59,25 @@ class rwxBitSwarm extends rwxComponent {
 	scrolledIntoView()
 	{
 		this.startAnimation();
+		this.stopScroll = true;
 	}
 
 	calculatePosition(firstblood=false, bits)
 	{
 		let letters = rwxBitFontGetMatrix(bits, this.orientation, this.width, this.height);
-		if(firstblood){this.actualLetters = bits}
+		if(firstblood){
+			this.actualLetters = bits;
+			this.mouseParticle = new rwxParticle(this.width/2, this.height/2, letters[0].dimensions.bitSize, 'circle', '#000000', this.c, 2);
+		}
+		else
+		{
+			this.mouseParticle.setRadius(letters[0].dimensions.bitSize);
+		}
+
 		letters.map((l,i)=>{
 			if(firstblood)
 			{
-				this.letters.push(new rwxBitSwarmLetter(l.matrix, l.bitx, l.bity, l.dimensions.bitSize, l.dimensions.particleSize, l.dimensions.particleGap, this.shape, this.c, this.canvas, this.width, this.height, `letter${i}`));
+				this.letters.push(new rwxBitSwarmLetter(l.matrix, l.bitx, l.bity, l.dimensions.bitSize, l.dimensions.particleSize, l.dimensions.particleGap, this.bitColor, this.shape, this.c, this.canvas, this.width, this.height, `letter${i}`));
 			}
 			else
 			{
@@ -102,11 +112,23 @@ class rwxBitSwarm extends rwxComponent {
 
 	moused()
 	{
+		this.mouseParticle.velocity = {x: ((this.mouse.x - this.lastmouse.x)/2), y: ((this.mouse.y - this.lastmouse.y)/2)}
+	}
 
+	collide(l)
+	{
+		for(let p of l.matrixParticles)
+		{
+			rwxGeometry.resolveCollision(p.particle, this.mouseParticle, true);
+			p.particle.x += p.particle.velocity.x;
+			p.particle.y += p.particle.velocity.y;
+			p.particle.draw();
+		}
 	}
 
 	animate()
 	{
+		this.mouseParticle.update(this.mouse.x, this.mouse.y);
 		for(let [i,l] of this.letters.entries())
 		{
 			if(this.letterTimeoutTicker >= i*this.letterAnimationTimeout)
@@ -116,7 +138,14 @@ class rwxBitSwarm extends rwxComponent {
 					l.startAnimating(this.nextAnimation);
 					this.animationsStarted.push(i);
 				}
-				l.update();
+				if(l.animationDone)
+				{
+					this.collide(l);
+				}
+				else
+				{
+					l.update();
+				}
 			}
 			if(l.animationDone && i==this.letters.length-1 && !this.startWordAnimationTicker)
 			{
@@ -130,25 +159,28 @@ class rwxBitSwarm extends rwxComponent {
 		{
 			this.letterTimeoutTicker +=1;
 		}
-		if(this.startWordAnimationTicker)
+		if(this.repeatAnimations)
 		{
-			this.wordAnimationTicker +=1;
-			if(this.wordAnimationTicker >= this.wordAnimationTimeout){
-				this.nextAnimation = this.letters[0].animations[rwxMath.randomInt(1, this.letters[0].animations.length-1)];
-				this.setNextAnimation = true;
-				this.wordAnimationTicker = 0;
-				this.letterTimeoutTicker2 = 0;
-				this.startletterTimeoutTicker2 = true;
-				this.animationsStarted = [];
+			if(this.startWordAnimationTicker)
+			{
+				this.wordAnimationTicker +=1;
+				if(this.wordAnimationTicker >= this.wordAnimationTimeout){
+					this.nextAnimation = this.letters[0].animations[rwxMath.randomInt(1, this.letters[0].animations.length-1)];
+					this.setNextAnimation = true;
+					this.wordAnimationTicker = 0;
+					this.letterTimeoutTicker2 = 0;
+					this.startletterTimeoutTicker2 = true;
+					this.animationsStarted = [];
+				}
 			}
-		}
 
-		if(this.startletterTimeoutTicker2 && this.letterTimeoutTicker2 < this.letters.length*this.letterAnimationTimeout)
-		{
-			this.letterTimeoutTicker2 += 1;
-		}
-		else{
-			this.startWordAnimationTicker = false;
+			if(this.startletterTimeoutTicker2 && this.letterTimeoutTicker2 < this.letters.length*this.letterAnimationTimeout)
+			{
+				this.letterTimeoutTicker2 += 1;
+			}
+			else{
+				this.startWordAnimationTicker = false;
+			}
 		}
 	}
 
@@ -160,9 +192,9 @@ class rwxBitSwarm extends rwxComponent {
 }
 
 class rwxBitSwarmLetter {
-	constructor(matrix, xpos, ypos, bitSize, particleSize, particleGap, shape, c, canvas, width, height, uniqueID)
+	constructor(matrix, xpos, ypos, bitSize, particleSize, particleGap, bitColor, shape, c, canvas, width, height, uniqueID)
 	{
-		Object.assign(this, {matrix, xpos, ypos, bitSize, particleSize, particleGap, shape, c, canvas, width, height, uniqueID});
+		Object.assign(this, {matrix, xpos, ypos, bitSize, particleSize, particleGap, bitColor, shape, c, canvas, width, height, uniqueID});
 		this.particleTimeout = 5;
 		this.particleTimeoutTicker = 0;
 		this.startDuration = 4000;
@@ -179,6 +211,7 @@ class rwxBitSwarmLetter {
 		this.particleAnimationCount = [];
 		this.particleAnimationCount2 = [];
 		this.particleAnimationCount3 = [];
+		// no good -  rejiggle
 		this.animations = ['start', 'cyclone', 'explode', 'snake', 'rejiggle', 'drop', 'fireworx', 'swarm'];
 		this.startAnimating('start');
 	}
@@ -187,6 +220,14 @@ class rwxBitSwarmLetter {
 	{
 		this.animationDone = false;
 		this[`${type}Animation`] = true;
+		this.matrixParticles.map((mp)=>{
+			mp.currentx = mp.particle.x;
+			mp.currenty = mp.particle.y;
+			mp.distancefromcenter = rwxGeometry.getDistance({x:mp.centerx, y:mp.centery},{x:mp.currentx, y:mp.currenty});
+			mp.cyclonedistancefromcenter = mp.distancefromcenter + this.bitSize/2;
+			mp.finaldistancefromcenter = rwxGeometry.getDistance({x:mp.centerx, y:mp.centery},{x:mp.finalx, y:mp.finaly});
+			mp.particle.velocity = {x:0,y:0};
+		return})
 	}
 
 	randomPositionInBoundary(xory)
@@ -210,8 +251,6 @@ class rwxBitSwarmLetter {
 			let centerx = this.xpos + (this.bitSize/2);
 			let centery = this.ypos + (this.bitSize/2);
 			let explodepoint = rwxGeometry.closestPointOnCircumference({x: m.x, y:m.y}, {x:centerx, y:centery}, this.boundary);
-			let distancefromcenter = rwxGeometry.getDistance({x:centerx, y:centery},{x:m.x, y:m.y});
-			let cyclonedistancefromcenter = distancefromcenter + this.bitSize/2;
 			let cycloneangle = rwxGeometry.getAngle(centerx, centery, m.x, m.y);
 			this.matrixParticles.push({
 				finalx: m.x,
@@ -240,15 +279,13 @@ class rwxBitSwarmLetter {
 				dropbottomy: (this.ypos + this.bitSize),
 				fireworxbottomx: (this.xpos + (this.bitSize/2)),
 				fireworxbottomy: (this.ypos + this.boundary + this.bitSize),
-				distancefromcenter,
-				cyclonedistancefromcenter,
 				cycloneangle,
 				explodepointx: explodepoint.x,
 				explodepointy: explodepoint.y,
 				centerx,
 				centery,
 				timeout: i*this.particleTimeout,
-				particle: new rwxParticle(m.x, m.y, this.particleSize, this.shape, this.c)
+				particle: new rwxParticle(m.x, m.y, this.particleSize, this.shape, this.bitColor, this.c, 1)
 			});
 			return;
 		});
@@ -337,7 +374,7 @@ class rwxBitSwarmLetter {
 
 	normal(p)
 	{
-		p.particle.update(p.finalx, p.finaly);
+		p.particle.draw();
 	}
 
 	fireworx(p, i)
@@ -345,8 +382,8 @@ class rwxBitSwarmLetter {
 		if(!this.particleAnimationCount2.includes(i))
 		{
 			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlefireworx${i}`, 'easeOutCubic', (this.fireworxDuration/5)*3, ()=>{this.particleAnimationCount2.push(i);})
-			let x = rwxAnimate.fromToCalc(p.finalx, p.fireworxbottomx, val);
-			let y = rwxAnimate.fromToCalc(p.finaly, p.fireworxbottomy, val);
+			let x = rwxAnimate.fromToCalc(p.currentx, p.fireworxbottomx, val);
+			let y = rwxAnimate.fromToCalc(p.currenty, p.fireworxbottomy, val);
 			return {x,y};
 		}
 		else
@@ -378,48 +415,13 @@ class rwxBitSwarmLetter {
 		return {x,y};
 	}
 
-	wave(p, i)
-	{
-		if(!this.particleAnimationCount2.includes(i))
-		{
-			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlewave${i}`, 'easeInQuart', (this.waveDuration/5), ()=>{this.particleAnimationCount2.push(i);})
-			let x = rwxAnimate.fromToCalc(p.finalx, p.wavestartx, val);
-			let y = rwxAnimate.fromToCalc(p.finaly, p.wavestarty, val);
-			return {x,y};
-		}
-		else
-		{
-			return this.waveStep2(p, i);
-		}
-	}
-
-	waveStep2(p, i)
-	{
-		if(!this.particleAnimationCount3.includes(i))
-		{
-			return rwxAnimate.fromToBezier({ x: p.wavestartx, y: p.wavestarty }, { x: p.wavestartx, y: p.wavey }, { x: p.wavestartx, y: p.wavey }, { x: p.wavestartx, y: p.wavestarty }, `${this.uniqueID}particlewave2${i}`, 'easeOutQuart', (this.waveDuration/5)*3, () => {this.particleAnimationCount3.push(i);});
-		}
-		else
-		{
-			return this.waveStep3(p, i);
-		}
-	}
-
-	waveStep3(p, i)
-	{
-		let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlewave3${i}`, 'easeOutQuart', (this.waveDuration/5), ()=>{this.particleAnimationCount.push(i);})
-		let x = rwxAnimate.fromToCalc(p.wavestartx, p.finalx, val);
-		let y = rwxAnimate.fromToCalc(p.wavestarty, p.finaly, val);
-		return {x,y};		
-	}
-
 	drop(p, i)
 	{
 		if(!this.particleAnimationCount2.includes(i))
 		{
 			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particledrop${i}`, 'linear', (this.dropDuration/5)*3, ()=>{this.particleAnimationCount2.push(i);})
-			let x = rwxAnimate.fromToCalc(p.finalx, p.droptopx, val);
-			let y = rwxAnimate.fromToCalc(p.finaly, p.droptopy, val);
+			let x = rwxAnimate.fromToCalc(p.currentx, p.droptopx, val);
+			let y = rwxAnimate.fromToCalc(p.currenty, p.droptopy, val);
 			return {x,y};
 		}
 		else
@@ -457,7 +459,7 @@ class rwxBitSwarmLetter {
 		let d = rwxAnimate.fromToCalc(p.distancefromcenter, p.cyclonedistancefromcenter*2, val);
 		if(val>=0.5)
 		{
-			d = p.distancefromcenter + (p.cyclonedistancefromcenter - (d-p.cyclonedistancefromcenter));
+			d = p.finaldistancefromcenter + (p.cyclonedistancefromcenter - (d-p.cyclonedistancefromcenter));
 		}
 		let x = p.centerx + Math.cos(rwxGeometry.toRadians(rwxAnimate.fromToCalc(0, 1080, val)+p.cycloneangle)) * d;
 		let y = p.centery + Math.sin(rwxGeometry.toRadians(rwxAnimate.fromToCalc(0, 1080, val)+p.cycloneangle)) * d;
@@ -473,7 +475,7 @@ class rwxBitSwarmLetter {
 	{
 		if(!this.particleAnimationCount2.includes(i))
 		{
-			return rwxAnimate.fromToBezier({ x: p.finalx, y: p.finaly }, { x: p.startcpx, y: p.startcpy }, { x: p.startcp2x, y: p.startcp2y }, { x: p.swarmx, y: p.swarmy }, `${this.uniqueID}particleSwarm1${i}`, 'easeInOutQuart', this.swarmDuration/2, () => {this.particleAnimationCount2.push(i);});	
+			return rwxAnimate.fromToBezier({ x: p.currentx, y: p.currenty }, { x: p.startcpx, y: p.startcpy }, { x: p.startcp2x, y: p.startcp2y }, { x: p.swarmx, y: p.swarmy }, `${this.uniqueID}particleSwarm1${i}`, 'easeInOutQuart', this.swarmDuration/2, () => {this.particleAnimationCount2.push(i);});	
 		}
 		else
 		{
@@ -485,9 +487,24 @@ class rwxBitSwarmLetter {
 	{
 		if(!this.particleAnimationCount2.includes(i))
 		{
-			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particleexplode${i}`, 'easeOutQuint', this.explodeDuration/2, ()=>{this.particleAnimationCount2.push(i);})
-			let x = rwxAnimate.fromToCalc(p.finalx, p.explodepointx, val);
-			let y = rwxAnimate.fromToCalc(p.finaly, p.explodepointy, val);
+			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particleexplodetocenter${i}`, 'easeOutCubic', this.explodeDuration/3, ()=>{this.particleAnimationCount2.push(i);})
+			let x = rwxAnimate.fromToCalc(p.currentx, p.centerx, val);
+			let y = rwxAnimate.fromToCalc(p.currenty, p.centery, val);
+			return {x,y};
+		}
+		else
+		{
+			return this.explodeStep2(p, i);
+		}
+	}
+
+	explodeStep2(p, i)
+	{
+		if(!this.particleAnimationCount3.includes(i))
+		{
+			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particleexplode${i}`, 'easeOutQuint', this.explodeDuration/2, ()=>{this.particleAnimationCount3.push(i);})
+			let x = rwxAnimate.fromToCalc(p.centerx, p.explodepointx, val);
+			let y = rwxAnimate.fromToCalc(p.centery, p.explodepointy, val);
 			return {x,y};
 		}
 		else
@@ -509,8 +526,8 @@ class rwxBitSwarmLetter {
 		if(!this.particleAnimationCount2.includes(i))
 		{
 			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlesnake${i}`, 'easeInQuart', this.snakeDuration/3, ()=>{this.particleAnimationCount2.push(i);})
-			let x = rwxAnimate.fromToCalc(p.finalx, p.snakestartx, val);
-			let y = rwxAnimate.fromToCalc(p.finaly, p.snakestarty, val);
+			let x = rwxAnimate.fromToCalc(p.currentx, p.snakestartx, val);
+			let y = rwxAnimate.fromToCalc(p.currenty, p.snakestarty, val);
 			return {x,y};
 		}
 		else
@@ -526,7 +543,7 @@ class rwxBitSwarmLetter {
 
 	rejiggle(p, i)
 	{
-		return rwxAnimate.fromToBezier({ x: p.finalx, y: p.finaly }, { x: p.rejigglecpx, y: p.rejigglecpy }, { x: p.rejigglecp2x, y: p.rejigglecp2y }, { x: p.finalx, y: p.finaly }, `${this.uniqueID}particlerejiggle${i}`, 'easeInOutQuad', this.rejiggleDuration, () => {this.particleAnimationCount.push(i);});	
+		return rwxAnimate.fromToBezier({ x: p.currentx, y: p.currenty }, { x: p.rejigglecpx, y: p.rejigglecpy }, { x: p.rejigglecp2x, y: p.rejigglecp2y }, { x: p.finalx, y: p.finaly }, `${this.uniqueID}particlerejiggle${i}`, 'easeInOutQuad', this.rejiggleDuration, () => {this.particleAnimationCount.push(i);});	
 	}
 }
 

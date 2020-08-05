@@ -71,7 +71,7 @@ class rwxBitVirus extends rwxComponent {
 		console.log(matrix);
 		matrix.map((m)=>{
 			m.matrix.map((mp)=>{
-				this.particles.push(new rwxParticle(mp.x, mp.y, m.dimensions.particleSize, this.shape, this.c))
+				this.particles.push(new rwxParticle(mp.x, mp.y, m.dimensions.particleSize, this.shape, this.bitColor, this.c))
 				return;
 			});
 			return;
@@ -83,6 +83,7 @@ class rwxBitVirus extends rwxComponent {
 	scrolledIntoView()
 	{
 		this.startAnimation();
+		this.stopScroll = true;
 	}
 
 	moused()
@@ -104,7 +105,6 @@ class rwxBitVirus extends rwxComponent {
 		let pixelRatio = rwxCanvas.scale(this.canvas, this.c, meas.width, meas.height);
 		this.width = (this.canvas.width / pixelRatio);
 		this.height = (this.canvas.height / pixelRatio);
-		this.c.fillStyle = this.bitColor;
 	}
 
 	animate()

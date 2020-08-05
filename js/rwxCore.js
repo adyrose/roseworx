@@ -117,6 +117,7 @@ class rwxComponent {
 			if(opts.enableMouseTracking)
 			{
 				this.mouse = {};
+				this.lastmouse = {};
 				this.mousedEvent = this.mousedEvent.bind(this);
 				window.addEventListener('mousemove', this.mousedEvent);
 			}
@@ -125,9 +126,10 @@ class rwxComponent {
 
 	mousedEvent(e)
 	{
-		this.lastmouse = this.mouse;
+		if(e.target !== this.canvas)return;
 		this.mouse = {x:e.clientX, y:e.clientY};
 		this.moused && this.moused();
+		this.lastmouse = this.mouse;
 	}
 
 	declareEvent(name)

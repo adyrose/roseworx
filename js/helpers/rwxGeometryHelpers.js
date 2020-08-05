@@ -66,6 +66,46 @@ const rwxGeometry = {
       y: (center.y + radius * ((p.y - center.y) / Math.sqrt(Math.pow((p.x - center.x), 2) + Math.pow((p.y - center.y),2))))
     }
   },
+  
+  // o = {x, y, mass, radius, velocity:{x, y}}
+  resolveCollision: (o, o2, dontUpdateSecondObject=false) => {
+    if((rwxGeometry.getDistance({x:o.x, y:o.y}, {x:o2.x, y:o2.y}) - o.radius - o2.radius) <= 0)
+    {
+      const xVelocityDiff = o.velocity.x - o2.velocity.x;
+      const yVelocityDiff = o.velocity.y - o2.velocity.y;
+
+      const xDist = o2.x - o.x;
+      const yDist = o2.y - o.y;
+      if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
+        const angle = -Math.atan2(o2.y - o.y, o2.x - o.x);
+
+        const u1 = rwxGeometry.rotateVelocities(o.velocity, angle);
+        const u2 = rwxGeometry.rotateVelocities(o2.velocity, angle);
+
+        const v1 = { x: u1.x * (o.mass - o2.mass) / (o.mass + o2.mass) + u2.x * 2 * o2.mass / (o.mass + o2.mass), y: u1.y };
+        const v2 = { x: u2.x * (o2.mass - o.mass) / (o.mass + o2.mass) + u1.x * 2 * o2.mass / (o.mass + o2.mass), y: u2.y };﻿
+
+        const vFinal1 = rwxGeometry.rotateVelocities(v1, -angle);
+        const vFinal2 = rwxGeometry.rotateVelocities(v2, -angle);
+
+        o.velocity.x = vFinal1.x;
+        o.velocity.y = vFinal1.y;
+        if(!dontUpdateSecondObject)
+        {
+          o2.velocity.x = vFinal2.x;
+          o2.velocity.y = vFinal2.y;
+        }
+      }
+    }
+  },
+
+  rotateVelocities: (velocity, angle) => {
+    const rotatedVelocities = {
+        x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
+        y: velocity.x * Math.sin(angle) + velocity.y * Math.cos(angle)
+    };
+    return rotatedVelocities;
+  },
 }
 
 export default rwxGeometry;

@@ -4,7 +4,8 @@ const rwxBitFontOrientationDefault = 'horizontal';
 const rwxBitFontOrientations = ['horizontal', 'vertical', 'slanted', 'wrap'];
 
 const rwxBitFontGetMatrix = (letters, orientation, width, height)=>{
-	if(!rwxBitFontOrientations.includes(orientation)){rwxError(`${orientation} is not a valid orientation. Valid orientations include ['${rwxBitFontOrientations.join("', '")}']. Using '${rwxBitFontOrientationDefault}'.`, 'rwxBitFont'); orientation = rwxBitFontOrientationDefault;}
+	if(orientation === undefined){orientation = rwxBitFontOrientationDefault;}
+	else if(!rwxBitFontOrientations.includes(orientation)){rwxError(`${orientation} is not a valid orientation. Valid orientations include ['${rwxBitFontOrientations.join("', '")}']. Using '${rwxBitFontOrientationDefault}'.`, 'rwxBitFont'); orientation = rwxBitFontOrientationDefault;}
 	letters = split(letters, orientation);
 	if(!letters)return;
 	let dimensions = [];
@@ -140,14 +141,46 @@ const rwxBitFontSizing = {
 };
 
 const rwxBitFontMatrix = {
+	"A": [
+		{x:0, y:4},
+		{x:0.5, y:3},
+		{x:1, y:2},
+		{x:1.5, y:1},
+		{x:2, y:0},
+		{x:2.5, y:1},
+		{x:3, y:2},
+		{x:3.5, y:3},
+		{x:4, y:4},
+		{x:1.5, y:2.65},
+		{x:2.5, y:2.65}
+	],
+	"B": [
+		{x:0, y:0},
+		{x:1, y:0},
+		{x:2, y:0},
+		{x:3, y:0},
+		{x:3.80, y:0.50},
+		{x:3.80, y:1.50},
+		{x:3.80, y:2.50},
+		{x:3.80, y:3.50},
+		{x:3, y:4},
+		{x:2, y:4},
+		{x:1, y:4},
+		{x:0, y:4},
+		{x:0, y:3},
+		{x:0, y:2},
+		{x:0, y:1},
+		{x:1, y:2},
+		{x:2, y:2},
+		{x:3, y:2},
+	],
 	"R": [
 		{x:0, y:0},
 		{x:1, y:0},
 		{x:2, y:0},
 		{x:3, y:0},
-		{x:4, y:0},
-		{x:4, y:1},
-		{x:4, y:2},
+		{x:3.8, y:0.5},
+		{x:3.8, y:1.5},
 		{x:3, y:2},
 		{x:2, y:2},
 		{x:1, y:2},
@@ -156,44 +189,38 @@ const rwxBitFontMatrix = {
 		{x:0, y:3},
 		{x:0, y:4},
 		{x:3, y:3},
-		{x:4, y:4},
+		{x:3.8, y:4},
 	],
 	"O": [
-		{x:0, y:0},
-		{x:1, y:0},
+		{x:1, y:0.3},
 		{x:2, y:0},
-		{x:3, y:0},
-		{x:4, y:0},
-		{x:4, y:1},
+		{x:3, y:0.3},
+		{x:3.7, y:1},
 		{x:4, y:2},
-		{x:4, y:3},
-		{x:4, y:4},
-		{x:3, y:4},
+		{x:3.7, y:3},
+		{x:3, y:3.7},
 		{x:2, y:4},
-		{x:1, y:4},
-		{x:0, y:4},
-		{x:0, y:3},
+		{x:1, y:3.7},
+		{x:0.3, y:3},
 		{x:0, y:2},
-		{x:0, y:1},
+		{x:0.3, y:1},
 	],
 	"S": [
-		{x:4, y:0},
+		{x:3.8, y:0.5},
 		{x:3, y:0},
 		{x:2, y:0},
 		{x:1, y:0},
-		{x:0, y:0},
-		{x:0, y:1},
-		{x:0, y:2},
+		{x:0.2, y:0.5},
+		{x:0.2, y:1.5},
 		{x:1, y:2},
 		{x:2, y:2},
 		{x:3, y:2},
-		{x:4, y:2},
-		{x:4, y:3},
-		{x:4, y:4},
+		{x:3.8, y:2.5},
+		{x:3.8, y:3.5},
 		{x:3, y:4},
 		{x:2, y:4},
 		{x:1, y:4},
-		{x:0, y:4}
+		{x:0.2, y:3.5}
 	],
 	"E": [
 		{x:0, y:0},

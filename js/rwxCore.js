@@ -120,6 +120,7 @@ class rwxComponent {
 				this.lastmouse = {};
 				this.mousedEvent = this.mousedEvent.bind(this);
 				window.addEventListener('mousemove', this.mousedEvent);
+				window.addEventListener('touchmove', this.mousedEvent);
 			}
 		}
 	}
@@ -127,7 +128,7 @@ class rwxComponent {
 	mousedEvent(e)
 	{
 		if(e.target !== this.canvas)return;
-		this.mouse = {x:e.clientX, y:e.clientY};
+		this.mouse = {x: e.type=="touchmove" ? e.touches[0].pageX : e.clientX, y: e.type=="touchmove" ? e.touches[0].pageY : e.clientY};
 		this.moused && this.moused();
 		this.lastmouse = this.mouse;
 	}

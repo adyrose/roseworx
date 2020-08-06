@@ -9,12 +9,6 @@ import rwxGeometry from '../helpers/rwxGeometryHelpers';
 import {rwxParticle, rwxParticleShapes} from '../common/rwxParticle';
 import rwxBitFontGetMatrix from '../common/rwxBitFont';
 
-/*
-	add collision detection functionality for when the mouse hits
-	add more effects and improve current ones
-*/
-
-
 class rwxBitSwarms extends rwxCore {
 	constructor()
 	{
@@ -28,6 +22,7 @@ class rwxBitSwarms extends rwxCore {
 		let bits = el.hasAttribute('data-rwx-bit-swarm-value');
 		if(!bits){this.error('There is no value (data-rwx-bit-swarm-value) attribute detected on the rwx-bit-swarm element.'); return;}
 		bits = el.getAttribute('data-rwx-bit-swarm-value');
+		if(!bits){this.error('There is no value in the (data-rwx-bit-swarm-value) attribute.'); return;}
 		let orientation = el.hasAttribute('data-rwx-bit-swarm-orientation') ? el.getAttribute('data-rwx-bit-swarm-orientation') : this.orientationDefault;
 		let shape = el.hasAttribute('data-rwx-bit-swarm-shape') ? el.getAttribute('data-rwx-bit-swarm-shape') : this.shapeDefault;
 		let color = el.hasAttribute('data-rwx-bit-swarm-color') ? el.getAttribute('data-rwx-bit-swarm-color') : this.colorDefault;
@@ -58,6 +53,10 @@ class rwxBitSwarm extends rwxComponent {
 
 	scrolledIntoView()
 	{
+		if(this.letters.length == 0){
+			this.stopAnimation = true;
+			return;
+		}
 		this.startAnimation();
 		this.stopScroll = true;
 	}
@@ -65,6 +64,7 @@ class rwxBitSwarm extends rwxComponent {
 	calculatePosition(firstblood=false, bits)
 	{
 		let letters = rwxBitFontGetMatrix(bits, this.orientation, this.width, this.height);
+		if(!letters)return;
 		if(firstblood){
 			this.actualLetters = bits;
 			this.mouseParticle = new rwxParticle(this.width/2, this.height/2, letters[0].dimensions.bitSize, 'circle', '#000000', this.c, 2);
@@ -77,7 +77,7 @@ class rwxBitSwarm extends rwxComponent {
 		letters.map((l,i)=>{
 			if(firstblood)
 			{
-				this.letters.push(new rwxBitSwarmLetter(l.matrix, l.bitx, l.bity, l.dimensions.bitSize, l.dimensions.particleSize, l.dimensions.particleGap, this.bitColor, this.shape, this.c, this.canvas, this.width, this.height, `letter${i}`));
+				this.letters.push(new rwxBitSwarmLetter(l.matrix, l.bitx, l.bity, l.dimensions.bitSize, l.dimensions.particleSize, this.bitColor, this.shape, this.c, this.canvas, this.width, this.height, `letter${i}`));
 			}
 			else
 			{
@@ -85,7 +85,6 @@ class rwxBitSwarm extends rwxComponent {
 				this.letters[i].bitSize = l.dimensions.bitSize;
 				this.letters[i].boundary = this.letters[i].bitSize;
 				this.letters[i].particleSize = l.dimensions.particleSize;
-				this.letters[i].particleGap = l.dimensions.particleGap;
 				this.letters[i].xpos = l.bitx;
 				this.letters[i].ypos = l.bity;
 				this.letters[i].createParticleData();				
@@ -112,7 +111,10 @@ class rwxBitSwarm extends rwxComponent {
 
 	moused()
 	{
-		this.mouseParticle.velocity = {x: ((this.mouse.x - this.lastmouse.x)/2), y: ((this.mouse.y - this.lastmouse.y)/2)}
+		if(this.mouseParticle)
+		{
+			this.mouseParticle.velocity = {x: ((this.mouse.x - this.lastmouse.x)/2), y: ((this.mouse.y - this.lastmouse.y)/2)}
+		}
 	}
 
 	collide(l)
@@ -192,9 +194,9 @@ class rwxBitSwarm extends rwxComponent {
 }
 
 class rwxBitSwarmLetter {
-	constructor(matrix, xpos, ypos, bitSize, particleSize, particleGap, bitColor, shape, c, canvas, width, height, uniqueID)
+	constructor(matrix, xpos, ypos, bitSize, particleSize, bitColor, shape, c, canvas, width, height, uniqueID)
 	{
-		Object.assign(this, {matrix, xpos, ypos, bitSize, particleSize, particleGap, bitColor, shape, c, canvas, width, height, uniqueID});
+		Object.assign(this, {matrix, xpos, ypos, bitSize, particleSize, bitColor, shape, c, canvas, width, height, uniqueID});
 		this.particleTimeout = 5;
 		this.particleTimeoutTicker = 0;
 		this.startDuration = 4000;
@@ -211,7 +213,6 @@ class rwxBitSwarmLetter {
 		this.particleAnimationCount = [];
 		this.particleAnimationCount2 = [];
 		this.particleAnimationCount3 = [];
-		// no good -  rejiggle
 		this.animations = ['start', 'cyclone', 'explode', 'snake', 'rejiggle', 'drop', 'fireworx', 'swarm'];
 		this.startAnimating('start');
 	}
@@ -251,6 +252,9 @@ class rwxBitSwarmLetter {
 			let centerx = this.xpos + (this.bitSize/2);
 			let centery = this.ypos + (this.bitSize/2);
 			let explodepoint = rwxGeometry.closestPointOnCircumference({x: m.x, y:m.y}, {x:centerx, y:centery}, this.boundary);
+			//if particle is dead centre of circle above will return NaN
+			if(isNaN(explodepoint.x)){explodepoint.x = m.x;}
+			if(isNaN(explodepoint.y)){explodepoint.y = m.y;}
 			let cycloneangle = rwxGeometry.getAngle(centerx, centery, m.x, m.y);
 			this.matrixParticles.push({
 				finalx: m.x,

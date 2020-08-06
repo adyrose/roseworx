@@ -22,3 +22,6 @@ To include the core javascript files of the framework use the following Javascri
 
 
 `import rwx from 'roseworx';`
+
+
+Please report all issues and bugs to <a href="https://github.com/adyrose/roseworx/issues">https://github.com/adyrose/roseworx/issues</a>

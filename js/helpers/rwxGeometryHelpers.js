@@ -18,8 +18,12 @@ const rwxGeometry = {
     c = 2 * Math.sqrt(c);
     return (a1 * c1 + u * b * (c1 - c) + a * Math.log((2 * u + u1 + c1) / (u1 + c))) / (4 * a1);
   },
-  
-  getAngle(centerX, centerY, posX, posY) {
+ 
+  getCoordinatesFromAngle: (p1, angle, distance) =>{
+    return {x: p1.x + distance * Math.cos(angle), y: p1.y + distance * Math.sin(angle)};
+  },
+
+  getAngle: (centerX, centerY, posX, posY) => {
     // returns an objects angle based on its coordinates and a center point
     let x = centerX - posX;
     let y = centerY - posY;

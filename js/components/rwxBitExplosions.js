@@ -45,10 +45,11 @@ class rwxBitExplosion extends rwxComponent {
 		this.orientation = orientation;
 		this.bitColor = color;
 		this.spareParticleColor = 'white';
+		this.startParticlesize = 2;
 		this.spareParticleSize = 1;
 		this.letterParticles = [];
 		this.createCanvas();
-		this.numberOfSpareParticles = 3;
+		this.numberOfSpareParticles = 20;
 		this.calculateLetterParticles();
 		this.calculateSpareParticles();
 		this.calculateAnimationPath();
@@ -67,8 +68,9 @@ class rwxBitExplosion extends rwxComponent {
 		if(!this.matrix)return;
 		this.matrix.map((m)=>{
 			m.matrix.map((mp)=>{
-				let letterparticle = new rwxParticle(mp.x, mp.y, this.spareParticleSize, this.shape, this.spareParticleColor, this.c)
+				let letterparticle = new rwxParticle(mp.x, mp.y, this.startParticlesize, this.shape, this.spareParticleColor, this.c)
 				letterparticle.isLetter = true;
+				letterparticle.actualparticlesize = m.dimensions.particleSize;
 				this.wordParticles.push(letterparticle);
 				return;
 			});
@@ -109,7 +111,7 @@ class rwxBitExplosion extends rwxComponent {
 						continue toContinue;
 					}
 				}
-				this.spareParticles.push(new rwxParticle(xCounter, yCounter, this.spareParticleSize, this.shape, this.spareParticleColor, this.c));
+				this.spareParticles.push(new rwxParticle(xCounter, yCounter, this.startParticlesize, this.shape, this.spareParticleColor, this.c));
 				yCounter += yIncrement;
 			}
 			xCounter+=xIncrement;
@@ -119,46 +121,65 @@ class rwxBitExplosion extends rwxComponent {
 
 	calculateAnimationPath()
 	{
-		const allParticles = [...this.spareParticles, ...this.wordParticles];
-		let start = {x:rwxMath.randomInt(0, this.width) , y:this.height+10};
+		this.allParticles = [...this.spareParticles, ...this.wordParticles];
+		let start = {x:rwxMath.randomInt(0, this.width) , y:this.height+50};
 		let center = {x:this.width/2, y:this.height/2};
+
+		this.calculateCluster(start);
 
 		let xbound = start.x < this.width/2 ? [0, this.width/2] : [this.width/2, this.width];
 		let cp1 = {x:rwxMath.randomInt(xbound[0],xbound[1]), y:0};
-		let cp2 = {x:center.x, y:0};
-		//create cluster
-		let counter = 6;
-		let prev;
-		allParticles.map((p,i)=>{
-			// if(i==0)
-			// {
-			// 	p.cluster = {x: center.x, y: center.y};
-			// }
-			// else
-			// {
-			// 	p.cluster = {}
-			// }
-			// if(i==counter)
-			// {
-			// 	counter = counter*2;
-			// }
-			// console.log(counter);
 
-			// p.animationStep = 0;
-			// p.animationPath = [];
-			// return;
-			p.animationPath = [{from:{x:start.x, y:start.y}, to:{x:center.x, y:center.y}, cp1, cp2, duration:5000, easing:'easeInQuint'}];
+		let cp2 = {x:center.x, y:0};
+		this.allParticles.map((p,i)=>{
+			p.animationPath = [{from:{x:p.cluster.x, y:p.cluster.y}, to:{x:center.x, y:center.y}, cp1, cp2, duration:4000, easing:'easeInQuint'}];
 			p.animationPath.push({from:{x:center.x, y:center.y}, to:{x:p.x, y:p.y}, duration:rwxMath.randomInt(1000,5000), easing:'easeOutQuart'});
 			p.animationStep = 0;
 			return;
 		});
 
-		this.allParticles = allParticles;
 	}
 
-	calculateCenterPosition()
+	calculateCluster(center)
 	{
-		return {x:this.width/2, y:this.height/2};
+		let limit = 6;
+		let counter = 0;
+		let clusterArr = [];
+		this.allParticles.map((p,i)=>{
+			if(i>0)
+			{
+				if(counter==limit)
+				{
+					limit = limit*2;
+					clusterArr.push(counter);
+					counter = 0;
+				}
+				counter+=1;
+				if(i == this.allParticles.length-1)
+				{
+					clusterArr.push(counter);
+				}
+			}
+			else
+			{
+				p.cluster = {x: center.x, y: center.y};
+			}
+		});
+
+		let particleCounter = 1;
+		for(let [i2, c] of clusterArr.entries())
+		{
+			let anglecounter = 0;
+			let angle = 360 / c;
+			for(let i=0;i<c;i++)
+			{
+				let particle = this.allParticles[particleCounter];
+				let coords = rwxGeometry.getCoordinatesFromAngle(center, rwxGeometry.toRadians(anglecounter), particle.radius*4*(i2+1));
+				particle.cluster = {x: coords.x, y: coords.y};
+				anglecounter+=angle;
+				particleCounter +=1;
+			}
+		}
 	}
 
 	scrolledIntoView()
@@ -198,26 +219,30 @@ class rwxBitExplosion extends rwxComponent {
 	animate()
 	{
 		this.allParticles.map((p, i)=>{
-			if(p.animationPath.length > p.animationStep)
+			if(p.animationPath && p.animationPath.length > p.animationStep)
 			{
 				p.dont = false;
 				let particle = p.animationPath[p.animationStep];
 				let val, xt, yt;
 				if(p.animationStep == 0)
 				{
-					let { x, y } = rwxAnimate.fromToBezier(particle.from, particle.cp1, particle.cp2, particle.to, `particlesplit${i}${p.animationStep}`, particle.easing, particle.duration, ()=>{p.animationStep+=1; p.dont = true});
+					let { x, y } = rwxAnimate.fromToBezier(particle.from, particle.cp1, particle.cp2, particle.to, `particleinit${i}${p.animationStep}`, particle.easing, particle.duration, ()=>{p.animationStep+=1; p.dont = true});
 					xt = x;
 					yt = y;
 				}
 				else
 				{
-					val = rwxAnimate.getEasingValue(`particlesplit${i}${p.animationStep}`, particle.easing, particle.duration, ()=>{p.animationStep+=1; p.dont = true});
+					val = rwxAnimate.getEasingValue(`particleinit${i}${p.animationStep}`, particle.easing, particle.duration, ()=>{p.animationStep+=1; p.dont = true});
 					xt = rwxAnimate.fromToCalc(particle.from.x, particle.to.x, val);
 					yt = rwxAnimate.fromToCalc(particle.from.y, particle.to.y, val);
 				}
 				if(!p.dont)
 				{
 					p.update(xt,yt);
+				}
+				else
+				{
+					p.draw();
 				}
 			}
 			else
@@ -228,14 +253,15 @@ class rwxBitExplosion extends rwxComponent {
 			// if is inside mouse circle ping to closest point on circumference 	
 			// increase radius gradually tto normals
 
-				// if(p.isLetter)
-				// {
-				// 	p.setRadius(5);
-				// 	p.color = 'red';
-				// }
-				
-				//p.update(p.cluster.x, p.cluster.y);
-				
+				if(!p.radiusExpanded)
+				{
+					let r = p.isLetter ? p.actualparticlesize : this.spareParticleSize;
+					p.setRadius(rwxAnimate.fromTo(this.startParticlesize, r, `particleradius${i}`, 'linear', 500, ()=>{p.radiusExpanded=true;}));
+					if(p.isLetter)
+					{
+						p.color = this.bitColor;
+					}
+				}
 				p.draw();
 			}
 			return;
@@ -258,6 +284,7 @@ class rwxBitExplosion extends rwxComponent {
 			return;
 		});
 		this.calculateSpareParticles();
+		this.allParticles = [...this.spareParticles, ...this.wordParticles];
 	}
 }
 

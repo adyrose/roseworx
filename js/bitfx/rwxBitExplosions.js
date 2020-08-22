@@ -7,9 +7,9 @@ import rwxMath from '../helpers/rwxMathHelpers';
 import rwxGeometry from '../helpers/rwxGeometryHelpers';
 import rwxMisc from '../helpers/rwxMiscHelpers';
 
-import {rwxParticle, rwxParticleShapes} from '../common/rwxParticle';
+import {rwxParticle, rwxParticleShapes} from './rwxParticle';
 
-import rwxBitFontGetMatrix from '../common/rwxBitFont';
+import rwxBitFontGetMatrix from './rwxBitFont';
 
 class rwxBitExplosions extends rwxCore {
 	constructor()

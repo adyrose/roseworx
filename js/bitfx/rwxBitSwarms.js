@@ -6,8 +6,8 @@ import rwxCanvas from '../helpers/rwxCanvasHelpers';
 import rwxMath from '../helpers/rwxMathHelpers';
 import rwxGeometry from '../helpers/rwxGeometryHelpers';
 
-import {rwxParticle, rwxParticleShapes} from '../common/rwxParticle';
-import rwxBitFontGetMatrix from '../common/rwxBitFont';
+import {rwxParticle, rwxParticleShapes} from './rwxParticle';
+import rwxBitFontGetMatrix from './rwxBitFont';
 
 class rwxBitSwarms extends rwxCore {
 	constructor()

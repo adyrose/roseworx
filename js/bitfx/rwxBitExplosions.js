@@ -41,16 +41,17 @@ class rwxBitExplosion extends rwxComponent {
 		this.el = el;
 		this.shape = shape;
 		this.bits = bits;
-		this.boundaryFromWordToSpareParticle = 10;
 		this.orientation = orientation;
 		this.bitColor = color;
+		this.backgroundColor = 'black';
 		this.spareParticleColor = 'white';
 		this.startParticlesize = 2;
 		this.spareParticleSize = 1;
-		this.letterParticles = [];
-		this.createCanvas();
+		this.boundaryFromWordToSpareParticle = 10;
 		this.numberOfSpareParticles = 20;
+		this.createCanvas();
 		this.calculateLetterParticles();
+		if(!this.matrix)return;
 		this.calculateSpareParticles();
 		this.calculateAnimationPath();
 		this.createMouseParticle();
@@ -58,7 +59,7 @@ class rwxBitExplosion extends rwxComponent {
 
 	createMouseParticle()
 	{
-		this.mouseParticle = new rwxParticle(this.width/2, this.height/2, this.matrix[0].dimensions.bitSize, 'circle', 'red', this.c, 2);
+		this.mouseParticle = new rwxParticle(this.width/2, this.height/2, this.matrix[0].dimensions.bitSize, 'circle', this.backgroundColor, this.c, 2);
 	}
 
 	calculateLetterParticles()
@@ -134,6 +135,7 @@ class rwxBitExplosion extends rwxComponent {
 		this.allParticles.map((p,i)=>{
 			p.animationPath = [{from:{x:p.cluster.x, y:p.cluster.y}, to:{x:center.x, y:center.y}, cp1, cp2, duration:4000, easing:'easeInQuint'}];
 			p.animationPath.push({from:{x:center.x, y:center.y}, to:{x:p.x, y:p.y}, duration:rwxMath.randomInt(1000,5000), easing:'easeOutQuart'});
+			p.final = {x: p.x, y: p.y};
 			p.animationStep = 0;
 			return;
 		});
@@ -194,10 +196,7 @@ class rwxBitExplosion extends rwxComponent {
 
 	moused()
 	{
-		if(this.mouseParticle)
-		{
-			this.mouseParticle.velocity = {x: ((this.mouse.x - this.lastmouse.x)/2), y: ((this.mouse.y - this.lastmouse.y)/2)}
-		}
+		return;
 	}
 
 	createCanvas()
@@ -247,12 +246,6 @@ class rwxBitExplosion extends rwxComponent {
 			}
 			else
 			{
-			// natural state wobbling around for spare particles
-			// grow and change color of letterParticles once
-			//magnet repulse on mouse
-			// if is inside mouse circle ping to closest point on circumference 	
-			// increase radius gradually tto normals
-
 				if(!p.radiusExpanded)
 				{
 					let r = p.isLetter ? p.actualparticlesize : this.spareParticleSize;
@@ -261,11 +254,24 @@ class rwxBitExplosion extends rwxComponent {
 					{
 						p.color = this.bitColor;
 					}
+					p.draw();
 				}
-				p.draw();
+				else
+				{
+					let coords;
+					if(rwxGeometry.isInsideCircle(p.final, this.mouse, this.matrix[0].dimensions.bitSize))
+					{
+						coords = rwxGeometry.closestPointOnCircumference(p.final, this.mouse, this.matrix[0].dimensions.bitSize);
+					}
+					else
+					{
+						coords = p.final;
+					}
+					p.update(coords.x, coords.y);
+				}
 			}
 			return;
-		})
+		});
 	}
 
 	resize()

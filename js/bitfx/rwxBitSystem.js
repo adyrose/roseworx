@@ -1,0 +1,2 @@
+// Strip out the moving particles on mouse and device orientatin from portfolio and add ability to have a word that
+// particles also move with mouse like others but letter particles dont move too much

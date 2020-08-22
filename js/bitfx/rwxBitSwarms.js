@@ -38,6 +38,7 @@ class rwxBitSwarm extends rwxComponent {
 		this.el = el;
 		this.shape = shape;
 		this.orientation = orientation;
+		this.backgroundColor = 'black';
 		this.bitColor = color;
 		this.repeatAnimations = true;
 		this.letters = [];
@@ -67,7 +68,7 @@ class rwxBitSwarm extends rwxComponent {
 		if(!letters)return;
 		if(firstblood){
 			this.actualLetters = bits;
-			this.mouseParticle = new rwxParticle(this.width/2, this.height/2, letters[0].dimensions.bitSize, 'circle', '#000000', this.c, 2);
+			this.mouseParticle = new rwxParticle(this.width/2, this.height/2, letters[0].dimensions.bitSize, 'circle', this.backgroundColor, this.c, 2);
 		}
 		else
 		{

@@ -249,7 +249,7 @@ class rwxBitExplosion extends rwxComponent {
 				if(!p.radiusExpanded)
 				{
 					let r = p.isLetter ? p.actualparticlesize : this.spareParticleSize;
-					p.setRadius(rwxAnimate.fromTo(this.startParticlesize, r, `particleradius${i}`, 'easeOutQuad', 500, ()=>{p.radiusExpanded=true;}));
+					p.setRadius(rwxAnimate.fromTo(this.startParticlesize, r, `particleradius${i}`, 'easeOutQuad', 1000, ()=>{p.radiusExpanded=true;}));
 					if(p.isLetter)
 					{
 						p.color = this.bitColor;
@@ -259,7 +259,7 @@ class rwxBitExplosion extends rwxComponent {
 				{
 					if(!p.isLetter)
 					{
-						p.setRadius(rwxAnimate.fromTo(this.spareParticleSize, this.startParticlesize, `particleradiuse${i}`, 'easeInQuad', 500, ()=>{p.radiusExpanded=false;}));
+						p.setRadius(rwxAnimate.fromTo(this.spareParticleSize, this.startParticlesize, `particleradiuse${i}`, 'easeInQuad', 1000, ()=>{p.radiusExpanded=false;}));
 					}				
 				}
 

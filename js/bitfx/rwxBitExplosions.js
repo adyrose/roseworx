@@ -217,6 +217,10 @@ class rwxBitExplosion extends rwxComponent {
 
 	animate()
 	{
+		this.wordParticles.map((p,i)=>{
+			p.draw();
+		});
+		return;
 		this.allParticles.map((p, i)=>{
 			if(p.animationPath && p.animationPath.length > p.animationStep)
 			{

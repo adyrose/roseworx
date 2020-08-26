@@ -5,6 +5,7 @@ import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxCanvas from '../helpers/rwxCanvasHelpers';
 import rwxMath from '../helpers/rwxMathHelpers';
 import rwxGeometry from '../helpers/rwxGeometryHelpers';
+import rwxMisc from '../helpers/rwxMiscHelpers';
 
 import {rwxParticle, rwxParticleShapes} from './rwxParticle';
 import rwxBitFontGetMatrix from './rwxBitFont';
@@ -15,6 +16,7 @@ class rwxBitSwarms extends rwxCore {
 		super('[rwx-bit-swarm]', true);
 		this.shapeDefault = 'circle';
 		this.colorDefault = '#FFFFFF';
+		this.backgroundColorDefault = '#000000';
 	}
 
 	execute(el, mc)
@@ -26,19 +28,22 @@ class rwxBitSwarms extends rwxCore {
 		let orientation = el.hasAttribute('data-rwx-bit-swarm-orientation') ? el.getAttribute('data-rwx-bit-swarm-orientation') : this.orientationDefault;
 		let shape = el.hasAttribute('data-rwx-bit-swarm-shape') ? el.getAttribute('data-rwx-bit-swarm-shape') : this.shapeDefault;
 		let color = el.hasAttribute('data-rwx-bit-swarm-color') ? el.getAttribute('data-rwx-bit-swarm-color') : this.colorDefault;
+		let bgcolor = el.hasAttribute('data-rwx-bit-swarm-background-color') ? el.getAttribute('data-rwx-bit-swarm-background-color') : this.backgroundColorDefault;
 		if(!rwxParticleShapes.includes(shape)){this.error(`${shape} is not a valid shape. Valid shapes include ['${rwxParticleShapes.join("', '")}']. Using '${this.shapeDefault}'.`); shape = this.shapeDefault;}
-		return new rwxBitSwarm(el, mc, bits, orientation, shape, color);
+		return new rwxBitSwarm(el, mc, bits, orientation, shape, color, bgcolor);
 	}
 }
 
 class rwxBitSwarm extends rwxComponent {
-	constructor(el, manualControl, bits, orientation, shape, color)
+	constructor(el, manualControl, bits, orientation, shape, color, bgcolor)
 	{
 		super({enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true})
 		this.el = el;
+		this.uniqueID = rwxMisc.uniqueId();
+		this.el.style.backgroundColor = bgcolor;
 		this.shape = shape;
 		this.orientation = orientation;
-		this.backgroundColor = 'black';
+		this.backgroundColor = bgcolor;
 		this.bitColor = color;
 		this.repeatAnimations = true;
 		this.letters = [];
@@ -78,7 +83,7 @@ class rwxBitSwarm extends rwxComponent {
 		letters.map((l,i)=>{
 			if(firstblood)
 			{
-				this.letters.push(new rwxBitSwarmLetter(l.matrix, l.bitx, l.bity, l.dimensions.bitSize, l.dimensions.particleSize, this.bitColor, this.shape, this.c, this.canvas, this.width, this.height, `letter${i}`));
+				this.letters.push(new rwxBitSwarmLetter(l.matrix, l.bitx, l.bity, l.dimensions.bitSize, l.dimensions.particleSize, this.bitColor, this.shape, this.c, this.canvas, this.width, this.height, `${this.uniqueID}letter${i}`));
 			}
 			else
 			{
@@ -253,9 +258,7 @@ class rwxBitSwarmLetter {
 			let centerx = this.xpos + (this.bitSize/2);
 			let centery = this.ypos + (this.bitSize/2);
 			let explodepoint = rwxGeometry.closestPointOnCircumference({x: m.x, y:m.y}, {x:centerx, y:centery}, this.boundary);
-			//if particle is dead centre of circle above will return NaN
-			if(isNaN(explodepoint.x)){explodepoint.x = m.x;}
-			if(isNaN(explodepoint.y)){explodepoint.y = m.y;}
+			if(isNaN(explodepoint.x) && isNaN(explodepoint.y)){explodepoint =  rwxGeometry.closestPointOnCircumference({x: m.x+10, y:m.y-10}, {x:centerx, y:centery}, this.boundary);}
 			let cycloneangle = rwxGeometry.getAngle(centerx, centery, m.x, m.y);
 			this.matrixParticles.push({
 				finalx: m.x,

@@ -18,6 +18,7 @@ class rwxBitExplosions extends rwxCore {
 		this.shapes = ['circle', 'square'];
 		this.shapeDefault = 'circle';
 		this.colorDefault = '#FFFFFF';
+		this.backgroundColorDefault = '#000000';
 	}
 
 	execute(el, mc)
@@ -28,23 +29,27 @@ class rwxBitExplosions extends rwxCore {
 		if(!bits){this.error('There is no value in the (data-rwx-bit-explosion-value) attribute.'); return;}
 		let orientation = el.hasAttribute('data-rwx-bit-explosion-orientation') ? el.getAttribute('data-rwx-bit-explosion-orientation') : this.orientationDefault;
 		let shape = el.hasAttribute('data-rwx-bit-explosion-shape') ? el.getAttribute('data-rwx-bit-explosion-shape') : this.shapeDefault;
+		let sparecolor = el.hasAttribute('data-rwx-bit-explosion-secondary-color') ? el.getAttribute('data-rwx-bit-explosion-secondary-color') : this.colorDefault;
 		let color = el.hasAttribute('data-rwx-bit-explosion-color') ? el.getAttribute('data-rwx-bit-explosion-color') : this.colorDefault;
+		let bgcolor = el.hasAttribute('data-rwx-bit-explosion-background-color') ? el.getAttribute('data-rwx-bit-explosion-background-color') : this.backgroundColorDefault;
 		if(!rwxParticleShapes.includes(shape)){this.error(`${shape} is not a valid shape. Valid shapes include ['${rwxParticleShapes.join("', '")}']. Using '${this.shapeDefault}'.`); shape = this.shapeDefault;}
-		return new rwxBitExplosion(el, mc, bits, orientation, shape, color);
+		return new rwxBitExplosion(el, mc, bits, orientation, shape, color, bgcolor, sparecolor);
 	}
 }
 
 class rwxBitExplosion extends rwxComponent {
-	constructor(el, manualControl, bits, orientation, shape, color)
+	constructor(el, manualControl, bits, orientation, shape, color, bgcolor, sparecolor)
 	{
 		super({enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true})
 		this.el = el;
+		this.uniqueID = rwxMisc.uniqueId();
+		this.el.style.backgroundColor = bgcolor;
 		this.shape = shape;
 		this.bits = bits;
 		this.orientation = orientation;
 		this.bitColor = color;
-		this.backgroundColor = 'black';
-		this.spareParticleColor = 'white';
+		this.backgroundColor = bgcolor;
+		this.spareParticleColor = sparecolor;
 		this.startParticlesize = 3;
 		this.spareParticleSize = 1;
 		this.boundaryFromWordToSpareParticle = 10;
@@ -217,10 +222,6 @@ class rwxBitExplosion extends rwxComponent {
 
 	animate()
 	{
-		this.wordParticles.map((p,i)=>{
-			p.draw();
-		});
-		return;
 		this.allParticles.map((p, i)=>{
 			if(p.animationPath && p.animationPath.length > p.animationStep)
 			{
@@ -229,13 +230,13 @@ class rwxBitExplosion extends rwxComponent {
 				let val, xt, yt;
 				if(p.animationStep == 0)
 				{
-					let { x, y } = rwxAnimate.fromToBezier(particle.from, particle.cp1, particle.cp2, particle.to, `particleinit${i}${p.animationStep}`, particle.easing, particle.duration, ()=>{p.animationStep+=1; p.dont = true});
+					let { x, y } = rwxAnimate.fromToBezier(particle.from, particle.cp1, particle.cp2, particle.to, `${this.uniqueID}particleinit${i}${p.animationStep}`, particle.easing, particle.duration, ()=>{p.animationStep+=1; p.dont = true});
 					xt = x;
 					yt = y;
 				}
 				else
 				{
-					val = rwxAnimate.getEasingValue(`particleinit${i}${p.animationStep}`, particle.easing, particle.duration, ()=>{p.animationStep+=1; p.dont = true});
+					val = rwxAnimate.getEasingValue(`${this.uniqueID}particleinit${i}${p.animationStep}`, particle.easing, particle.duration, ()=>{p.animationStep+=1; p.dont = true});
 					xt = rwxAnimate.fromToCalc(particle.from.x, particle.to.x, val);
 					yt = rwxAnimate.fromToCalc(particle.from.y, particle.to.y, val);
 				}
@@ -253,7 +254,7 @@ class rwxBitExplosion extends rwxComponent {
 				if(!p.radiusExpanded)
 				{
 					let r = p.isLetter ? p.actualparticlesize : this.spareParticleSize;
-					p.setRadius(rwxAnimate.fromTo(this.startParticlesize, r, `particleradius${i}`, 'easeOutQuad', 1000, ()=>{p.radiusExpanded=true;}));
+					p.setRadius(rwxAnimate.fromTo(this.startParticlesize, r, `${this.uniqueID}particleradius${i}`, 'easeOutQuad', 1000, ()=>{p.radiusExpanded=true;}));
 					if(p.isLetter)
 					{
 						p.color = this.bitColor;
@@ -263,7 +264,7 @@ class rwxBitExplosion extends rwxComponent {
 				{
 					if(!p.isLetter)
 					{
-						p.setRadius(rwxAnimate.fromTo(this.spareParticleSize, this.startParticlesize, `particleradiuse${i}`, 'easeInQuad', 1000, ()=>{p.radiusExpanded=false;}));
+						p.setRadius(rwxAnimate.fromTo(this.spareParticleSize, this.startParticlesize, `${this.uniqueID}particleradiuse${i}`, 'easeInQuad', 1000, ()=>{p.radiusExpanded=false;}));
 					}				
 				}
 

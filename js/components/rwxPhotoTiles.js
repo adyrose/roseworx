@@ -310,7 +310,7 @@ class rwxPhotoTile extends rwxComponent {
 
 function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pixelRatio)
 {
-	this.uniqueID = rwxMisc.uniqueId();;
+	this.uniqueID = rwxMisc.uniqueId();
   this.timeoutCounter = 0;
   this.duration = 500;
   this.slideDirections = ['slideLeft', 'slideRight', 'slideUp', 'slideDown'];

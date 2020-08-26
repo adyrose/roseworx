@@ -127,8 +127,13 @@ class rwxComponent {
 
 	mousedEvent(e)
 	{
+		if(!this.canvasDimensions){this.canvasDimensions = this.canvas.getBoundingClientRect();}
 		if(e.target !== this.canvas)return;
-		this.mouse = {x: e.type=="touchmove" ? e.touches[0].pageX : e.clientX, y: e.type=="touchmove" ? e.touches[0].pageY : e.clientY};
+		let x = e.type=="touchmove" ? e.touches[0].pageX : e.clientX;
+		x = x-this.canvasDimensions.left;
+		let y = e.type=="touchmove" ? e.touches[0].pageY : e.clientY;
+		y = y-this.canvasDimensions.top;
+		this.mouse = {x, y};
 		this.moused && this.moused();
 		this.lastmouse = this.mouse;
 	}

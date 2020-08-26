@@ -12,9 +12,9 @@ const rwxBitFontGetMatrix = (letters, orientation, width, height)=>{
 	let size = calculateSize(width);
 	let counter = 0;
 	let toReturn = [];
-	if(orientation == "wrap" && letters.includes(' '))
+	if(orientation == "wrap" && letters.includes('*'))
 	{
-		let words = letters.join('').split(' ');
+		let words = letters.join('').split('*');
 		dimensions = words.map((w,i)=>calculateDimensions(w.length, i, words.length, orientation, width, height, size));
 	}
 	else
@@ -26,14 +26,13 @@ const rwxBitFontGetMatrix = (letters, orientation, width, height)=>{
 	let bity = dimensions[counter].y;	
 
 	letters.map((l, i)=>{
-
-		if(l==" "){
+		if(l=="*"){
 			counter+=1; 
 			bitx=dimensions[counter].x; 
 			bity=dimensions[counter].y; 
 			return;
 		}
-		else {
+		else if(l!==" ") {
 			let matrix = [];
 			rwxBitFontMatrix[l].map((p)=>{
 				matrix.push({x: bitx + (p.x * size.particleGap), y: bity + (p.y * size.particleGap)});
@@ -52,9 +51,10 @@ const split = (bits, orientation) =>
 {
 	const letters = [...bits.toUpperCase()];
 	const allowed = Object.keys(rwxBitFontMatrix);
-	if(orientation == 'wrap'){allowed.push(' ')}
+	allowed.push(' ');
+	if(orientation == 'wrap'){allowed.push('*')}
 	const notAllowed = letters.filter((l)=>!allowed.includes(l));
-	if(notAllowed.length > 0){rwxError(`[${notAllowed}] ${notAllowed.length > 1 ? 'are not supported bits' : 'is not a supported bit'}. Supported bits are [${Object.keys(rwxBitFontMatrix)}]. CASE INSENSITIVE. Note - ' ' spaces are only allowed if the 'wrap' orientation is specified.`, 'rwxBitFont'); return false;}
+	if(notAllowed.length > 0){rwxError(`[${notAllowed}] ${notAllowed.length > 1 ? 'are not supported bits' : 'is not a supported bit'}. Supported bits are [${Object.keys(rwxBitFontMatrix)}]. CASE INSENSITIVE. Note - '*' (carriage return) is only allowed if the 'wrap' orientation is specified.`, 'rwxBitFont'); return false;}
 	return letters;
 }
 

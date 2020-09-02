@@ -16,9 +16,9 @@
 	}
 	&:disabled
 	{
-		color: $grey;
-		border: 1px solid $grey;
-		box-shadow: 2px 2px $grey;
+		color: $button-color-disabled;
+		border: 1px solid $button-color-disabled;
+		box-shadow: 2px 2px $button-color-disabled;
 	}
 }
 
@@ -41,8 +41,8 @@
 
 	&:disabled
 	{
-		background-color:$grey;
-		border: 1px solid $grey;
+		background-color:$button-color-disabled;
+		border: 1px solid $button-color-disabled;
 	}		
 }
 

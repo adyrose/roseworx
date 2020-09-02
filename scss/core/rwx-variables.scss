@@ -166,10 +166,13 @@ $table-cell-width-limit: 200px !default;
 //forms
 $form-color-base: $theme-color-base !default;
 $form-color-secondary: $theme-color-secondary !default;
-$form-color-focus: $turquoise !default;
 $form-color-valid: $black !default;
 $form-color-invalid: $red !default;
 $form-item-size: 50px !default;
+
+//focus-ring
+$focus-ring-color: $turquoise !default;
+$focus-ring-shadow: 0 0 0.3rem 0.1rem $focus-ring-color !default;
 
 //buttons
 $button-size: 50px !default;

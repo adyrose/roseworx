@@ -48,9 +48,10 @@
 
 .rwx-button, button:not(.no-decoration)
 {
-	display:inline-block;
+	@include flex-center;
 	min-height:$button-size;
-	padding:0.75rem 1.5rem 0.75rem 1.5rem;
+	padding-left: $button-padding;
+	padding-right: $button-padding;
 	transition: all 0.7s $transition-base;
 	@include h6;
 	cursor:pointer;

@@ -28,38 +28,38 @@ body {
 
 @mixin h1 {
   @include headingstyle;
-  font-size: $h1-size;
-  line-height: $h1-size + 0.55rem;  
+  font-size: rem($h1-size);
+  line-height: rem($h1-size) + 0.55rem;  
 }
 
 @mixin h2 {
   @include headingstyle;
-  font-size: $h2-size;
-  line-height: $h2-size + 0.55rem;  
+  font-size: rem($h2-size);
+  line-height: rem($h2-size) + 0.55rem;  
 }
 
 @mixin h3 {
   @include headingstyle;
-  font-size: $h3-size;
-  line-height: $h3-size + 0.55rem;  
+  font-size: rem($h3-size);
+  line-height: rem($h3-size) + 0.55rem;  
 }
 
 @mixin h4 {
   @include headingstyle;
-  font-size: $h4-size;
-  line-height: $h4-size + 0.55rem;  
+  font-size: rem($h4-size);
+  line-height: rem($h4-size) + 0.55rem;  
 }
 
 @mixin h5 {
   @include headingstyle;
-  font-size: $h5-size;
-  line-height: $h5-size + 0.55rem;  
+  font-size: rem($h5-size);
+  line-height: rem($h5-size) + 0.55rem;  
 }
 
 @mixin h6 {
   @include headingstyle;
-  font-size: $h6-size;
-  line-height: $h6-size + 0.55rem;  
+  font-size: rem($h6-size);
+  line-height: rem($h6-size) + 0.55rem;  
 }
 
 h1, .h1
@@ -282,6 +282,7 @@ $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
 .rwxt-small
 {
   font-size:$font-size-small !important;
+  line-height:$line-height-small !important;
 }
 .rwxt-uppercase
 {

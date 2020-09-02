@@ -8,6 +8,7 @@ class rwxParticle {
 	setRadius(size)
 	{
 		this.radius = size/2;
+		this.size = size;
 	}
 
 	update(x, y)

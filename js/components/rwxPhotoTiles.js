@@ -38,7 +38,7 @@ class rwxPhotoTile extends rwxComponent {
   	this.photos = [...el.children];//[...el.querySelectorAll('img')];
   	if(this.photos.length == 0)return;
   	this.effectInit = effect;
-  	this.createCanvas(el);
+  	this.createCanvas();
   	this.calculateSize(el);
   	this.photoLoop(el, noThumbnails);
 
@@ -142,14 +142,6 @@ class rwxPhotoTile extends rwxComponent {
   	this.width = this.canvas.width / this.pixelRatio;
   	this.height = this.canvas.height / this.pixelRatio;
   }
-
-  createCanvas(el)
-  {
-  	this.canvas = document.createElement('canvas');
-  	this.c = this.canvas.getContext('2d');
-  	el.appendChild(this.canvas);
-  }
-
 
   changeBackground(photoNumber, effect, force=false)
   {

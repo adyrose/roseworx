@@ -1,15 +1,41 @@
-import {rwxError} from '../rwxCore';
+import {rwxError, rwxCore} from '../rwxCore';
+import {rwxParticleShapes} from './rwxParticle';
 
-const rwxBitFontOrientationDefault = 'horizontal';
 const rwxBitFontOrientations = ['horizontal', 'vertical', 'slanted', 'wrap'];
 
-const rwxBitFontGetMatrix = (letters, orientation, width, height)=>{
-	if(orientation === undefined){orientation = rwxBitFontOrientationDefault;}
-	else if(!rwxBitFontOrientations.includes(orientation)){rwxError(`${orientation} is not a valid orientation. Valid orientations include ['${rwxBitFontOrientations.join("', '")}']. Using '${rwxBitFontOrientationDefault}'.`, 'rwxBitFont'); orientation = rwxBitFontOrientationDefault;}
+class rwxBitFont extends rwxCore {
+	constructor(selector)
+	{
+		super(`[${selector}]`, true);
+		this.component = selector;
+		this.shapeDefault = 'circle';
+		this.colorDefault = '#FFFFFF';
+		this.orientationDefault = "horizontal";
+		this.backgroundColorDefault = '#000000';		
+	}
+
+	execute(el, mc)
+	{
+		let bits = el.hasAttribute(`data-${this.component}-value`);
+		if(!bits){this.error(`There is no value (data-${this.component}-value) attribute detected on the ${this.component} element.`); return;}
+		bits = el.getAttribute(`data-${this.component}-value`);
+		if(!bits){this.error(`There is no value in the (data-${this.component}-value) attribute.`); return;}
+		let orientation = el.hasAttribute(`data-${this.component}-orientation`) ? el.getAttribute(`data-${this.component}-orientation`) : this.orientationDefault;
+		let shape = el.hasAttribute(`data-${this.component}-shape`) ? el.getAttribute(`data-${this.component}-shape`) : this.shapeDefault;
+		let color = el.hasAttribute(`data-${this.component}-color`) ? el.getAttribute(`data-${this.component}-color`) : this.colorDefault;
+		let bgcolor = el.hasAttribute(`data-${this.component}-background-color`) ? el.getAttribute(`data-${this.component}-background-color`) : this.backgroundColorDefault;
+		if(!rwxParticleShapes.includes(shape)){this.error(`${shape} is not a valid shape. Valid shapes include ['${rwxParticleShapes.join("', '")}']. Using '${this.shapeDefault}'.`); shape = this.shapeDefault;}
+		if(!rwxBitFontOrientations.includes(orientation)){rwxError(`${orientation} is not a valid orientation. Valid orientations include ['${rwxBitFontOrientations.join("', '")}']. Using '${rwxBitFontOrientationDefault}'.`, 'rwxBitFont'); orientation = rwxBitFontOrientationDefault;}
+		return this.execute2(el, mc, bits, orientation, shape, color, bgcolor)
+	}
+}
+
+
+const rwxBitFontGetMatrix = (letters, orientation, width, height, forceSize=false)=>{
 	letters = split(letters, orientation);
 	if(!letters)return;
 	let dimensions = [];
-	let size = calculateSize(width);
+	let size = calculateSize(width, forceSize);
 	let counter = 0;
 	let toReturn = [];
 	if(orientation == "wrap" && letters.includes('*'))
@@ -72,7 +98,8 @@ const calculateDimensions = (bitlength, index=0, length=0, orientation, width, h
 	{
 		bitXPlus = (size.bitSize + size.bitSpacing);
 		bitYPlus = 0;
-		y = (height/2) - (((length*size.bitSize) + ((length-1)*size.bitSpacing))/2) + (index * (size.bitSize + size.bitSpacing));
+		//bitYPlus = 10; wrap slanted
+		y = (height/2) - (((length*size.bitSize) + ((length-1)*size.bitSpacing))/2) + (index * (size.bitSize + (size.bitSpacing*1.5)));
 		x = (width/2) - (((bitlength*size.bitSize) + ((bitlength-1)*size.bitSpacing))/2);
 	}
 	else if (orientation == "vertical")
@@ -93,8 +120,9 @@ const calculateDimensions = (bitlength, index=0, length=0, orientation, width, h
 	return {x, y, bitXPlus, bitYPlus};
 }
 
-const calculateSize = (w) =>
+const calculateSize = (w, fs) =>
 {
+	if(fs){return rwxBitFontSizing[fs]}
 	if(w <= 500)
 	{
 		return rwxBitFontSizing.sm;
@@ -556,4 +584,4 @@ const rwxBitFontMatrix = {
 	]
 }
 
-export default rwxBitFontGetMatrix;
+export {rwxBitFont, rwxBitFontGetMatrix};

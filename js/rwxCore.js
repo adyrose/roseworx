@@ -235,9 +235,36 @@ class rwxComponent {
     if(!this.stopAnimation)
     {
       requestAnimationFrame(this.animateLoop);
-      (this.c && this.canvas) && this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      (this.c && this.canvas && !this.dontClearRect) && this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			this.animate();    
     }
+	}
+
+	elFullSizeAbsolute()
+	{
+		this.el.style.position = 'absolute';
+		this.el.style.top = '0px';
+		this.el.style.left = '0px';
+		this.el.style.right = '0px';
+		this.el.style.bottom = '0px';
+		this.el.style.width = '100%';
+		this.el.style.height = '100%';
+	}
+
+	createCanvas()
+	{
+		this.canvas = document.createElement('canvas');
+		this.c = this.canvas.getContext('2d');
+		this.el.appendChild(this.canvas);
+    this.sizeCanvas();
+	}
+
+	sizeCanvas()
+	{
+		let meas = this.el.getBoundingClientRect();
+		let pixelRatio = rwxCanvas.scale(this.canvas, this.c, this.canvasWidth || meas.width, this.canvasHeight || meas.height);
+		this.width = (this.canvas.width / pixelRatio);
+		this.height = (this.canvas.height / pixelRatio);
 	}
 
 	error(msg)

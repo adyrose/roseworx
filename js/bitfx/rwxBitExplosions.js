@@ -1,38 +1,21 @@
-require('../../scss/components/rwxBitExplosion.scss');
-import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxComponent } from '../rwxCore';
 
-import rwxAnimate from '../helpers/rwxAnimateHelpers';
-import rwxCanvas from '../helpers/rwxCanvasHelpers';
-import rwxMath from '../helpers/rwxMathHelpers';
-import rwxGeometry from '../helpers/rwxGeometryHelpers';
-import rwxMisc from '../helpers/rwxMiscHelpers';
+import { rwxCanvas, rwxMath, rwxAnimate, rwxDOM, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
 
-import {rwxParticle, rwxParticleShapes} from './rwxParticle';
+import {rwxParticle} from './rwxParticle';
 
-import rwxBitFontGetMatrix from './rwxBitFont';
+import {rwxBitFont, rwxBitFontGetMatrix} from './rwxBitFont';
 
-class rwxBitExplosions extends rwxCore {
+class rwxBitExplosions extends rwxBitFont {
 	constructor()
 	{
-		super('[rwx-bit-explosion]', true);
-		this.shapes = ['circle', 'square'];
-		this.shapeDefault = 'circle';
-		this.colorDefault = '#FFFFFF';
-		this.backgroundColorDefault = '#000000';
+		super('rwx-bit-explosion');
+		this.spareColorDefault = "#FFFFFF";
 	}
 
-	execute(el, mc)
+	execute2(el, mc, bits, orientation, shape, color, bgcolor)
 	{
-		let bits = el.hasAttribute('data-rwx-bit-explosion-value');
-		if(!bits){this.error('There is no value (data-rwx-bit-explosion-value) attribute detected on the rwx-bit-explosion element.'); return;}
-		bits = el.getAttribute('data-rwx-bit-explosion-value');
-		if(!bits){this.error('There is no value in the (data-rwx-bit-explosion-value) attribute.'); return;}
-		let orientation = el.hasAttribute('data-rwx-bit-explosion-orientation') ? el.getAttribute('data-rwx-bit-explosion-orientation') : this.orientationDefault;
-		let shape = el.hasAttribute('data-rwx-bit-explosion-shape') ? el.getAttribute('data-rwx-bit-explosion-shape') : this.shapeDefault;
-		let sparecolor = el.hasAttribute('data-rwx-bit-explosion-secondary-color') ? el.getAttribute('data-rwx-bit-explosion-secondary-color') : this.colorDefault;
-		let color = el.hasAttribute('data-rwx-bit-explosion-color') ? el.getAttribute('data-rwx-bit-explosion-color') : this.colorDefault;
-		let bgcolor = el.hasAttribute('data-rwx-bit-explosion-background-color') ? el.getAttribute('data-rwx-bit-explosion-background-color') : this.backgroundColorDefault;
-		if(!rwxParticleShapes.includes(shape)){this.error(`${shape} is not a valid shape. Valid shapes include ['${rwxParticleShapes.join("', '")}']. Using '${this.shapeDefault}'.`); shape = this.shapeDefault;}
+		let sparecolor = el.hasAttribute('data-rwx-bit-explosion-secondary-color') ? el.getAttribute('data-rwx-bit-explosion-secondary-color') : this.spareColorDefault;
 		return new rwxBitExplosion(el, mc, bits, orientation, shape, color, bgcolor, sparecolor);
 	}
 }
@@ -54,6 +37,7 @@ class rwxBitExplosion extends rwxComponent {
 		this.spareParticleSize = 1;
 		this.boundaryFromWordToSpareParticle = 10;
 		this.numberOfSpareParticles = 20;
+		this.elFullSizeAbsolute();
 		this.createCanvas();
 		this.calculateLetterParticles();
 		if(!this.matrix)return;
@@ -191,7 +175,7 @@ class rwxBitExplosion extends rwxComponent {
 
 	scrolledIntoView()
 	{
-		if(this.wordParticles.length == 0){
+		if(this.allParticles.length == 0){
 			this.stopAnimation = true;
 			return;
 		}		
@@ -202,22 +186,6 @@ class rwxBitExplosion extends rwxComponent {
 	moused()
 	{
 		return;
-	}
-
-	createCanvas()
-	{
-		this.canvas = document.createElement('canvas');
-		this.c = this.canvas.getContext('2d');
-		this.el.appendChild(this.canvas);
-    this.sizeCanvas();
-	}
-
-	sizeCanvas()
-	{
-		let meas = this.el.getBoundingClientRect();
-		let pixelRatio = rwxCanvas.scale(this.canvas, this.c, meas.width, meas.height);
-		this.width = (this.canvas.width / pixelRatio);
-		this.height = (this.canvas.height / pixelRatio);
 	}
 
 	animate()

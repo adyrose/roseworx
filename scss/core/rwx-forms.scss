@@ -117,7 +117,7 @@
 			color: $red;
 			order: 3;
 			margin-top:5px;
-			font-size: $font-size-small;
+			@extend .small;
 			display:none;
 		}
 

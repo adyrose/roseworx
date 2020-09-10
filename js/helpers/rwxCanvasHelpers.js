@@ -39,7 +39,7 @@ const rwxCanvas =
     ctx.arc(center.x, center.y, (radius-(depth/2)), startAngle, endAngle);
     ctx.lineWidth = depth;
     ctx.stroke();
-    ctx.closePath();    
+    ctx.closePath();
   },
 
   // not sure what it does anymore

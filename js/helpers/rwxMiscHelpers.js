@@ -50,6 +50,20 @@ const rwxMisc =
         const j = Math.floor(Math.random() * (i + 1));
         [a[i], a[j]] = [a[j], a[i]];
     }
+  },
+
+  isHexValue: (v) => {
+    const re = /^#(?:[0-9a-f]{3}){1,2}$/i;
+    return re.test(v);
+  },
+
+  convertHexToRGB: (v) => {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(v);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
   }
 }
 

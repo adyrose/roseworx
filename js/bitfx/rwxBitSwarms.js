@@ -1,35 +1,18 @@
-require('../../scss/components/rwxBitSwarm.scss');
-import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxComponent } from '../rwxCore';
 
-import rwxAnimate from '../helpers/rwxAnimateHelpers';
-import rwxCanvas from '../helpers/rwxCanvasHelpers';
-import rwxMath from '../helpers/rwxMathHelpers';
-import rwxGeometry from '../helpers/rwxGeometryHelpers';
-import rwxMisc from '../helpers/rwxMiscHelpers';
+import { rwxCanvas, rwxMath, rwxAnimate, rwxDOM, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
 
-import {rwxParticle, rwxParticleShapes} from './rwxParticle';
-import rwxBitFontGetMatrix from './rwxBitFont';
+import {rwxParticle} from './rwxParticle';
+import {rwxBitFont, rwxBitFontGetMatrix} from './rwxBitFont';
 
-class rwxBitSwarms extends rwxCore {
+class rwxBitSwarms extends rwxBitFont {
 	constructor()
 	{
-		super('[rwx-bit-swarm]', true);
-		this.shapeDefault = 'circle';
-		this.colorDefault = '#FFFFFF';
-		this.backgroundColorDefault = '#000000';
+		super('rwx-bit-swarm');
 	}
 
-	execute(el, mc)
+	execute2(el, mc, bits, orientation, shape, color, bgcolor)
 	{
-		let bits = el.hasAttribute('data-rwx-bit-swarm-value');
-		if(!bits){this.error('There is no value (data-rwx-bit-swarm-value) attribute detected on the rwx-bit-swarm element.'); return;}
-		bits = el.getAttribute('data-rwx-bit-swarm-value');
-		if(!bits){this.error('There is no value in the (data-rwx-bit-swarm-value) attribute.'); return;}
-		let orientation = el.hasAttribute('data-rwx-bit-swarm-orientation') ? el.getAttribute('data-rwx-bit-swarm-orientation') : this.orientationDefault;
-		let shape = el.hasAttribute('data-rwx-bit-swarm-shape') ? el.getAttribute('data-rwx-bit-swarm-shape') : this.shapeDefault;
-		let color = el.hasAttribute('data-rwx-bit-swarm-color') ? el.getAttribute('data-rwx-bit-swarm-color') : this.colorDefault;
-		let bgcolor = el.hasAttribute('data-rwx-bit-swarm-background-color') ? el.getAttribute('data-rwx-bit-swarm-background-color') : this.backgroundColorDefault;
-		if(!rwxParticleShapes.includes(shape)){this.error(`${shape} is not a valid shape. Valid shapes include ['${rwxParticleShapes.join("', '")}']. Using '${this.shapeDefault}'.`); shape = this.shapeDefault;}
 		return new rwxBitSwarm(el, mc, bits, orientation, shape, color, bgcolor);
 	}
 }
@@ -53,6 +36,7 @@ class rwxBitSwarm extends rwxComponent {
 		this.letterTimeoutTicker2 = 0;
 		this.wordAnimationTimeout = 300;
 		this.wordAnimationTicker = 0;
+		this.elFullSizeAbsolute();
 		this.createCanvas();
 		this.calculatePosition(true, bits);
 	}
@@ -96,23 +80,6 @@ class rwxBitSwarm extends rwxComponent {
 				this.letters[i].createParticleData();				
 			}
 		});
-	}
-
-	createCanvas()
-	{
-		this.canvas = document.createElement('canvas');
-		this.c = this.canvas.getContext('2d');
-		this.el.appendChild(this.canvas);
-    this.sizeCanvas();
-	}
-
-	sizeCanvas()
-	{
-		let meas = this.el.getBoundingClientRect();
-		let pixelRatio = rwxCanvas.scale(this.canvas, this.c, meas.width, meas.height);
-		this.width = (this.canvas.width / pixelRatio);
-		this.height = (this.canvas.height / pixelRatio);
-		this.c.fillStyle = this.bitColor;
 	}
 
 	moused()

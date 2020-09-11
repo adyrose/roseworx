@@ -8,6 +8,7 @@ class rwxParticle {
 	setRadius(size)
 	{
 		this.radius = size/2;
+		this.size = size;
 	}
 
 	update(x, y)
@@ -23,7 +24,7 @@ class rwxParticle {
 		this.c.fillStyle = this.color;
 		this[this.shape]();
 		this.c.fill();
-		this.c.closePath()
+		this.c.closePath();
 	}
 
 	square()

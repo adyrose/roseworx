@@ -45,8 +45,8 @@ class rwxCountOMeter extends rwxComponent {
 	    "#8cff00",
 	    "#2fff00"
 		];
-		this.createCanvas();
-
+    this.canvasHeight = this.el.getBoundingClientRect().width/2;
+    this.createCanvas();
 		this.animeCounter = [];
 		this.value = value
     this.rating = this.value/10*2;
@@ -70,23 +70,6 @@ class rwxCountOMeter extends rwxComponent {
 		this.sizeCanvas();
 		this.makeParticles();
 		this.makeText();
-	}
-
-	createCanvas()
-	{
-		this.canvas = document.createElement('canvas');
-		this.c = this.canvas.getContext('2d');
-		this.el.appendChild(this.canvas);
-    this.sizeCanvas();
-	}
-
-	sizeCanvas()
-	{
-		let meas = this.el.getBoundingClientRect();
-		let pixelRatio = rwxCanvas.scale(this.canvas, this.c, meas.width, meas.width/2);
-
-		this.width = (this.canvas.width / pixelRatio);
-		this.height = (this.canvas.height / pixelRatio);
 	}
 
 	makeText(firstblood = false)

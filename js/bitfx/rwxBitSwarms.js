@@ -226,7 +226,7 @@ class rwxBitSwarmLetter {
 			let centery = this.ypos + (this.bitSize/2);
 			let explodepoint = rwxGeometry.closestPointOnCircumference({x: m.x, y:m.y}, {x:centerx, y:centery}, this.boundary);
 			if(isNaN(explodepoint.x) && isNaN(explodepoint.y)){explodepoint =  rwxGeometry.closestPointOnCircumference({x: m.x+10, y:m.y-10}, {x:centerx, y:centery}, this.boundary);}
-			let cycloneangle = rwxGeometry.getAngle(centerx, centery, m.x, m.y);
+			let cycloneangle = rwxGeometry.getAngle({x:centerx, y:centery}, {x:m.x, y:m.y});
 			this.matrixParticles.push({
 				finalx: m.x,
 				finaly: m.y,

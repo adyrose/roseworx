@@ -40,11 +40,6 @@ const rwxCanvas =
     ctx.lineWidth = depth;
     ctx.stroke();
     ctx.closePath();
-  },
-
-  // not sure what it does anymore
-  // getCoordsFromAngle(c1,c2,radius,angle) {
-  //   return {x:c1+Math.cos(angle)*radius,y:c2+Math.sin(angle)*radius};
-  // },
+  }
 }
 export default rwxCanvas;

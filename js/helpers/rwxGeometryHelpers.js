@@ -23,10 +23,10 @@ const rwxGeometry = {
     return {x: p1.x + distance * Math.cos(angle), y: p1.y + distance * Math.sin(angle)};
   },
 
-  getAngle: (centerX, centerY, posX, posY) => {
+  getAngle: (center, p) => {
     // returns an objects angle based on its coordinates and a center point
-    let x = centerX - posX;
-    let y = centerY - posY;
+    let x = center.x - p.x;
+    let y = center.y - p.y;
 
     let theta = Math.atan2(-y, -x);
     theta *= 180 / Math.PI;

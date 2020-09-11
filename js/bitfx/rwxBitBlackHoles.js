@@ -6,8 +6,6 @@ import { rwxCanvas, rwxMath, rwxAnimate, rwxDOM, rwxMisc, rwxGeometry } from '..
 
 import {rwxBitFont, rwxBitFontGetMatrix} from './rwxBitFont';
 
-// Add numbers 0-9 to bitfont (update demo site with new available things)
-
 class rwxBitBlackHoles extends rwxBitFont {
   constructor()
   {
@@ -104,7 +102,7 @@ class rwxBitBlackHole extends rwxComponent {
 
   generateLetterParticles()
   {
-    this.matrix = rwxBitFontGetMatrix(this.bits, this.orientation, this.width, this.height, 'sm');
+    this.matrix = rwxBitFontGetMatrix(this.bits, this.orientation, this.width, this.height, 'xl');
     let letterparticles = [];
     let xs = [];
     let ys = [];
@@ -219,9 +217,15 @@ class rwxBitBlackHole extends rwxComponent {
     let percentage;
     for(let p of this.particles)
     {
+      if(p.isLetter)
+      {
+        p.x = p.finalx;
+        p.y=p.finaly;
+        p.draw();
+      }
+      continue;
       if(!p.isLetter)
       {
-        continue;
         if(p.rotationRadius > this.innerRingRadius)
         {
           p.rotationRadius -= 0.1;

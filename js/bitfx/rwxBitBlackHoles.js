@@ -102,7 +102,7 @@ class rwxBitBlackHole extends rwxComponent {
 
   generateLetterParticles()
   {
-    this.matrix = rwxBitFontGetMatrix(this.bits, this.orientation, this.width, this.height, 'xl');
+    this.matrix = rwxBitFontGetMatrix(this.bits, this.orientation, this.width, this.height, 'sm');
     let letterparticles = [];
     let xs = [];
     let ys = [];
@@ -122,7 +122,7 @@ class rwxBitBlackHole extends rwxComponent {
     });
     let width = Math.max(...xs) - Math.min(...xs);
     let height = Math.max(...ys) - Math.min(...ys);
-    this.innerRingRadius = width > height ? (width/2) : (height/2);
+    this.innerRingRadius = width > height ? (width/2)+10 : (height/2)+10;
     this.calculateInnerRingPosition(letterparticles);
   }
 
@@ -217,13 +217,6 @@ class rwxBitBlackHole extends rwxComponent {
     let percentage;
     for(let p of this.particles)
     {
-      if(p.isLetter)
-      {
-        p.x = p.finalx;
-        p.y=p.finaly;
-        p.draw();
-      }
-      continue;
       if(!p.isLetter)
       {
         if(p.rotationRadius > this.innerRingRadius)

@@ -265,7 +265,7 @@ $weights: ("light": 200, "normal": "normal", "bold": 600, "extra-bold": 900);
 {
 	.rwxt-#{$selector}
 	{
-		font-weight: $weight;
+		font-weight: $weight !important;
 	}
 }
 

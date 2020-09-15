@@ -24,7 +24,6 @@ const rwxGeometry = {
   },
 
   getAngle: (center, p) => {
-    // returns an objects angle based on its coordinates and a center point
     let x = center.x - p.x;
     let y = center.y - p.y;
 

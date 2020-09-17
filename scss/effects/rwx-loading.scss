@@ -1,6 +1,6 @@
 $rwx-loading-background-color: $grey !default;
 $rwx-loading-color: $white !default;
-[rwx-loading]
+[rwx-loading], .rwx-loading
 {
 	overflow:hidden;
 	position:relative;

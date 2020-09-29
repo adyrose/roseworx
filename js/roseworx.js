@@ -4,6 +4,6 @@ import rwxTabs from './core/rwxTabs';
 import rwxMist from './effects/rwxMists';
 import rwxSliders from './core/rwxSliders';
 
-const globalObject = {forms:rwxForms, sliders:rwxSliders, tabs:rwxTabs}
+const globalObject = {forms:rwxForms, sliders:rwxSliders, tabs:rwxTabs, mists: rwxMist, tables: rwxTables}
 window.rwx = globalObject;
 export default globalObject;

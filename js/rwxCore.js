@@ -9,18 +9,25 @@ class rwxCore {
 		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
 		this.execute = this.execute.bind(this);
 		window.addEventListener('load', ()=>{
-			if(selector)
-			{
-				[...document.querySelectorAll(selector)].map((el) => {
-					const mc = canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
-					this.addIME(el.id, mc);
-				});
-			}
-			else
-			{
-				this.execute();
-			}
+			this.selector = selector;
+			this.canHaveManualControl = canHaveManualControl;
+			this.scanDOM();
 		});
+	}
+
+	scanDOM()
+	{
+		if(this.selector)
+		{
+			[...document.querySelectorAll(this.selector)].map((el) => {
+				const mc = this.canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
+				this.addIME(el.id, mc);
+			});
+		}
+		else
+		{
+			this.execute();
+		}
 	}
 
 	validateParameter(value, type, caller)

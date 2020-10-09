@@ -20,6 +20,11 @@ class rwxCore {
 		if(this.selector)
 		{
 			[...document.querySelectorAll(this.selector)].map((el) => {
+				for(let im in this.internalMap){
+					if(this.internalMap[im].el === el){
+						return;
+					}
+				}
 				const mc = this.canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
 				this.addIME(el.id, mc);
 			});

@@ -98,7 +98,7 @@ h6, .h6
   @include additionalheadingstyle;
 }
 
-@if $secton-seperators
+@if $section-seperators
 {
   section, .section
   {

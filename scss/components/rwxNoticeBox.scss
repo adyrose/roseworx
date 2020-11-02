@@ -14,7 +14,7 @@ $positions: ('top-left', 'top-right', 'bottom-left', 'bottom-right');
 
 .rwx-notice-box
 {
-	&.--top-left
+	&.\--top-left
 	{
   	top:-$bouncemeasure;
   	left:-$bouncemeasure;
@@ -25,7 +25,7 @@ $positions: ('top-left', 'top-right', 'bottom-left', 'bottom-right');
 	  transform: translate(-100%,-100%);
 	  border-bottom-right-radius:10px;
 	}
-	&.--top-right
+	&.\--top-right
 	{
 		top:-$bouncemeasure;
   	right:-$bouncemeasure;
@@ -36,7 +36,7 @@ $positions: ('top-left', 'top-right', 'bottom-left', 'bottom-right');
 	  transform: translate(100%,-100%);
 	  border-bottom-left-radius:10px;
 	}
-	&.--bottom-left
+	&.\--bottom-left
 	{
   	bottom:-$bouncemeasure;
   	left:-$bouncemeasure;
@@ -47,7 +47,7 @@ $positions: ('top-left', 'top-right', 'bottom-left', 'bottom-right');
 	  transform: translate(-100%,100%);
 	  border-top-right-radius:10px;
 	}
-	&.--bottom-right
+	&.\--bottom-right
 	{
   	bottom:-$bouncemeasure;
   	right:-$bouncemeasure;

@@ -61,7 +61,7 @@
 		transition: all 1s $transition-base;
 	}
 	@include button($button-color-base);
-	&.--inverted
+	&.\--inverted
 	{
 		@include invertedButton($button-color-base);	
 	}
@@ -70,7 +70,7 @@
 		&.--#{$modifier}
 		{
 			@include button($color);
-			&.--inverted
+			&.\--inverted
 			{
 				@include invertedButton($color);
 			}

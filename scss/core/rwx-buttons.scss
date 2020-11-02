@@ -67,7 +67,7 @@
 	}
 	@each $modifier, $color in $colors
 	{
-		&.--#{$modifier}
+		&.\--#{$modifier}
 		{
 			@include button($color);
 			&.\--inverted

@@ -48,11 +48,6 @@ $grid-classes:
 			max-width: map-get($breakpoints, 'xl');
 		}
 	}
-	&-followed-by-full
-	{
-		padding-right: 0px !important;
-		padding-left: $grid-item-gutter !important;
-	}
 	&-full
 	{
 		width:100%;
@@ -64,9 +59,36 @@ $grid-classes:
 	flex-wrap:wrap;
 	@each $selector, $value in $grid-classes
 	{
+		&.equal-padding
+		{
+			margin-left:-$grid-item-gutter;
+			margin-right:-$grid-item-gutter;
+			.rwx-split-#{$selector}
+			{
+				&:last-of-type
+				{
+					padding-right:$grid-item-gutter;
+				}
+				&:first-of-type
+				{
+					padding-left:$grid-item-gutter;
+				}
+			}
+		}
+
 		&-#{$selector}
 		{
 			width: #{$value};
+			padding-left: $grid-item-gutter;
+			padding-right: $grid-item-gutter;
+			&:last-of-type
+			{
+				padding-right:0px;
+			}
+			&:first-of-type
+			{
+				padding-left:0px;
+			}
 			position:relative;
 			@include snap-down-from('md')
 			{
@@ -74,26 +96,7 @@ $grid-classes:
 				padding-bottom:$grid-item-gutter;
 				width:100%;
 			}
-
-			padding-left: $grid-item-gutter/2;
-			padding-right: $grid-item-gutter/2;
-			&:last-of-type
-			{
-				padding-right: 0px;
-				padding-left: $grid-item-gutter;
-			}
-			&:first-of-type
-			{
-				padding-right: $grid-item-gutter;
-				padding-left: 0px;
-			}
 		}
-		.rwx-split-full + &-#{$selector}
-		{
-			padding-left:0px;
-			padding-right: $grid-item-gutter;
-		}		
-
 		& .rwx-split &-#{$selector}
 		{
 			@include snap-down-from('md')

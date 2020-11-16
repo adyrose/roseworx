@@ -12,6 +12,13 @@ $grid-classes:
 
 .rwx-split
 {
+	padding-left: $grid-item-gutter;
+	padding-right: $grid-item-gutter;
+	.rwx-split
+	{
+		padding-left:0px;
+		padding-right:0px;
+	}
 	&.end-vertically
 	{
 		align-items: flex-end;

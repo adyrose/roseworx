@@ -1,6 +1,6 @@
 {
   "name": "roseworx",
-  "version": "4.4.4",
+  "version": "4.4.5",
   "description": "Front end css and js framework",
   "main": "js/roseworx.js",
   "scripts": {

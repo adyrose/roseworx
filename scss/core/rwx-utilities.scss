@@ -12,7 +12,7 @@
 
 .rwxu-show
 {
-	display:initial !important
+	display:initial !important;
 	&-md
 	{
 		@include snap-down-from('md')

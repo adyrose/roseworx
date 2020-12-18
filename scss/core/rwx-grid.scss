@@ -19,6 +19,10 @@ $grid-classes:
 		padding-left:0px;
 		padding-right:0px;
 	}
+	&.no-wrap
+	{
+		flex-wrap:nowrap;
+	}
 	&.end-vertically
 	{
 		align-items: flex-end;
@@ -101,6 +105,8 @@ $grid-classes:
 			{
 				padding-top:$grid-item-gutter;
 				padding-bottom:$grid-item-gutter;
+				padding-left: 0px;
+				padding-right:0px;
 				width:100%;
 			}
 		}

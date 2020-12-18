@@ -18,6 +18,13 @@ $spacings: ("no": 0, "sm": $small-spacing, "md": $medium-spacing, "lg": $large-s
 				{
 					#{$property}-#{$direction}: $unit !important;
 				}
+				@include snap-down-from('md')
+				{
+					&-#{$dselector}-#{$size}-rsp
+					{
+						#{$property}-#{$direction}: $unit !important;
+					}
+				}
 			}
 		}
 	}	

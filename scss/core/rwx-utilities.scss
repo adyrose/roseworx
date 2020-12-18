@@ -1,11 +1,11 @@
 .rwxu-hide
 {
-	display:none;
+	display:none !important;
 	&-md
 	{
 		@include snap-down-from('md')
 		{
-			display: none;
+			display: none !important;
 		}
 	}
 }

@@ -14,16 +14,16 @@ $spacings: ("no": 0, "sm": $small-spacing, "md": $medium-spacing, "lg": $large-s
 			
 			@each $direction, $dselector in $directions
 			{
-				&-#{$dselector}-#{$size}
-				{
-					#{$property}-#{$direction}: $unit !important;
-				}
 				@include snap-down-from('md')
 				{
 					&-#{$dselector}-#{$size}-rsp
 					{
 						#{$property}-#{$direction}: $unit !important;
 					}
+				}
+				&-#{$dselector}-#{$size}
+				{
+					#{$property}-#{$direction}: $unit !important;
 				}
 			}
 		}

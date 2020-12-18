@@ -2,6 +2,27 @@ $things: ("margin": "m", "padding": "p");
 $directions: ("left": "l", "right": "r", "top" :"t", "bottom": "b");
 $spacings: ("no": 0, "sm": $small-spacing, "md": $medium-spacing, "lg": $large-spacing);
 
+@each $size, $unit in $spacings {
+	@each $property, $selector in $things
+	{
+		.rwxs-#{$selector}
+		{
+			&-#{$size}
+			{
+				#{$property}: $unit !important;
+			}
+			
+			@each $direction, $dselector in $directions
+			{
+				&-#{$dselector}-#{$size}
+				{
+					#{$property}-#{$direction}: $unit !important;
+				}
+			}
+		}
+	}	
+}
+
 //ensure rsp classes precede in hierarchy
 @each $size, $unit in $spacings {
 	@each $property, $selector in $things
@@ -23,27 +44,6 @@ $spacings: ("no": 0, "sm": $small-spacing, "md": $medium-spacing, "lg": $large-s
 					{
 						#{$property}-#{$direction}: $unit !important;
 					}
-				}
-			}
-		}
-	}	
-}
-
-@each $size, $unit in $spacings {
-	@each $property, $selector in $things
-	{
-		.rwxs-#{$selector}
-		{
-			&-#{$size}
-			{
-				#{$property}: $unit !important;
-			}
-			
-			@each $direction, $dselector in $directions
-			{
-				&-#{$dselector}-#{$size}
-				{
-					#{$property}-#{$direction}: $unit !important;
 				}
 			}
 		}

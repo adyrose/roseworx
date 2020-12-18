@@ -10,6 +10,18 @@
 	}
 }
 
+.rwxu-show
+{
+	display:initial !important
+	&-md
+	{
+		@include snap-down-from('md')
+		{
+			display: initial !important;
+		}
+	}	
+}
+
 .rwxu-flex-center
 {
 	@include flex-center;

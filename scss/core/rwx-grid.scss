@@ -19,6 +19,16 @@ $grid-classes:
 		padding-left:0px;
 		padding-right:0px;
 	}
+	&.breakout-rsp
+	{
+		@include snap-down-from('md')
+		{
+			margin-left:-$grid-item-gutter !important;
+			margin-right:-$grid-item-gutter !important;
+			padding-left:$grid-item-gutter !important;
+			padding-right:$grid-item-gutter !important;
+		}
+	}
 	&.no-wrap
 	{
 		flex-wrap:nowrap;

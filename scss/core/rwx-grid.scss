@@ -10,6 +10,8 @@ $grid-classes:
   "fifth-x3" 60%,
   "fifth-x4" 80%;
 
+
+
 .rwx-split
 {
 	padding-left: $grid-item-gutter;
@@ -19,7 +21,7 @@ $grid-classes:
 		padding-left:0px;
 		padding-right:0px;
 	}
-	&.breakout-rsp
+	&-breakout-rsp
 	{
 		@include snap-down-from('md')
 		{

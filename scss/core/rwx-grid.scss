@@ -31,6 +31,14 @@ $grid-classes:
 			padding-right:$grid-item-gutter !important;
 		}
 	}
+	&.equal-padding
+	{
+		@include snap-up-from('md')
+		{
+			margin-left:-$grid-item-gutter;
+			margin-right:-$grid-item-gutter;
+		}
+	}
 	&.no-wrap
 	{
 		flex-wrap:nowrap;
@@ -82,20 +90,15 @@ $grid-classes:
 	flex-wrap:wrap;
 	@each $selector, $value in $grid-classes
 	{
-		&.equal-padding
+		&.equal-padding .rwx-split-#{$selector}
 		{
-			margin-left:-$grid-item-gutter;
-			margin-right:-$grid-item-gutter;
-			.rwx-split-#{$selector}
+			&:last-of-type
 			{
-				&:last-of-type
-				{
-					padding-right:$grid-item-gutter;
-				}
-				&:first-of-type
-				{
-					padding-left:$grid-item-gutter;
-				}
+				padding-right:$grid-item-gutter;
+			}
+			&:first-of-type
+			{
+				padding-left:$grid-item-gutter;
 			}
 		}
 

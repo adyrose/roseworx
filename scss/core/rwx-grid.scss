@@ -46,7 +46,7 @@ $grid-classes:
 		{
 			&-#{$selector}
 			{
-				width: #{$value};
+				width: #{$value} !important;
 			}
 		}
 	}

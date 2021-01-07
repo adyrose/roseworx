@@ -42,6 +42,13 @@ $grid-classes:
 	&.no-wrap
 	{
 		flex-wrap:nowrap;
+		@each $selector, $value in $grid-classes
+		{
+			&-#{$selector}
+			{
+				width: #{$value};
+			}
+		}
 	}
 	&.end-vertically
 	{
@@ -88,6 +95,7 @@ $grid-classes:
 	//overflow-x:hidden;
 	display:flex;
 	flex-wrap:wrap;
+
 	@each $selector, $value in $grid-classes
 	{
 		&.equal-padding .rwx-split-#{$selector}

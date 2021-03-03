@@ -18,7 +18,7 @@ $purple: #731773 !default;
 $pink: #ff33cc !default;
 $brown: #9a3300 !default;
 
-$colors: ('black':$black, 
+$ecolors: ('black':$black, 
 					'grey':$grey, 
 					'dark-grey':$dark-grey, 
 					'white':$white, 
@@ -34,6 +34,15 @@ $colors: ('black':$black,
 					'pink': $pink,
 					'brown': $brown
 					);
+$colors: null !default;
+@if $colors
+{
+	$colors: map-merge($colors, $ecolors);
+}
+@else
+{
+	$colors: $ecolors;
+}
 
 $icons: (
 	'tick': (

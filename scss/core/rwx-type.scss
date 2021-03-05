@@ -271,7 +271,6 @@ $weights: ("light": 200, "normal": 400, "semi-bold":500, "bold": 700, "extra-bol
 
 @each $selector,$measurements in $fontsizes
 {
-  @debug $measurements;
   .rwxt-#{$selector}
   {
     font-size: rem(map-get($measurements, "size")) !important;

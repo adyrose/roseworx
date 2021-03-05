@@ -265,7 +265,7 @@ $weights: ("light": 200, "normal": 400, "semi-bold":500, "bold": 700, "extra-bol
 {
 	.rwxt-#{$selector}
 	{
-		font-weight: $weight;
+		font-weight: $weight !important;
 	}
 }
 
@@ -274,8 +274,8 @@ $weights: ("light": 200, "normal": 400, "semi-bold":500, "bold": 700, "extra-bol
   @debug $measurements;
   .rwxt-#{$selector}
   {
-    font-size: map-get($measurements, "size");
-    line-height: map-get($measurements, "lh");
+    font-size: map-get($measurements, "size") !important;
+    line-height: map-get($measurements, "lh") !important;
   }
 }
 
@@ -289,11 +289,6 @@ $weights: ("light": 200, "normal": 400, "semi-bold":500, "bold": 700, "extra-bol
   text-decoration: underline !important;
 }
 
-.rwxt-small
-{
-  font-size:$font-size-small !important;
-  line-height:$line-height-small !important;
-}
 .rwxt-uppercase
 {
   text-transform: uppercase !important;

@@ -1,6 +1,5 @@
 $things: ("margin": "m", "padding": "p");
 $directions: ("left": "l", "right": "r", "top" :"t", "bottom": "b");
-$spacings: ("no": 0, "sm": $small-spacing, "md": $medium-spacing, "lg": $large-spacing);
 
 @each $size, $unit in $spacings {
 	@each $property, $selector in $things

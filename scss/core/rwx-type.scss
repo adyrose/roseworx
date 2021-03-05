@@ -259,7 +259,7 @@ ul
   }
 }
 
-$weights: ("light": 200, "normal": 400, "bold": 700, "extra-bold": 900);
+$weights: ("light": 200, "normal": 400, "semi-bold":500, "bold": 700, "extra-bold": 900);
 
 @each $selector, $weight in $weights
 {
@@ -267,6 +267,16 @@ $weights: ("light": 200, "normal": 400, "bold": 700, "extra-bold": 900);
 	{
 		font-weight: $weight;
 	}
+}
+
+@each $selector,$measurements in $fontsizes
+{
+  @debug $measurements;
+  .rwxt-#{$selector}
+  {
+    font-size: map-get($measurements, "size");
+    line-height: map-get($measurements, "lh");
+  }
 }
 
 .rwxt-no-underline

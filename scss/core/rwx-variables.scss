@@ -136,12 +136,24 @@ $breakpoints: (
 $small-spacing: 1.5rem !default;
 $medium-spacing: 3rem !default;
 $large-spacing: 4.5rem !default;
+$espacings: ("no": 0, "sm": $small-spacing, "md": $medium-spacing, "lg": $large-spacing);
+$spacings: null !default;
+@if $spacings
+{
+	$spacings: map-merge($spacings, $espacings);
+}
+@else
+{
+	$spacings: $espacings;
+}
 
 //type
 $font-size-small: 0.8rem !default;
 $font-size-base: 0.95rem !default;
-$line-height-base: 1.6rem !default;
+$font-size-large: 1.10rem !default;
 $line-height-small: 1.3rem !default;
+$line-height-base: 1.6rem !default;
+$line-height-large: 1.9rem !default;
 $h1-size: $font-size-base * 3 !default;
 $h2-size: $font-size-base * 2.4 !default;
 $h3-size: $font-size-base * 1.9 !default;
@@ -158,6 +170,20 @@ $card-background-color: $theme-color-secondary !default;
 $card-border-color: $theme-color-base !default;
 $section-seperators: true !default;
 $section-seperator-color: $theme-color-tertiary !default;
+$efontsizes: (
+	"small": ("size": $font-size-small, "lh": $line-height-small),
+	"large": ("size": $font-size-large, "lh": $line-height-large)
+);
+$fontsizes: null !default;
+@if $fontsizes
+{
+	$fontsizes: map-merge($fontsizes, $efontsizes);
+}
+@else
+{
+	$fontsizes: $efontsizes;
+}
+
 
 //animation-easings
 $transition-slow-in: cubic-bezier(.09,1.08,.74,.95); 

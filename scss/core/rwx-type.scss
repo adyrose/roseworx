@@ -274,8 +274,8 @@ $weights: ("light": 200, "normal": 400, "semi-bold":500, "bold": 700, "extra-bol
   @debug $measurements;
   .rwxt-#{$selector}
   {
-    font-size: map-get($measurements, "size") !important;
-    line-height: map-get($measurements, "lh") !important;
+    font-size: rem(map-get($measurements, "size")) !important;
+    line-height: rem(map-get($measurements, "lh")) !important;
   }
 }
 

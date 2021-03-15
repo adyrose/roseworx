@@ -2,19 +2,22 @@ import { rwxError } from '../rwxCore';
 
 const rwxAnimateHelpers = {
   EasingFunctions: {
-    linear: function (t) { return t },
-    easeInQuad: function (t) { return t*t },
-    easeOutQuad: function (t) { return t*(2-t) },
-    easeInOutQuad: function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
-    easeInCubic: function (t) { return t*t*t },
-    easeOutCubic: function (t) { return (--t)*t*t+1 },
-    easeInOutCubic: function (t) { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
-    easeInQuart: function (t) { return t*t*t*t },
-    easeOutQuart: function (t) { return 1-(--t)*t*t*t },
-    easeInOutQuart: function (t) { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
-    easeInQuint: function (t) { return t*t*t*t*t },
-    easeOutQuint: function (t) { return 1+(--t)*t*t*t*t },
-    easeInOutQuint: function (t) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t },
+    linear: t => { return t },
+    easeInQuad: t => { return t*t },
+    easeOutQuad: t => { return t*(2-t) },
+    easeInOutQuad: t => { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
+    easeInCubic: t => { return t*t*t },
+    easeOutCubic: t => { return (--t)*t*t+1 },
+    easeInOutCubic: t => { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
+    easeInQuart: t => { return t*t*t*t },
+    easeOutQuart: t => { return 1-(--t)*t*t*t },
+    easeInOutQuart: t => { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
+    easeInQuint: t => { return t*t*t*t*t },
+    easeOutQuint: t => { return 1+(--t)*t*t*t*t },
+    easeInOutQuint: t => { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t },
+    easeInElastic: t => { return (.04 - .04 / t) * Math.sin(25 * t) + 1 },
+    easeOutElastic: t => { return .04 * t / (--t) * Math.sin(25 * t) },
+    easeInOutElastic: t => { return (t -= .5) < 0 ? (.02 + .01 / t) * Math.sin(50 * t) : (.02 - .01 / t) * Math.sin(50 * t) + 1 }
   },
 
   sanitizeEasing(easing, id) {

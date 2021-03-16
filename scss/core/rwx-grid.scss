@@ -21,7 +21,7 @@ $grid-classes:
 		padding-left:0px;
 		padding-right:0px;
 	}
-	&-breakout-rsp
+	&.breakout-rsp
 	{
 		@include snap-down-from('md')
 		{
@@ -98,6 +98,8 @@ $grid-classes:
 
 	@each $selector, $value in $grid-classes
 	{
+		@include snap-up-from('md')
+		{
 		&.equal-padding .rwx-split-#{$selector}
 		{
 			&:last-of-type
@@ -108,6 +110,7 @@ $grid-classes:
 			{
 				padding-left:$grid-item-gutter;
 			}
+		}
 		}
 
 		&-#{$selector}

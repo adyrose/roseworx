@@ -27,8 +27,8 @@ $grid-classes:
 		{
 			margin-left:-$grid-item-gutter !important;
 			margin-right:-$grid-item-gutter !important;
-			padding-left:$grid-item-gutter !important;
-			padding-right:$grid-item-gutter !important;
+			padding-left:$grid-item-gutter*2 !important;
+			padding-right:$grid-item-gutter*2 !important;
 		}
 	}
 	&.equal-padding

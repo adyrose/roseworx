@@ -15,6 +15,7 @@
 	display:initial !important;
 	&-rsp
 	{
+		display:none !important;
 		@include snap-down-from('md')
 		{
 			display: initial !important;

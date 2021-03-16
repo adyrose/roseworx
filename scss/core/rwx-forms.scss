@@ -130,6 +130,10 @@
 				position:absolute;
 				width:1px;
 				left:-$form-item-size;
+				&:focus
+				{
+					box-shadow: none;
+				}
 				&:focus + label
 				{
 					&:after

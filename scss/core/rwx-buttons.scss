@@ -46,7 +46,7 @@
 	}		
 }
 
-.rwx-button, button:not(.no-decoration)
+.rwx-button:not(.no-decoration), button:not(.no-decoration)
 {
 	@include flex-center;
 	min-height:$button-size;

@@ -1,7 +1,7 @@
 .rwxu-hide
 {
 	display:none !important;
-	&-md
+	&-rsp
 	{
 		@include snap-down-from('md')
 		{
@@ -13,7 +13,7 @@
 .rwxu-show
 {
 	display:initial !important;
-	&-md
+	&-rsp
 	{
 		@include snap-down-from('md')
 		{

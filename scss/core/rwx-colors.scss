@@ -1,3 +1,15 @@
+$border-directions: (
+	"r": "right",
+	"l": "left",
+	"t": "top",
+	"b": "bottom"
+);
+
+$sizes: (
+	"md": "2px",
+	"lg": "3px"
+);
+
 @each $selector, $color in $colors
 {
 	.rwxc-background-#{$selector}
@@ -8,8 +20,32 @@
 	{
 		color:$color !important;
 	}
-	.rwxc-border-#{$selector}
+	.rwxc-border
 	{
-		border: 1px solid $color;
+		&-#{$selector}
+		{
+			border: 1px solid $color;
+			@each $size, $px in $sizes
+			{
+				&-#{$size}
+				{
+					border: #{$px} solid $color;
+				}
+			}
+		}
+		@each $s, $c in $border-directions
+		{
+			&-#{$s}-#{$selector}
+			{
+				border-#{$c}: 1px solid $color;
+				@each $size, $px in $sizes
+				{
+					&-#{$size}
+					{
+						border-#{$c}: #{$px} solid $color;
+					}
+				}
+			}
+		}
 	}
 }

@@ -1,5 +1,5 @@
 $grid-classes:
-  //"full" 100%,
+  "full" 100%,
   "half" 50%,
   "third" 33.33%,
   "third-x2" 66.66%,
@@ -10,35 +10,21 @@ $grid-classes:
   "fifth-x3" 60%,
   "fifth-x4" 80%;
 
-
-
 .rwx-split
 {
-	padding-left: $grid-item-gutter;
-	padding-right: $grid-item-gutter;
+	display:flex;
+	flex-wrap:wrap;
+	@include snap-down-from('md')
+	{
+		padding-left:$grid-item-gutter;
+		padding-right:$grid-item-gutter;
+	}
 	.rwx-split
 	{
-		padding-left:0px;
-		padding-right:0px;
+		margin-left:-$grid-item-gutter;
+		margin-right:-$grid-item-gutter;
 	}
-	&.breakout-rsp
-	{
-		@include snap-down-from('md')
-		{
-			margin-left:-$grid-item-gutter !important;
-			margin-right:-$grid-item-gutter !important;
-			padding-left:$grid-item-gutter*2 !important;
-			padding-right:$grid-item-gutter*2 !important;
-		}
-	}
-	&.equal-padding
-	{
-		@include snap-up-from('md')
-		{
-			margin-left:-$grid-item-gutter;
-			margin-right:-$grid-item-gutter;
-		}
-	}
+
 	&.no-wrap
 	{
 		flex-wrap:nowrap;
@@ -70,6 +56,7 @@ $grid-classes:
 	{
 		justify-content: space-around;
 	}
+
 	&.non-fluid
 	{
 		@include snap-up-from('md')
@@ -86,46 +73,14 @@ $grid-classes:
 			max-width: map-get($breakpoints, 'xl');
 		}
 	}
-	&-full
-	{
-		width:100%;
-		padding-left:0px;
-		padding-right:0px;
-	}
-	//overflow-x:hidden;
-	display:flex;
-	flex-wrap:wrap;
 
 	@each $selector, $value in $grid-classes
 	{
-		@include snap-up-from('md')
-		{
-		&.equal-padding .rwx-split-#{$selector}
-		{
-			&:last-of-type
-			{
-				padding-right:$grid-item-gutter;
-			}
-			&:first-of-type
-			{
-				padding-left:$grid-item-gutter;
-			}
-		}
-		}
-
 		&-#{$selector}
 		{
 			width: #{$value};
 			padding-left: $grid-item-gutter;
 			padding-right: $grid-item-gutter;
-			&:last-of-type
-			{
-				padding-right:0px;
-			}
-			&:first-of-type
-			{
-				padding-left:0px;
-			}
 			position:relative;
 			@include snap-down-from('md')
 			{
@@ -136,15 +91,15 @@ $grid-classes:
 				width:100%;
 			}
 		}
-		& .rwx-split &-#{$selector}
+		@include snap-up-from('md')
 		{
-			@include snap-down-from('md')
+			>:first-child:not(.rwx-split-#{$selector})
 			{
-				&:not(:first-of-type), &:not(:last-of-type)
-				{
-					padding-left:0px;
-					padding-right:0px;
-				}
+				padding-left: 15px;
+			}
+			>:last-child:not(.rwx-split-#{$selector})
+			{
+				padding-right: 15px;
 			}
 		}
 	}

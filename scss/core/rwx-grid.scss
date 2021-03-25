@@ -10,20 +10,23 @@ $grid-classes:
   "fifth-x3" 60%,
   "fifth-x4" 80%;
 
+%grid-padding {
+	padding-right:$grid-item-gutter/2;
+	padding-left:$grid-item-gutter/2;
+	@include snap-down-from('md')
+	{
+		padding-top:$grid-item-gutter/2;
+		padding-bottom:$grid-item-gutter/2;
+		padding-left: 0px;
+		padding-right:0px;
+		width:100%;
+	} 	
+}
+
 .rwx-split
 {
 	display:flex;
 	flex-wrap:wrap;
-	@include snap-down-from('md')
-	{
-		padding-left:$grid-item-gutter;
-		padding-right:$grid-item-gutter;
-	}
-	.rwx-split
-	{
-		margin-left:-$grid-item-gutter;
-		margin-right:-$grid-item-gutter;
-	}
 
 	&.no-wrap
 	{
@@ -36,6 +39,19 @@ $grid-classes:
 			}
 		}
 	}
+
+	&.explicit
+	{
+		@extend %grid-padding;
+		.rwx-split.explicit.align
+		{
+			padding-left:0px;
+			padding-right:0px;
+			margin-left: -$grid-item-gutter/2;
+			margin-right: -$grid-item-gutter/2;
+		}
+	}
+
 	&.end-vertically
 	{
 		align-items: flex-end;
@@ -55,6 +71,18 @@ $grid-classes:
 	&.space-around
 	{
 		justify-content: space-around;
+	}
+	&.space-even
+	{
+		justify-content: space-around;
+		&:before
+		{
+			content:"";
+		}
+		&:after
+		{
+			content: "";
+		}
 	}
 
 	&.non-fluid
@@ -79,28 +107,8 @@ $grid-classes:
 		&-#{$selector}
 		{
 			width: #{$value};
-			padding-left: $grid-item-gutter;
-			padding-right: $grid-item-gutter;
 			position:relative;
-			@include snap-down-from('md')
-			{
-				padding-top:$grid-item-gutter;
-				padding-bottom:$grid-item-gutter;
-				padding-left: 0px;
-				padding-right:0px;
-				width:100%;
-			}
-		}
-		@include snap-up-from('md')
-		{
-			>:first-child:not(.rwx-split-#{$selector})
-			{
-				padding-left: 15px;
-			}
-			>:last-child:not(.rwx-split-#{$selector})
-			{
-				padding-right: 15px;
-			}
+			@extend %grid-padding;
 		}
 	}
 }

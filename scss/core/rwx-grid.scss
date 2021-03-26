@@ -130,7 +130,6 @@ $grid-classes:
 			width: #{$value};
 			position:relative;
 			@extend %grid-padding;
-			overflow:hidden;
 		}
 	}
 }

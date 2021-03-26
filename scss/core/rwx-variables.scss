@@ -116,6 +116,7 @@ $theme-color-tertiary: $light-blue !default;
 
 //grid
 $grid-item-gutter:15px !default;
+$grid-item-gutter-vertical: $grid-item-gutter*2 !default;
 $breakpoint-mini: 480px !default;
 $breakpoint-sm: 576px !default;
 $breakpoint-md: 768px !default;
@@ -133,10 +134,12 @@ $breakpoints: (
 
 
 //spacings
-$small-spacing: 1.5rem !default;
-$medium-spacing: 3rem !default;
-$large-spacing: 4.5rem !default;
-$espacings: ("no": 0, "sm": $small-spacing, "md": $medium-spacing, "lg": $large-spacing);
+$extra-small-spacing: 8px !default;
+$small-spacing: 16px !default;
+$medium-spacing: 24px !default;
+$large-spacing: 32px !default;
+$extra-large-spacing: 40px !default;
+$espacings: ("no": 0, "sm": $small-spacing, "md": $medium-spacing, "lg": $large-spacing, "xs": $extra-small-spacing, "xl": $extra-large-spacing);
 $spacings: null !default;
 @if $spacings
 {

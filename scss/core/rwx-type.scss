@@ -98,37 +98,62 @@ h6, .h6
   @include additionalheadingstyle;
 }
 
-@if $section-seperators
-{
-  section, .section
+
+%subsection {
+  &:not(.no-bar)
   {
-    border-top: 3px solid $section-seperator-color;
-    section, .section
+    @if $section-seperators
     {
       border-top: 2px solid $section-seperator-color;
-      section, .section
-      {
-        border-top: 1px solid $section-seperator-color;
-      }
     }
+  }
+  &:not(.no-indent)
+  {
+    margin-left:$small-spacing;
+  }
+}
+
+%subsubsection {
+  &:not(.no-bar)
+  {
+    @if $section-seperators
+    {
+      border-top: 1px solid $section-seperator-color;
+    }
+  }
+  &:not(.no-indent)
+  {
+    margin-left:$small-spacing;
   }
 }
 
 section, .section
 {
-  margin-top: $large-spacing;
-  margin-bottom: $large-spacing;
-  padding-top:20px;
-  section, .section
+  margin-top: $extra-large-spacing;
+  margin-bottom: $extra-large-spacing;
+  width:100%;
+  &:not(.no-bar)
   {
-    margin-top: $medium-spacing;
-    margin-bottom: $medium-spacing;
-    padding-top:15px;
-    section, .section
+    padding-top:$small-spacing;
+    @if $section-seperators
     {
-      padding-top:10px;
-      margin-top: $small-spacing;
-      margin-bottom: $small-spacing;
+      border-top: 3px solid $section-seperator-color;
+    }
+  }
+  &.sub-section
+  {
+    @extend %subsection;
+  }
+  &.sub-sub-section
+  {
+    @extend %subsubsection;
+  }
+  section, .section, .sub-section
+  {
+    @extend %subsection;
+    section, .section, .sub-sub-section
+    {
+      @extend %subsubsection;
     }
   }
 }
@@ -278,6 +303,11 @@ $weights: ("light": 200, "normal": 400, "semi-bold":500, "bold": 700, "extra-bol
   }
 }
 
+.rwxt-base
+{
+  font-family:$font-base !important;
+}
+
 .rwxt-no-underline
 {
   text-decoration: none !important;
@@ -313,9 +343,10 @@ $cards: ("help": $orange, "note": $light-blue, "warning": $red, "hint": $yellow,
     padding: 15px 10px 15px 70px;
     position:relative;
     background-color:$card-background-color;
-    box-shadow: 0px 0px 3px $card-border-color;
+    box-shadow: 1px 1px 4px $card-border-color;
     min-height:80px;
     border-radius:8px;
+    overflow:hidden;;
     &:before
     {
       content: "";

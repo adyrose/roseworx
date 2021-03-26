@@ -65,11 +65,23 @@ $grid-classes:
 		flex-direction:column;
 		&.center
 		{
-			align-items:stretch;
+			align-items:center;
+			justify-content:flex-start;
 		}
 		&.center-vertically
 		{
+			justify-content:center;
+			align-items:stretch;
+		}
+		&.end-vertically
+		{
+			justify-content:flex-end;
+			align-items:stretch;
+		}
+		&.end
+		{
 			justify-content:flex-start;
+			align-items:flex-end;
 		}
 	}
 
@@ -77,11 +89,15 @@ $grid-classes:
 	{
 		align-items: flex-end;
 	}
-	&.center-vertically, &.vertical.center
+	&.center-vertically
 	{
 		align-items: center;
 	}
-	&.center, &.vertical.center-verticlly
+	&.end
+	{
+		justify-content:flex-end;
+	}
+	&.center
 	{
 		justify-content:center;
 	}

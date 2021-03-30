@@ -26,16 +26,18 @@ body {
   @extend .rwxt-bold;  
 }
 
+$headingincrement: 8px;
+
 @mixin h1 {
   @include headingstyle;
   font-size: rem($h1-size);
-  line-height: rem($h1-size) + 0.55rem;
+  line-height: rem($h1-size) + rem($headingincrement);
   @if $responsiveheadings
   {
     @include snap-down-from('md')
     {
-      font-size: rem($h1-size / 100 * $responsiveheadings);
-      line-height: rem(($h1-size + 0.55rem) / 100 * $responsiveheadings);
+      font-size: rem($h1-size) / 100 * $responsiveheadings;
+      line-height: rem($h1-size) + rem($headingincrement) / 100 * $responsiveheadings;
     }
   }
 }
@@ -43,13 +45,13 @@ body {
 @mixin h2 {
   @include headingstyle;
   font-size: rem($h2-size);
-  line-height: rem($h2-size) + 0.55rem;
+  line-height: rem($h2-size) + rem($headingincrement);
   @if $responsiveheadings
   {
     @include snap-down-from('md')
     {
       font-size: rem($h2-size / 100 * $responsiveheadings);
-      line-height: rem(($h2-size + 0.55rem) / 100 * $responsiveheadings);
+      line-height: rem($h2-size) + rem($headingincrement) / 100 * $responsiveheadings;
     }
   }
 }
@@ -57,13 +59,13 @@ body {
 @mixin h3 {
   @include headingstyle;
   font-size: rem($h3-size);
-  line-height: rem($h3-size) + 0.55rem;
+  line-height: rem($h3-size) + rem($headingincrement);
   @if $responsiveheadings
     {
     @include snap-down-from('md')
     {
       font-size: rem($h3-size / 100 * $responsiveheadings);
-      line-height: rem(($h3-size + 0.55rem) / 100 * $responsiveheadings);
+      line-height: rem($h3-size) + rem($headingincrement) / 100 * $responsiveheadings;
     }
   }
 }
@@ -71,13 +73,13 @@ body {
 @mixin h4 {
   @include headingstyle;
   font-size: rem($h4-size);
-  line-height: rem($h4-size) + 0.55rem;
+  line-height: rem($h4-size) + rem($headingincrement);
   @if $responsiveheadings
   {
     @include snap-down-from('md')
     {
       font-size: rem($h4-size / 100 * $responsiveheadings);
-      line-height: rem(($h4-size + 0.55rem) / 100 * $responsiveheadings);
+      line-height: rem($h4-size) + rem($headingincrement) / 100 * $responsiveheadings;
     }
   }
 }
@@ -85,13 +87,13 @@ body {
 @mixin h5 {
   @include headingstyle;
   font-size: rem($h5-size);
-  line-height: rem($h5-size) + 0.55rem;
+  line-height: rem($h5-size) + rem($headingincrement);
   @if $responsiveheadings
   {
     @include snap-down-from('md')
     {
       font-size: rem($h5-size / 100 * $responsiveheadings);
-      line-height: rem(($h5-size + 0.55rem) / 100 * $responsiveheadings);
+      line-height: rem($h5-size) + rem($headingincrement) / 100 * $responsiveheadings;
     }
   }
 }
@@ -99,13 +101,13 @@ body {
 @mixin h6 {
   @include headingstyle;
   font-size: rem($h6-size);
-  line-height: rem($h6-size) + 0.55rem;
+  line-height: rem($h6-size) + rem($headingincrement);
   @if $responsiveheadings
   {
     @include snap-down-from('md')
     {
       font-size: rem($h6-size / 100 * $responsiveheadings);
-      line-height: rem(($h6-size + 0.55rem) / 100 * $responsiveheadings);
+      line-height: rem($h6-size) + rem($headingincrement) / 100 * $responsiveheadings;
     }
   }
 }

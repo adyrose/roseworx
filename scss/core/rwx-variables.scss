@@ -152,12 +152,12 @@ $spacings: null !default;
 
 //type
 $responsiveheadings: 75 !default;
-$font-size-small: 0.8rem !default;
-$font-size-base: 0.95rem !default;
-$font-size-large: 1.10rem !default;
-$line-height-small: 1.3rem !default;
-$line-height-base: 1.6rem !default;
-$line-height-large: 1.9rem !default;
+$font-size-small: 12px !default;
+$font-size-base: 16px !default;
+$font-size-large: 20px !default;
+$line-height-small: 18px !default;
+$line-height-base: 24px !default;
+$line-height-large: 26px !default;
 $h1-size: $font-size-base * 3.3 !default;
 $h2-size: $font-size-base * 2.7 !default;
 $h3-size: $font-size-base * 2.2 !default;

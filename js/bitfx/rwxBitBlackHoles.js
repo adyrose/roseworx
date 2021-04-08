@@ -17,19 +17,7 @@ class rwxBitBlackHoles extends rwxBitFont {
   {
     let sparecolor = el.hasAttribute('data-rwx-bit-black-hole-secondary-color') ? el.getAttribute('data-rwx-bit-black-hole-secondary-color') : this.spareColorDefault;
     let disableTrail = el.hasAttribute('data-rwx-bit-black-hole-disable-trail');
-    return new rwxBitBlackHole(el, mc, bits, orientation, shape, color, bgcolor, this.sanitizeColor(sparecolor), disableTrail);
-  }
-
-  sanitizeColor(sc)
-  {
-    const isHex = rwxMisc.isHexValue(sc); 
-    if(!isHex)this.error('Secondary-color needs to be a valid HEX value (I.E #FFF / #000000).')
-    sc = isHex ? sc : this.spareColorDefault;
-    if(sc.length === 4)
-    {
-      sc += sc.substring(1,4);
-    }
-    return rwxMisc.convertHexToRGB(sc);
+    return new rwxBitBlackHole(el, mc, bits, orientation, shape, color, bgcolor, this.sanitizeColor(sparecolor, this.spareColorDefault), disableTrail);
   }
 }
 

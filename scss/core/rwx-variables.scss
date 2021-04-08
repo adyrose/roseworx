@@ -170,7 +170,7 @@ $font-heading: 'Josefin Sans', sans-serif !default;
 $font-color-base: $black !default;
 $font-link-color: $theme-color-tertiary !default;
 $list-item-counter-color: $theme-color-tertiary !default;
-$card-background-color: $theme-color-secondary !default;
+$card-background-color: rgba($theme-color-secondary,0.4) !default;
 $card-border-color: $theme-color-base !default;
 $section-seperators: true !default;
 $section-seperator-color: $theme-color-tertiary !default;
@@ -215,9 +215,9 @@ $focus-ring-shadow: 0 0 0.3rem 0.1rem $focus-ring-color !default;
 
 //buttons
 $button-size: 50px !default;
-$button-padding: 15px !default;
+$button-padding: 20px !default;
 $button-color-base: $theme-color-base !default;
-$button-color-disabled: $grey !default;
+$button-color-white: $black !default;
 
 //Slider
 $slider-counter-active-color: $theme-color-base !default;

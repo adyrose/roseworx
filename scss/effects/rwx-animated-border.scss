@@ -29,7 +29,7 @@ $rwx-animated-border-size: 5px !default;
 			}			
 		}
 	}
-	&.active
+	&.active, &:hover
 	{
 		svg rect {
 			@include finish-styles;		

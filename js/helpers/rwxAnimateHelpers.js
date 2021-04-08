@@ -17,7 +17,8 @@ const rwxAnimateHelpers = {
     easeInOutQuint: t => { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t },
     easeInElastic: t => { return (.04 - .04 / t) * Math.sin(25 * t) + 1 },
     easeOutElastic: t => { return .04 * t / (--t) * Math.sin(25 * t) },
-    easeInOutElastic: t => { return (t -= .5) < 0 ? (.02 + .01 / t) * Math.sin(50 * t) : (.02 - .01 / t) * Math.sin(50 * t) + 1 }
+    easeInOutElastic: t => { return (t -= .5) < 0 ? (.02 + .01 / t) * Math.sin(50 * t) : (.02 - .01 / t) * Math.sin(50 * t) + 1 },
+    easeOutBack: t=> {const c1 = 1.70158;const c3 = c1 + 1;return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);}
   },
 
   sanitizeEasing(easing, id) {
@@ -50,7 +51,7 @@ const rwxAnimateHelpers = {
     }
     else
     {
-      return val.toFixed(8);      
+      return val.toFixed(6);      
     }  
   },
 
@@ -68,7 +69,8 @@ const rwxAnimate = {
     if(!this[`${id}Easing`]){this[`${id}Easing`] = rwxAnimateHelpers.sanitizeEasing(easing, id);}
     if(!this[`${id}Duration`]){this[`${id}Duration`] = rwxAnimateHelpers.sanitizeDuration(duration, id);}
     let val = rwxAnimateHelpers.easingFunction(this[`${id}Easing`], this[`${id}Duration`], `${id}Ease`, cb);
-    if(val >= 1)
+    let c = (easing==="easeInElastic" || easing==="easeInOutElastic" || easing==="easeOutBack") ? val===1 : val>=1;
+    if(c)
     {
       cb();
       rwxAnimateHelpers.deleteVars(id);

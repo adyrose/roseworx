@@ -1,33 +1,54 @@
 import {rwxError, rwxCore} from '../rwxCore';
 import {rwxParticleShapes} from './rwxParticle';
 
+import { rwxMisc } from '../helpers/rwxHelpers';
+
 const rwxBitFontOrientations = ['horizontal', 'vertical', 'slanted', 'wrap'];
 
 class rwxBitFont extends rwxCore {
-	constructor(selector)
+	constructor(selector, noFont=false)
 	{
 		super(`[${selector}]`, true);
 		this.component = selector;
 		this.shapeDefault = 'circle';
 		this.colorDefault = '#FFFFFF';
 		this.orientationDefault = "horizontal";
-		this.backgroundColorDefault = '#000000';		
+		this.backgroundColorDefault = '#000000';
+		this.noFont = noFont;
 	}
 
 	execute(el, mc)
 	{
-		let bits = el.hasAttribute(`data-${this.component}-value`);
-		if(!bits){this.error(`There is no value (data-${this.component}-value) attribute detected on the ${this.component} element.`); return;}
-		bits = el.getAttribute(`data-${this.component}-value`);
-		if(!bits){this.error(`There is no value in the (data-${this.component}-value) attribute.`); return;}
-		let orientation = el.hasAttribute(`data-${this.component}-orientation`) ? el.getAttribute(`data-${this.component}-orientation`) : this.orientationDefault;
+		let bits, orientation;
+		if(!this.noFont)
+		{
+			bits = el.hasAttribute(`data-${this.component}-value`);
+			if(!bits){this.error(`There is no value (data-${this.component}-value) attribute detected on the ${this.component} element.`); return;}
+			bits = el.getAttribute(`data-${this.component}-value`);
+			if(!bits){this.error(`There is no value in the (data-${this.component}-value) attribute.`); return;}
+			orientation = el.hasAttribute(`data-${this.component}-orientation`) ? el.getAttribute(`data-${this.component}-orientation`) : this.orientationDefault;
+			if(!rwxBitFontOrientations.includes(orientation)){rwxError(`${orientation} is not a valid orientation. Valid orientations include ['${rwxBitFontOrientations.join("', '")}']. Using '${rwxBitFontOrientationDefault}'.`, 'rwxBitFont'); orientation = rwxBitFontOrientationDefault;}
+		}
+
 		let shape = el.hasAttribute(`data-${this.component}-shape`) ? el.getAttribute(`data-${this.component}-shape`) : this.shapeDefault;
 		let color = el.hasAttribute(`data-${this.component}-color`) ? el.getAttribute(`data-${this.component}-color`) : this.colorDefault;
 		let bgcolor = el.hasAttribute(`data-${this.component}-background-color`) ? el.getAttribute(`data-${this.component}-background-color`) : this.backgroundColorDefault;
 		if(!rwxParticleShapes.includes(shape)){this.error(`${shape} is not a valid shape. Valid shapes include ['${rwxParticleShapes.join("', '")}']. Using '${this.shapeDefault}'.`); shape = this.shapeDefault;}
-		if(!rwxBitFontOrientations.includes(orientation)){rwxError(`${orientation} is not a valid orientation. Valid orientations include ['${rwxBitFontOrientations.join("', '")}']. Using '${rwxBitFontOrientationDefault}'.`, 'rwxBitFont'); orientation = rwxBitFontOrientationDefault;}
+		
 		return this.execute2(el, mc, bits, orientation, shape, color, bgcolor)
 	}
+
+  sanitizeColor(c, def)
+  {
+    const isHex = rwxMisc.isHexValue(c); 
+    if(!isHex)this.error('color needs to be a valid HEX value (I.E #FFF / #000000).')
+    c = isHex ? c : def;
+    if(c.length === 4)
+    {
+      c += c.substring(1,4);
+    }
+    return rwxMisc.convertHexToRGB(c);
+  }
 }
 
 

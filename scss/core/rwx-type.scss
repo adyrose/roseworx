@@ -274,10 +274,10 @@ a
 
 ul
 {
-  margin-bottom: 1.5rem;
-  padding-left:0.8rem;
   &:not(.no-decoration)
   {
+    margin-bottom: 1.5rem;
+    padding-left:0.8rem;
     li
     {
       position:relative;
@@ -392,8 +392,8 @@ $cards: ("help": $orange, "note": $light-blue, "warning": $red, "hint": $yellow,
     text-align:left;
     padding: 15px 10px 15px 70px;
     position:relative;
-    background-color:$card-background-color;
-    box-shadow: 1px 1px 4px $card-border-color;
+    background-color: $card-background-color;
+    box-shadow: 1px 1px 2px $card-border-color;
     min-height:80px;
     border-radius:8px;
     overflow:hidden;;
@@ -417,7 +417,7 @@ $cards: ("help": $orange, "note": $light-blue, "warning": $red, "hint": $yellow,
       height:100%;
       width:50px;
       z-index:1;
-      background-color: rgba($color, 0.6);
+      background-color: rgba($color, 0.8);
     }
   }
 }

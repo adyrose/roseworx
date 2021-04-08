@@ -1,6 +1,6 @@
 import { rwxComponent } from '../rwxCore';
 
-import { rwxCanvas, rwxMath, rwxAnimate, rwxDOM, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
+import { rwxMath, rwxAnimate, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
 
 import {rwxParticle} from './rwxParticle';
 import {rwxBitFont, rwxBitFontGetMatrix} from './rwxBitFont';

@@ -11,27 +11,43 @@ class rwxCore {
 		window.addEventListener('load', ()=>{
 			this.selector = selector;
 			this.canHaveManualControl = canHaveManualControl;
-			this.scanDOM();
-		});
-	}
-
-	scanDOM()
-	{
-		if(this.selector)
-		{
 			[...document.querySelectorAll(this.selector)].map((el) => {
-				for(let im in this.internalMap){
-					if(this.internalMap[im].el === el){
-						return;
-					}
-				}
+				if(this.checkMap(el)){return;}
 				const mc = this.canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
 				this.addIME(el.id, mc);
 			});
+		});
+	}
+
+	checkMap(el)
+	{
+		for(let im in this.internalMap){
+			if(this.internalMap[im].el === el)
+			{
+				return true;
+				break;
+			}
 		}
-		else
+	}
+
+	unhook(id)
+	{
+		if(id)
 		{
-			this.execute();
+			let ime = this.getIME(id);
+			if(ime) ime.stopAnimation = true;
+		}
+	}
+
+	hook(id)
+	{
+		if(id)
+		{
+			let el = document.getElementById(id);
+			if(!el){console.log(`Element #${id} not found on page.`); return;}
+			if(this.checkMap(el)){return;}
+			const mc = this.canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
+			this.addIME(el.id, mc);			
 		}
 	}
 
@@ -63,6 +79,11 @@ class rwxCore {
 			this.error(`Duplicate ID #${id} detected. Things may not work as expected, please use unique ID's per Component.`)
 		}
 		this.internalMap[toUse] = obj;
+	}
+
+	deleteIME(id)
+	{
+		delete this.internalMap[id];
 	}
 
 	getIME(id)
@@ -254,6 +275,7 @@ class rwxComponent {
 
 	elFullSizeAbsolute()
 	{
+		this.el.parentNode.style.position = "relative";
 		this.el.style.position = 'absolute';
 		this.el.style.top = '0px';
 		this.el.style.left = '0px';

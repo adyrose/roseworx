@@ -1,12 +1,18 @@
 @mixin button($color)
 {
+	@if $color == white
+	{
+		$color: $button-color-white;
+	}
+
 	color: $color;
 	border: 1px solid $color;
 	box-shadow: 2px 2px $color;
 	background-color:white;
+
 	&:not(:disabled)
 	{
-		&:hover, &:focus
+		&:hover, &:focus, &:active
 		{
 			background-color:$color;
 			box-shadow:none;
@@ -14,52 +20,68 @@
 			color:$white;
 		}
 	}
-	&:disabled
-	{
-		color: $button-color-disabled;
-		border: 1px solid $button-color-disabled;
-		box-shadow: 2px 2px $button-color-disabled;
-	}
 }
 
 @mixin invertedButton($color)
 {
+	@if $color == white
+	{
+		color: $button-color-white;
+		border: 1px solid $button-color-white;
+	}
+	@else
+	{
+		border: 1px solid $color;
+		color:$white;
+	}
 	background-color:$color;
 	box-shadow:none;
-	border: 1px solid $color;
-	color:$white;
 	&:not(:disabled)
 	{
-		&:hover, &:focus
+		&:hover, &:focus, &:active
 		{
-			color: $color;
-			border: 1px solid $color;
-			box-shadow: 2px 2px $color;
-			background-color:white;
+			@if $color == white
+			{
+				color: $button-color-white;
+				box-shadow: 2px 2px $button-color-white;
+			}
+			@else
+			{
+				color: $color;
+				box-shadow: 2px 2px $color;
+				border: 1px solid $color;
+			}
+			background-color: $white;
 		}
 	}
+}
 
-	&:disabled
-	{
-		background-color:$button-color-disabled;
-		border: 1px solid $button-color-disabled;
-	}		
+button, .rwx-button
+{
+	cursor:pointer;
 }
 
 .rwx-button:not(.no-decoration), button:not(.no-decoration)
 {
 	@include flex-center;
+	display:inline-flex;
 	min-height:$button-size;
 	padding-left: $button-padding;
 	padding-right: $button-padding;
 	transition: all 0.7s $transition-base;
+	border-radius:4px;
 	@include h6;
-	cursor:pointer;
 	&:hover, &:focus
 	{
 		outline:none;
 		transition: all 1s $transition-base;
 	}
+
+	&.\--bullet
+	{
+		border-radius:$button-padding*2;
+	}
+
 	@include button($button-color-base);
 	&.\--inverted
 	{
@@ -75,6 +97,11 @@
 				@include invertedButton($color);
 			}
 		}
+	}
+
+	&:disabled
+	{
+		opacity:0.5;
 	}
 }
 

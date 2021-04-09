@@ -17,6 +17,18 @@ class rwxBitSystems extends rwxBitFont {
 	{
 		return new rwxBitSystem(el, this.sanitizeColor(bgcolor, this.backgroundColorDefault), this.sanitizeColor(color,this.colorDefault), shape);
 	}
+
+	explode(id)
+	{
+		const IME = this.getIME(id);
+		console.log(IME);
+		IME && IME.explode();		
+	}
+	implode(id)
+	{
+		const IME = this.getIME(id);
+		IME && IME.implode();		
+	}
 }
 
 class rwxBitSystem extends rwxComponent {
@@ -46,26 +58,25 @@ class rwxBitSystem extends rwxComponent {
 
 	createConfig()
 	{
-		this.radius = Math.sqrt(Math.pow((this.width - this.width/2), 2) + Math.pow((this.height - this.height/2), 2)) + 100;
+		this.screenRadius = Math.sqrt(Math.pow((this.width - this.width/2), 2) + Math.pow((this.height - this.height/2), 2)) + 100;
 		this.centerx = this.width/2;
     this.centery = this.height/2;
     this.numberofparticles = 133;
-    this.particles = [];
-    this.maskParticles = [];
 		this.parallaxMouse = {
       x: 0,
       y: 0
     }
 	}
 
-	calculate()
+	calculate(firstBlood=true)
 	{
+    this.particles = [];
+    this.maskParticles = [];
     for(let i=0;i<this.numberofparticles;i++)
     {
     	let finalx = rwxMath.randomInt(0, this.width);
     	let finaly = rwxMath.randomInt(0, this.height);
    		let radius = rwxMath.randomInt(1,3);
-			let zoomCoords = rwxGeometry.closestPointOnCircumference({x:finalx, y: finaly}, {x:this.centerx, y:this.centery}, radius);
   		let p = new rwxParticle(finalx, finaly, radius*2, this.shape, this.convertToColor(this.bitColor), this.c);
 		  p.parallaxMoveValue = 2;
 		  p.parallaxMoveDrag = Math.random() /  15;
@@ -79,44 +90,38 @@ class rwxBitSystem extends rwxComponent {
 		  p.timer = 0;
 		  p.cacheColor = this.bitColor;
 		  p.ringSize = rwxMath.randomInt(1,5);
+		  p.parallax = !firstBlood;
     	this.particles.push(p);
     	this.maskParticles.push(new rwxParticle(finalx, finaly, (radius*2)+3, this.shape, this.convertToColor(this.background), this.c));
     }
 	}
 
-  zoomIn()
+  implode()
   {
+  	if(!this.hasExploded)return;
     this.parallaxMouse.x = 0;
     this.parallaxMouse.y = 0;
     this.addMouseMove();
-    this.zoomOut = false;
-    this.zoomIn = true;  	
+    this.explodenow = false;
+    this.implodenow = true;  	
   }
 
-  zoomOut()
+  explode()
   {
     this.removeMouseMove();
-    this.zoomIn = false;
-    this.zoomOut = true;  	
-  }
-
-  explodeStars()
-  {
-    this.fastForward = false;
-    this.explodeParticles = true;
-    this.addMouseMove();
+    this.implodenow = false;
+    this.explodenow = true;
+    this.hasExploded = true;
   }
 
 	removeMouseMove()
   {
-  	this.parallax = false;
     document.body.removeEventListener('mousemove', this.handleMouseMove);
     window.removeEventListener('deviceorientation', this.handleOrientation);
   }
 
   addMouseMove()
   {
-  	this.parallax = true;
     document.body.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('deviceorientation', this.handleOrientation);
   }
@@ -138,6 +143,12 @@ class rwxBitSystem extends rwxComponent {
     this.parallaxMouse.y = (e.clientY || e.pageY) - window.innerHeight/2; 
   }
 
+  resize()
+  {
+		this.sizeCanvas();
+		this.calculate(false);
+  }
+
   animate()
   {
   	for(let [index, p] of this.particles.entries())
@@ -145,11 +156,11 @@ class rwxBitSystem extends rwxComponent {
   		if(p.parallax)
   		{
   			let x = p.finalx + (p.lastMouse.x/p.parallaxMoveAmount);
-		    let y = p.finaly + (p.lastMouse.y/p.parallaxMoveAmount);
+		    let y = p.finaly + (p.lastMouse.y/p.parallaxMoveAmount);	
 		    p.update(x,y);
 		    p.lastMouse.x += (this.parallaxMouse.x - p.lastMouse.x) * p.parallaxMoveDrag;
 		    p.lastMouse.y += (this.parallaxMouse.y - p.lastMouse.y) * p.parallaxMoveDrag;
-  		}
+		 	}
   		else
   		{
   			p.timer +=1;
@@ -184,12 +195,45 @@ class rwxBitSystem extends rwxComponent {
 	  			!p.collapse && this.maskParticles[index].draw();
 	  		}
   		}
-  		if(this.zoomIn){
-
-  		}
-  		if(this.zoomOut){
-  			
-  		}
+		  if(this.explodenow)
+	    {
+	    	p.imploded = false;
+	    	p.parallax = false;
+	    	if(!p.cachePosition)
+	    	{
+	    		p.cachePosition = {};
+	    		p.cachePosition.x = p.x;
+	    		p.cachePosition.y = p.y;
+	    		p.cachePosition.explodeCoords = rwxGeometry.closestPointOnCircumference({x:p.x, y: p.y}, {x:this.centerx, y:this.centery}, this.screenRadius);
+	    	}
+	    	if(!p.exploded)
+	    	{
+		    	let val = rwxAnimate.getEasingValue(`systemparticleexplode${this.uniqueID}${index}`, 'easeOutQuart', 1500, ()=>{p.exploded=true})
+		    	let x = rwxAnimate.fromToCalc(p.cachePosition.x, p.cachePosition.explodeCoords.x, val);
+		    	let y = rwxAnimate.fromToCalc(p.cachePosition.y, p.cachePosition.explodeCoords.y, val);
+		    	p.update(x,y);
+	    	}
+	    	else
+	    	{
+	    		p.draw();
+	    	}
+	    }
+	    if(this.implodenow)
+	    {
+	    	p.exploded = false;
+	    	if(!p.imploded)
+	    	{
+	    		p.parallax=false;
+		    	let val = rwxAnimate.getEasingValue(`systemparticleexplode${this.uniqueID}${index}`, 'easeInQuart', 1500, ()=>{p.imploded=true;p.lastMouse = {x:0,y:0};p.parallax=true;})
+		    	let x = rwxAnimate.fromToCalc(p.cachePosition.explodeCoords.x, p.finalx, val);
+		    	let y = rwxAnimate.fromToCalc(p.cachePosition.explodeCoords.y, p.finaly, val);
+		    	p.update(x,y);
+	    	}
+	    	else
+	    	{
+	    		p.draw();
+	    	}   	
+	    }
   	}
   }
 }

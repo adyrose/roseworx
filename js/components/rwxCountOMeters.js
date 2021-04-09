@@ -159,7 +159,7 @@ class rwxCountOMeter extends rwxComponent {
     }
     if(this.animeCounter.length == this.particles.length)
     {
-    	//this.stopAnimation = true;
+    	this.stopAnimation = true;
     }
   }
 }

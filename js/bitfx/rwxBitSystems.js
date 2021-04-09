@@ -15,7 +15,8 @@ class rwxBitSystems extends rwxBitFont {
 
 	execute2(el, mc, bits, orientation, shape, color, bgcolor)
 	{
-		return new rwxBitSystem(el, this.sanitizeColor(bgcolor, this.backgroundColorDefault), this.sanitizeColor(color,this.colorDefault), shape);
+		let disableInit = el.hasAttribute('data-rwx-bit-system-disable-init');
+		return new rwxBitSystem(el, this.sanitizeColor(bgcolor, this.backgroundColorDefault), this.sanitizeColor(color,this.colorDefault), shape, disableInit);
 	}
 
 	explode(id)
@@ -33,12 +34,13 @@ class rwxBitSystems extends rwxBitFont {
 
 class rwxBitSystem extends rwxComponent {
 
-	constructor(el, bgColor, bitColor, shape)
+	constructor(el, bgColor, bitColor, shape, disableInit)
 	{
 		super({enableAnimationLoop: true, enableResizeDebounce: true})
 		this.el = el;
 		this.background = bgColor;
 		this.bitColor = bitColor;
+		this.disableInit = disableInit;
 		this.shape = shape;
 		this.el.style.backgroundColor = this.convertToColor(this.background);
 		this.uniqueID = rwxMisc.uniqueId();
@@ -163,6 +165,12 @@ class rwxBitSystem extends rwxComponent {
 		 	}
   		else
   		{
+  			if(this.disableInit && !this.explodenow && !this.implodenow)
+  			{
+  				p.parallax = true;
+  				if(!this.eventAdded){this.addMouseMove();this.eventAdded=true}
+  				continue;
+  			}
   			p.timer +=1;
 				if(p.timer>=p.bounceTimeout)
 				{

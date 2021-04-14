@@ -22,7 +22,6 @@ class rwxBitSystems extends rwxBitFont {
 	explode(id)
 	{
 		const IME = this.getIME(id);
-		console.log(IME);
 		IME && IME.explode();		
 	}
 	implode(id)

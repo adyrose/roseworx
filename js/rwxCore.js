@@ -9,6 +9,7 @@ class rwxCore {
 		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
 		this.execute = this.execute.bind(this);
 		window.addEventListener('load', ()=>{
+			if(!selector){this.execute();return;}
 			this.selector = selector;
 			this.canHaveManualControl = canHaveManualControl;
 			[...document.querySelectorAll(this.selector)].map((el) => {

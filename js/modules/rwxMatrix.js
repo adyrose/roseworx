@@ -4,7 +4,7 @@ class rwxMatrix {
 	constructor(parent=null, fov=70, nv=0.01, fv=10)
 	{
 		this.resize = this.resize.bind(this);
-		this.animate = this.animate.bind(this);
+		this.renderScene = this.renderScene.bind(this);
 		this.THREE = THREE;
 		this.fov = fov;
 		this.nv = nv;
@@ -84,7 +84,7 @@ class rwxMatrix {
 	{
 		this.renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
 		this.renderer.setSize( this.bounds.width, this.bounds.height );
-		this.renderer.setAnimationLoop( this.animate );
+		this.renderer.setAnimationLoop( this.renderScene );
 		this.renderer.domElement.style.width = "100%";
 		this.parent.appendChild( this.renderer.domElement );	
 	}
@@ -98,6 +98,12 @@ class rwxMatrix {
     this.renderer.domElement.style.width = "100%";
   }
 
+	renderScene(time)
+	{
+		this.animate(time);
+		this.renderer.render( this.scene, this.camera );		
+	}
+
 	animate(time)
 	{
 		this.meshes.map((m)=>{
@@ -108,8 +114,6 @@ class rwxMatrix {
 			}
 			return false;
 		})
-
-		this.renderer.render( this.scene, this.camera );		
 	}
 }
 

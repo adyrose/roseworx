@@ -10,9 +10,9 @@ class rwxPreload extends rwxCore {
 
 	execute()
 	{
-		setTimeout(()=>{
+		window.requestAnimationFrame(()=>{
 			document.body.classList.contains('rwx-preload') && document.body.classList.remove('rwx-preload');
-		}, 300);
+		});
 	}
 }
 

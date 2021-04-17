@@ -112,37 +112,37 @@ $headingincrement: 8px;
   }
 }
 
-h1, .h1
+h1, .h1, button.no-decoration.h1
 {
   @include h1;
   @include additionalheadingstyle;
 }
 
-h2, .h2
+h2, .h2, button.no-decoration.h2
 {
   @include h2;
   @include additionalheadingstyle;
 }
 
-h3, .h3
+h3, .h3, button.no-decoration.h3
 {
   @include h3;
   @include additionalheadingstyle;
 }
 
-h4, .h4
+h4, .h4, button.no-decoration.h4
 {
   @include h4;
   @include additionalheadingstyle;
 }
 
-h5, .h5
+h5, .h5, button.no-decoration.h5
 {
   @include h5;
   @include additionalheadingstyle;
 }
 
-h6, .h6
+h6, .h6, button.no-decoration.h6
 {
   @include h6;
   @include additionalheadingstyle;

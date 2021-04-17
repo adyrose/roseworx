@@ -4,7 +4,7 @@ class rwxAnimatedBorder {
 	constructor(el)
 	{
 		this.target = el;
-		this.target.classList.add('rwx-animateable-border');
+		this.target.classList.add('rwx-animated-border');
 		this.target.style.position = "relative";
 		this.paddingX = 60;
 		this.paddingY = 40;

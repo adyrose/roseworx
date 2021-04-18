@@ -6,7 +6,7 @@ class rwxSkrollX extends rwxCore {
 	{
 		super('[rwxsx],[rwxpx]');
 		this.directionDefault = "up";
-		this.parallaxValueDefault = 10;
+		this.parallaxSpeedDefault = 10;
 	}
 
 	execute(el)
@@ -15,17 +15,17 @@ class rwxSkrollX extends rwxCore {
 		const delay = el.hasAttribute('data-rwxsx-delay') ? el.getAttribute('data-rwxsx-delay') : false;
 		const parallax = el.hasAttribute('rwxpx');
 		const direction = el.hasAttribute('data-rwxpx-direction') ? el.getAttribute('data-rwxpx-direction') : this.directionDefault;
-		const value = el.hasAttribute('data-rwxpx-value') ? el.getAttribute('data-rwxpx-value') : this.parallaxValueDefault;
-		return parallax ? new rwxParallaxItem(el, direction, value) : new rwxSkrollXItem(el, trigger, delay, parallax);
+		const speed = el.hasAttribute('data-rwxpx-speed') ? el.getAttribute('data-rwxpx-speed') : this.parallaxSpeedDefault;
+		return parallax ? new rwxParallaxItem(el, direction, speed) : new rwxSkrollXItem(el, trigger, delay, parallax);
 	}
 }
 
 class rwxParallaxItem extends rwxComponent {
-	constructor(el, direction, value)
+	constructor(el, direction, speed)
 	{
 		super({enableScrollTracking: true});
 		this.el = el;
-		this.parallaxMultiplier = parseInt(value);
+		this.parallaxMultiplier = parseInt(speed);
 		this.direction = direction;
 	}
 

@@ -36,7 +36,10 @@ class rwxCore {
 		if(id)
 		{
 			let ime = this.getIME(id);
-			if(ime) ime.stopAnimation = true;
+			if(ime){
+				ime.stopAnimation = true;
+				ime.stopScroll = true;
+			}
 		}
 	}
 
@@ -148,6 +151,12 @@ class rwxComponent {
 				this.scroll();
 			}
 
+			if(opts.enableScrollTracking)
+			{
+				this.scrollEvent = this.scrollEvent.bind(this);
+				window.addEventListener('scroll', this.scrollEvent);
+			}
+
 			if(opts.enableMouseTracking)
 			{
 				this.mouse = {};
@@ -204,7 +213,7 @@ class rwxComponent {
 	scroll()
 	{
 		this.scrollErrorReported = false;
-		setTimeout(()=>{this.scrollEvent();}, 500);
+		window.requestAnimationFrame(()=>this.scrollEvent());
 		window.addEventListener('scroll', this.scrollEvent);
 	}
 

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 class rwxMatrix {
-	constructor(parent=null, fov=70, nv=0.01, fv=10)
+	constructor(parent=false, lights, fov=70, nv=0.1, fv=1000)
 	{
 		this.resize = this.resize.bind(this);
 		this.renderScene = this.renderScene.bind(this);
@@ -12,24 +12,32 @@ class rwxMatrix {
 		this.parent = parent ? document.getElementById(parent) : document.body;
 		this.hasParent = parent;
 		if(!this.parent){console.log(`#${parent} does not exist.`);return;}
+		if(this.hasParent)
+		{
+			this.parent.style.height = "100%";
+			this.parent.style.width = "100%";
+		}
 		this.calculateBounds();
 		this.createCamera();
 		this.createScene();
-		this.createLights();
+		lights && this.createLights();
 		this.meshes = [];
-		this.standardMat = new THREE.MeshNormalMaterial({flatShading:true});
-		this.addShape();
+		this.standardGeo = new THREE.BoxGeometry( 2, 2, 2 );
+		this.standardMat = lights ? new THREE.MeshStandardMaterial() : new THREE.MeshNormalMaterial({flatShading:true});
+		this.addShape(this.standardGeo, this.standardMat);
 		this.createRenderer();
 		window.addEventListener('resize', this.resize);
 	}
 
   createLights()
   {
-    this.directionalLight = new THREE.DirectionalLight( 0x505050, 15 );
-    this.directionalLight.position.set(10 , 10, 15);
-    this.scene.add( this.directionalLight );
-    const light2 = new THREE.AmbientLight( 0x505050, 7 );
-    this.scene.add( light2 );
+    this.directLight = new THREE.DirectionalLight( 0x505050, 0.9 );
+    this.directLight.position.set(10 , 10, 15);
+    this.scene.add( this.directLight );
+    this.ambience = new THREE.AmbientLight( 0xe65c00, 0.75 );
+    this.scene.add( this.ambience );
+    const helper = new THREE.DirectionalLightHelper( this.directLight, 5 );
+    this.scene.add(helper);
   }
 
 	calculateBounds()
@@ -43,7 +51,7 @@ class rwxMatrix {
 	createCamera()
 	{
 		this.camera = new THREE.PerspectiveCamera( this.fov, this.bounds.width / this.bounds.height, this.nv, this.fv );
-		this.camera.position.z = 1;
+		this.camera.position.z = 10;
 	}
 
 	createScene()
@@ -68,7 +76,7 @@ class rwxMatrix {
 		this.scene.remove(obj);
 	}
 
-	addShape(geo=new THREE.BoxGeometry( 0.2, 0.2, 0.2 ), mat=this.standardMat, r=true)
+	addShape(geo, mat, r=true)
 	{
 		let mesh = new THREE.Mesh( geo, mat );
 		const obj = {

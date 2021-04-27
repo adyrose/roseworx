@@ -38,7 +38,7 @@ class rwxCore {
 			let ime = this.getIME(id);
 			if(ime){
 				ime.stopAnimation = true;
-				ime.stopScroll = true;
+				ime.removeListeners();
 			}
 		}
 	}
@@ -120,52 +120,59 @@ class rwxCore {
 }
 
 class rwxComponent {
-	constructor(opts)
+	constructor({enableCustomEvents, enableAnimationLoop, enableScrollIntoView, enableMouseTracking, enableScrollTracking, enableResizeDebounce})
 	{
 		this.resourceName = this.constructor.name;
-		if(opts)
+
+		if(enableCustomEvents)
 		{
-			if(opts.enableCustomEvents)
-			{
-				this.customEventsEnabled = true;
-				this.availableEvents = [];
-			}
-
-			if(opts.enableAnimationLoop)
-			{
-				this.stopAnimation = true;
-				this.animateLoop = this.animateLoop.bind(this);
-			}
-
-			if(opts.enableResizeDebounce)
-			{
-				this.debounceThreshold = 250;
-				this.resizeDebounce();
-			}
-
-			if(opts.enableScrollIntoView)
-			{
-				this.stopScroll = false;
-				this.setScrollTrigger(200);
-				this.scrollEvent = this.scrollEvent.bind(this);
-				this.scroll();
-			}
-
-			if(opts.enableScrollTracking)
-			{
-				this.scrollEvent = this.scrollEvent.bind(this);
-				window.addEventListener('scroll', this.scrollEvent);
-			}
-
-			if(opts.enableMouseTracking)
-			{
-				this.mouse = {};
-				this.lastmouse = {};
-				this.mousedEvent = this.mousedEvent.bind(this);
-				window.addEventListener('mousemove', this.mousedEvent);
-				window.addEventListener('touchmove', this.mousedEvent);
-			}
+			this.customEventsEnabled = true;
+			this.availableEvents = [];
 		}
+
+		if(enableAnimationLoop)
+		{
+			this.stopAnimation = true;
+			this.animateLoop = this.animateLoop.bind(this);
+		}
+
+		if(enableResizeDebounce)
+		{
+			this.debounceThreshold = 250;
+			this.debounceEvent = this.debounceEvent.bind(this);
+			this.resizeDebounce();
+		}
+
+		if(enableScrollIntoView)
+		{
+			this.stopScroll = false;
+			this.setScrollTrigger(200);
+			this.scrollEvent = this.scrollEvent.bind(this);
+			this.scroll();
+		}
+
+		if(enableScrollTracking)
+		{
+			this.scrollEvent = this.scrollEvent.bind(this);
+			window.addEventListener('scroll', this.scrollEvent);
+		}
+
+		if(enableMouseTracking)
+		{
+			this.mouse = {};
+			this.lastmouse = {};
+			this.mousedEvent = this.mousedEvent.bind(this);
+			window.addEventListener('mousemove', this.mousedEvent);
+			window.addEventListener('touchmove', this.mousedEvent);
+		}
+	}
+
+	removeListeners()
+	{
+		window.removeEventListener('mousemove', this.mousedEvent);
+		window.removeEventListener('touchmove', this.mousedEvent);
+		window.removeEventListener('scroll', this.scrollEvent);
+		window.removeEventListener('resize', this.debounceEvent);
 	}
 
 	mousedEvent(e)
@@ -244,23 +251,26 @@ class rwxComponent {
 		}
 	}
 
+	debounceEvent()
+	{
+		this.debounce && clearTimeout(this.debounce)
+		this.debounce = setTimeout(()=>{
+			if(!this.resize){
+				if(!this.debounceErrorReported)
+				{
+					this.error('No resize method (this.resize) defined on instance.');
+					this.debounceErrorReported = true;
+				}
+				return;
+			}
+			this.resize();
+		}, this.debounceThreshold);
+	}
+
 	resizeDebounce()
 	{
 		this.debounceErrorReported = false;
-	  window.addEventListener('resize', ()=>{
-			this.debounce && clearTimeout(this.debounce)
-			this.debounce = setTimeout(()=>{
-				if(!this.resize){
-					if(!this.debounceErrorReported)
-					{
-						this.error('No resize method (this.resize) defined on instance.');
-						this.debounceErrorReported = true;
-					}
-					return;
-				}
-				this.resize();
-			}, this.debounceThreshold);
-		});
+	  window.addEventListener('resize', this.debounceEvent);
 	}
 
 	startAnimation()

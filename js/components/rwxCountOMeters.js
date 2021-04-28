@@ -21,8 +21,7 @@ class rwxCountOMeters extends rwxCore {
 class rwxCountOMeter extends rwxComponent {
 	constructor(el, value, manualControl)
 	{
-		super({enableAnimationLoop: true, enableResizeDebounce: true, enableScrollIntoView: !manualControl})
-		this.el = el;
+		super({element: el, enableAnimationLoop: true, enableResizeDebounce: true, enableScrollIntoView: !manualControl})
 		this.colors = [
 	    "#ff0000",
 	    "#ff1900",

@@ -23,8 +23,7 @@ class rwxSkrollX extends rwxCore {
 class rwxParallaxItem extends rwxComponent {
 	constructor(el, direction, speed)
 	{
-		super({enableScrollTracking: true});
-		this.el = el;
+		super({element: el, enableScrollTracking: true});
 		this.parallaxMultiplier = parseInt(speed);
 		this.direction = direction;
 	}

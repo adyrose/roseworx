@@ -23,9 +23,7 @@ class rwxBitExplosions extends rwxBitFont {
 class rwxBitExplosion extends rwxComponent {
 	constructor(el, manualControl, bits, orientation, shape, color, bgcolor, sparecolor)
 	{
-		super({enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true})
-		this.el = el;
-		this.uniqueID = rwxMisc.uniqueId();
+		super({element: el, enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true})
 		this.el.style.backgroundColor = bgcolor;
 		this.shape = shape;
 		this.bits = bits;
@@ -183,11 +181,6 @@ class rwxBitExplosion extends rwxComponent {
 		this.stopScroll = true;
 	}
 
-	moused()
-	{
-		return;
-	}
-
 	animate()
 	{
 		this.allParticles.map((p, i)=>{
@@ -237,9 +230,9 @@ class rwxBitExplosion extends rwxComponent {
 				}
 
 				let coords;
-				if(rwxGeometry.isInsideCircle(p.final, this.mouse, this.matrix[0].dimensions.bitSize))
+				if(rwxGeometry.isInsideCircle(p.final, this.mouseTrack.mouse, this.matrix[0].dimensions.bitSize))
 				{
-					coords = rwxGeometry.closestPointOnCircumference(p.final, this.mouse, this.matrix[0].dimensions.bitSize);
+					coords = rwxGeometry.closestPointOnCircumference(p.final, this.mouseTrack.mouse, this.matrix[0].dimensions.bitSize);
 				}
 				else
 				{

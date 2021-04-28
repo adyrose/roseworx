@@ -24,9 +24,7 @@ class rwxBitBlackHoles extends rwxBitFont {
 class rwxBitBlackHole extends rwxComponent {
   constructor(el, manualControl, bits, orientation, shape, color, bgcolor, sparecolor, disableTrail)
   {
-    super({enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking: true})
-    this.el = el;
-    this.uniqueID = rwxMisc.uniqueId();
+    super({element: el, enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking: true})
     this.el.style.backgroundColor = bgcolor;
     this.sparecolor = sparecolor;
     this.disableTrail = disableTrail;
@@ -226,7 +224,7 @@ class rwxBitBlackHole extends rwxComponent {
         let b = (Math.floor(percentage)/100) * this.sparecolor.b;
         p.color = `rgb(${r}, ${g}, ${b})`;
 
-        if(rwxGeometry.isInsideCircle({x:p.x, y:p.y}, this.mouse, this.mouseRadius))
+        if(rwxGeometry.isInsideCircle({x:p.x, y:p.y}, this.mouseTrack.mouse, this.mouseRadius))
         {
           if(p.size <= (p.naturalSize+this.expandRadiusBy))
           {

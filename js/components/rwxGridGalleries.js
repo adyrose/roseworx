@@ -17,8 +17,7 @@ class rwxGridGalleries extends rwxCore {
 class rwxGridGallery extends rwxComponent {
 	constructor(el, manualControl)
 	{
-		super({enableScrollIntoView: !manualControl});
-		this.el = el;
+		super({element: el, enableScrollIntoView: !manualControl});
 		this.items = [...this.el.querySelectorAll('.rwx-grid-gallery-item')];
 		if(this.items.length == 0)return;
 		this.createStructure();

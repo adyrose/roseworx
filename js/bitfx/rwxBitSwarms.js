@@ -20,9 +20,7 @@ class rwxBitSwarms extends rwxBitFont {
 class rwxBitSwarm extends rwxComponent {
 	constructor(el, manualControl, bits, orientation, shape, color, bgcolor)
 	{
-		super({enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true})
-		this.el = el;
-		this.uniqueID = rwxMisc.uniqueId();
+		super({element: el, enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true});
 		this.el.style.backgroundColor = bgcolor;
 		this.shape = shape;
 		this.orientation = orientation;
@@ -86,7 +84,7 @@ class rwxBitSwarm extends rwxComponent {
 	{
 		if(this.mouseParticle)
 		{
-			this.mouseParticle.velocity = {x: ((this.mouse.x - this.lastmouse.x)/2), y: ((this.mouse.y - this.lastmouse.y)/2)}
+			this.mouseParticle.velocity = this.mouseTrack.velocity;
 		}
 	}
 
@@ -103,7 +101,7 @@ class rwxBitSwarm extends rwxComponent {
 
 	animate()
 	{
-		this.mouseParticle.update(this.mouse.x, this.mouse.y);
+		this.mouseParticle.update(this.mouseTrack.mouse.x, this.mouseTrack.mouse.y);
 		for(let [i,l] of this.letters.entries())
 		{
 			if(this.letterTimeoutTicker >= i*this.letterAnimationTimeout)

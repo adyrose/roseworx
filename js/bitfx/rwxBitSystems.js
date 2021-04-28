@@ -35,18 +35,15 @@ class rwxBitSystem extends rwxComponent {
 
 	constructor(el, bgColor, bitColor, shape, disableInit)
 	{
-		super({enableAnimationLoop: true, enableResizeDebounce: true})
-		this.el = el;
+		super({element: el, enableAnimationLoop: true, enableResizeDebounce: true, enableMouseTracking:true})
 		this.background = bgColor;
 		this.bitColor = bitColor;
 		this.disableInit = disableInit;
 		this.shape = shape;
 		this.el.style.backgroundColor = this.convertToColor(this.background);
-		this.uniqueID = rwxMisc.uniqueId();
+		this.mouseTrack.remove();
 		this.elFullSizeAbsolute();
 		this.createCanvas();
-		this.handleMouseMove = this.handleMouseMove.bind(this);
-		this.handleOrientation = this.handleOrientation.bind(this);
 		this.createConfig();
 		this.calculate();
 		this.startAnimation();
@@ -63,10 +60,6 @@ class rwxBitSystem extends rwxComponent {
 		this.centerx = this.width/2;
     this.centery = this.height/2;
     this.numberofparticles = 133;
-		this.parallaxMouse = {
-      x: 0,
-      y: 0
-    }
 	}
 
 	calculate(firstBlood=true)
@@ -82,7 +75,7 @@ class rwxBitSystem extends rwxComponent {
 		  p.parallaxMoveValue = 2;
 		  p.parallaxMoveDrag = Math.random() /  15;
 		  p.parallaxMoveAmount = Math.floor(Math.random() * (20- p.parallaxMoveValue+1) +  p.parallaxMoveValue);
-		  p.lastMouse = {x:0,y:0};
+		  p.lastMouse = {x:0, y:0};
 		  p.finalx = finalx;
 		  p.finaly = finaly;
 		  p.expandTo = (radius*2) + rwxMath.randomInt(20,30);
@@ -100,48 +93,17 @@ class rwxBitSystem extends rwxComponent {
   implode()
   {
   	if(!this.hasExploded)return;
-    this.parallaxMouse.x = 0;
-    this.parallaxMouse.y = 0;
-    this.addMouseMove();
+    this.mouseTrack.add();
     this.explodenow = false;
     this.implodenow = true;  	
   }
 
   explode()
   {
-    this.removeMouseMove();
+    this.mouseTrack.remove();
     this.implodenow = false;
     this.explodenow = true;
     this.hasExploded = true;
-  }
-
-	removeMouseMove()
-  {
-    document.body.removeEventListener('mousemove', this.handleMouseMove);
-    window.removeEventListener('deviceorientation', this.handleOrientation);
-  }
-
-  addMouseMove()
-  {
-    document.body.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('deviceorientation', this.handleOrientation);
-  }
-
-  handleOrientation(event)
-  {
-    let alpha = event.alpha === null ? 0 : event.alpha;
-    let y = event.beta === null ? 0 : event.beta;
-    let x = event.gamma === null ? 0 : event.gamma;
-    if (x >  90) { x =  90};
-    if (x < -90) { x = -90};
-    this.parallaxMouse.x = (window.innerWidth*x/180)*4;
-    this.parallaxMouse.y = (window.innerHeight*y/225)*4;  
-  }
-
-  handleMouseMove(e)
-  {
-    this.parallaxMouse.x = (e.clientX || e.pageX) - window.innerWidth/2;
-    this.parallaxMouse.y = (e.clientY || e.pageY) - window.innerHeight/2; 
   }
 
   resize()
@@ -159,15 +121,15 @@ class rwxBitSystem extends rwxComponent {
   			let x = p.finalx + (p.lastMouse.x/p.parallaxMoveAmount);
 		    let y = p.finaly + (p.lastMouse.y/p.parallaxMoveAmount);	
 		    p.update(x,y);
-		    p.lastMouse.x += (this.parallaxMouse.x - p.lastMouse.x) * p.parallaxMoveDrag;
-		    p.lastMouse.y += (this.parallaxMouse.y - p.lastMouse.y) * p.parallaxMoveDrag;
+		    p.lastMouse.x += (this.mouseTrack.parallaxmouse.x - p.lastMouse.x) * p.parallaxMoveDrag;
+		    p.lastMouse.y += (this.mouseTrack.parallaxmouse.y - p.lastMouse.y) * p.parallaxMoveDrag;
 		 	}
   		else
   		{
   			if(this.disableInit && !this.explodenow && !this.implodenow)
   			{
   				p.parallax = true;
-  				if(!this.eventAdded){this.addMouseMove();this.eventAdded=true}
+  				if(!this.eventAdded){this.mouseTrack.add();this.eventAdded=true}
   				continue;
   			}
   			p.timer +=1;
@@ -195,7 +157,7 @@ class rwxBitSystem extends rwxComponent {
 	  				else
 	  				{
 	  					p.parallax = true;
-	  					if(!this.eventAdded){this.addMouseMove();this.eventAdded=true}
+	  					if(!this.eventAdded){this.mouseTrack.add();this.eventAdded=true}
 	  				}
 	  			}
 	  			p.draw();

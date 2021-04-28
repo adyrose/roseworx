@@ -26,8 +26,7 @@ class rwxNumberSwitchers extends rwxCore {
 class rwxNumberSwitcher extends rwxComponent {
 	constructor(el, initialValue, stopAtZero)
 	{
-		super({enableCustomEvents: true, enableAnimationLoop: true});
-		this.el = el;
+		super({element: el, enableCustomEvents: true, enableAnimationLoop: true});
 		if(isNaN(initialValue)){this.error("Initial value needs to be number"); return}
 		this.stopAtZero = stopAtZero;
 		this.htmlDefinition();

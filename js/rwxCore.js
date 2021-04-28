@@ -1,5 +1,6 @@
 import rwxMisc from './helpers/rwxMiscHelpers';
 import rwxCanvas from './helpers/rwxCanvasHelpers';
+import rwxMouseTrack from './common/rwxMouseTracking';
 
 class rwxCore {
 	constructor(selector, canHaveManualControl=false)
@@ -120,10 +121,11 @@ class rwxCore {
 }
 
 class rwxComponent {
-	constructor({enableCustomEvents, enableAnimationLoop, enableScrollIntoView, enableMouseTracking, enableScrollTracking, enableResizeDebounce})
+	constructor({element, enableCustomEvents, enableAnimationLoop, enableScrollIntoView, enableMouseTracking, enableScrollTracking, enableResizeDebounce})
 	{
 		this.resourceName = this.constructor.name;
-
+		this.el = element;
+		this.uniqueID = rwxMisc.uniqueId();
 		if(enableCustomEvents)
 		{
 			this.customEventsEnabled = true;
@@ -159,33 +161,16 @@ class rwxComponent {
 
 		if(enableMouseTracking)
 		{
-			this.mouse = {};
-			this.lastmouse = {};
-			this.mousedEvent = this.mousedEvent.bind(this);
-			window.addEventListener('mousemove', this.mousedEvent);
-			window.addEventListener('touchmove', this.mousedEvent);
+			let fn = this.moused ? ()=>{this.moused()} : ()=>{};
+			this.mouseTrack = new rwxMouseTrack(this.el, fn);
 		}
 	}
 
 	removeListeners()
 	{
-		window.removeEventListener('mousemove', this.mousedEvent);
-		window.removeEventListener('touchmove', this.mousedEvent);
 		window.removeEventListener('scroll', this.scrollEvent);
 		window.removeEventListener('resize', this.debounceEvent);
-	}
-
-	mousedEvent(e)
-	{
-		this.canvasDimensions = this.canvas.getBoundingClientRect();
-		if(e.target !== this.canvas)return;
-		let x = e.type=="touchmove" ? e.touches[0].clientX : e.clientX;
-		x = x-this.canvasDimensions.left;
-		let y = e.type=="touchmove" ? e.touches[0].clientY : e.clientY;
-		y = y-this.canvasDimensions.top;
-		this.mouse = {x, y};
-		this.moused && this.moused();
-		this.lastmouse = this.mouse;
+		this.mouseTrack && this.mouseTrack.remove();
 	}
 
 	declareEvent(name)

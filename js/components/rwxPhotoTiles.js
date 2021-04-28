@@ -33,8 +33,7 @@ class rwxPhotoTiles extends rwxCore {
 class rwxPhotoTile extends rwxComponent {
   constructor(el, effect, auto, autoTimeout, noThumbnails)
   {
-  	super({enableAnimationLoop: true, enableResizeDebounce: true});
-  	this.el = el;
+  	super({element: el, enableAnimationLoop: true, enableResizeDebounce: true});
   	this.photos = [...el.children];//[...el.querySelectorAll('img')];
   	if(this.photos.length == 0)return;
   	this.effectInit = effect;

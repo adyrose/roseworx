@@ -29,6 +29,28 @@ class rwxMatrix {
 		window.addEventListener('resize', this.resize);
 	}
 
+	getVisibleBoundsAtDepth(depth) {
+	  const cameraOffset = this.camera.position.z;
+	  if ( depth < cameraOffset ) depth -= cameraOffset;
+	  else depth += cameraOffset;
+	  const vFOV = this.camera.fov * Math.PI / 180; 
+	  const height = Math.tan( vFOV / 2 ) * Math.abs( depth );
+	  const width = height * this.camera.aspect;
+	  return {
+	  	xmin: -width,
+	  	xmax: width,
+	  	ymin: -height,
+	  	ymax: height
+	  };
+	}
+
+
+	unhook()
+	{
+		window.removeEventListener('resize', this.resize);
+		this.renderer.setAnimationLoop(null);
+	}
+
   createLights()
   {
     this.directLight = new THREE.DirectionalLight( 0x505050, 0.9 );

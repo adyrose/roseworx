@@ -1,5 +1,3 @@
-import { rwxCore } from '../rwxCore';
-
 class rwxAnimatedBorder {
 	constructor(el)
 	{

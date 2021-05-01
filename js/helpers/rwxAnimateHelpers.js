@@ -1,51 +1,34 @@
 import { rwxError } from '../rwxCore';
+import rwxMisc from './rwxMiscHelpers';
+
+const EasingFunctions = {
+  linear: t => { return t },
+  easeInQuad: t => { return t*t },
+  easeOutQuad: t => { return t*(2-t) },
+  easeInOutQuad: t => { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
+  easeInCubic: t => { return t*t*t },
+  easeOutCubic: t => { return (--t)*t*t+1 },
+  easeInOutCubic: t => { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
+  easeInQuart: t => { return t*t*t*t },
+  easeOutQuart: t => { return 1-(--t)*t*t*t },
+  easeInOutQuart: t => { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
+  easeInQuint: t => { return t*t*t*t*t },
+  easeOutQuint: t => { return 1+(--t)*t*t*t*t },
+  easeInOutQuint: t => { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t },
+  easeInElastic: t => { return (.04 - .04 / t) * Math.sin(25 * t) + 1 },
+  easeOutElastic: t => { return .04 * t / (--t) * Math.sin(25 * t) },
+  easeInOutElastic: t => { return (t -= .5) < 0 ? (.02 + .01 / t) * Math.sin(50 * t) : (.02 - .01 / t) * Math.sin(50 * t) + 1 },
+  easeOutBack: t=> {const c1 = 1.70158;const c3 = c1 + 1;return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);} 
+}
 
 const rwxAnimateHelpers = {
-  EasingFunctions: {
-    linear: t => { return t },
-    easeInQuad: t => { return t*t },
-    easeOutQuad: t => { return t*(2-t) },
-    easeInOutQuad: t => { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
-    easeInCubic: t => { return t*t*t },
-    easeOutCubic: t => { return (--t)*t*t+1 },
-    easeInOutCubic: t => { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
-    easeInQuart: t => { return t*t*t*t },
-    easeOutQuart: t => { return 1-(--t)*t*t*t },
-    easeInOutQuart: t => { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
-    easeInQuint: t => { return t*t*t*t*t },
-    easeOutQuint: t => { return 1+(--t)*t*t*t*t },
-    easeInOutQuint: t => { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t },
-    easeInElastic: t => { return (.04 - .04 / t) * Math.sin(25 * t) + 1 },
-    easeOutElastic: t => { return .04 * t / (--t) * Math.sin(25 * t) },
-    easeInOutElastic: t => { return (t -= .5) < 0 ? (.02 + .01 / t) * Math.sin(50 * t) : (.02 - .01 / t) * Math.sin(50 * t) + 1 },
-    easeOutBack: t=> {const c1 = 1.70158;const c3 = c1 + 1;return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);}
-  },
-
-  sanitizeEasing(easing, id) {
-    if(!rwxAnimateHelpers.EasingFunctions[easing] && !this[`${id}Easing`]){
-      this[`${id}Easing`] = true;
-      rwxError(`no '${easing}'' easing function for id - ${id}, falling back to 'linear' timing.`, '(rwxAnimateHelpers)');
-      return 'linear';
-    }
-    return easing;  
-  },
-
-  sanitizeDuration(duration, id) {
-    if(!Number.isInteger(duration) && !this[`${id}Duration`]){ 
-      this[`${id}Duration`] = true;
-      rwxError(`duration for id - ${id} must be an integer, falling back to '1000'.`, '(rwxAnimateHelpers)');
-      return 1000;
-    }
-    return duration;  
-  },
-
   easingFunction(easing, duration, variable) {
     if(!this[variable])
     {
       this[variable] = performance.now();
     }
     let p = (performance.now() - this[variable]) / duration;
-    let val = rwxAnimateHelpers.EasingFunctions[easing](p);
+    let val = EasingFunctions[easing](p);
     if (performance.now() - this[variable] > duration){
       return 1;
     }
@@ -57,18 +40,14 @@ const rwxAnimateHelpers = {
 
   deleteVars(id)
   {
-    delete this[`${id}Easing`];
-    delete this[`${id}Duration`];
     delete this[`${id}Ease`];
   }
 }
 
 const rwxAnimate = {
-  getEasingValue: function(id, easing="linear", duration=1000, cb=()=>{}) {
+  getEasingValue: function(id, easing, duration, cb=()=>{}) {
     if(!id)return;
-    if(!this[`${id}Easing`]){this[`${id}Easing`] = rwxAnimateHelpers.sanitizeEasing(easing, id);}
-    if(!this[`${id}Duration`]){this[`${id}Duration`] = rwxAnimateHelpers.sanitizeDuration(duration, id);}
-    let val = rwxAnimateHelpers.easingFunction(this[`${id}Easing`], this[`${id}Duration`], `${id}Ease`, cb);
+    let val = rwxAnimateHelpers.easingFunction(easing, duration, `${id}Ease`, cb);
     let c = (easing==="easeInElastic" || easing==="easeInOutElastic" || easing==="easeOutBack") ? val===1 : val>=1;
     if(c)
     {
@@ -111,4 +90,119 @@ const rwxAnimate = {
   }
 }
 
+class rwxAnimation {
+  constructor({from, to, duration, easing, loop=false, complete=()=>{}})
+  {
+    this.loop = loop;
+    this.defaultDuration = 1000;
+    this.defaultEasing = 'linear';
+    this.complete = complete;
+    this.isComplete = false;
+    this.duration = this.sanitizeDuration(duration);
+    this.parse(from, to , easing);
+  }
+
+  parse(f, t, e)
+  {
+    this.animations = [];
+    if(!Array.isArray(f)){f=[f]}
+    if(!Array.isArray(t)){t=[t]}
+    if(!Array.isArray(e)){e=[e]}
+
+    f.map((from, i)=>{
+      this.animations.push({
+        from,
+        to: Array.isArray(t) ? t[i] || t[0] : t,
+        easing: this.sanitizeEasing(Array.isArray(e) ? e[i] || e[0] : e),
+        id: rwxMisc.uniqueId(),
+        duration: this.duration,
+        cb: ()=>{this.complete();}
+      })
+    });
+  }
+
+  sanitizeEasing(easing) {
+    if(!EasingFunctions[easing]){
+      rwxError(`No '${easing}' easing function, falling back to '${this.defaultEasing}'.`, '(rwxAnimation)');
+      return this.defaultEasing;
+    }
+    return easing;  
+  }
+
+  sanitizeDuration(i) {
+    if(!Number.isInteger(i)){ 
+      rwxError(`Duration must be an integer, falling back to '${this.defaultDuration}'.`, '(rwxAnimation)');
+      return this.defaultDuration;
+    }
+    return i;  
+  }
+
+  clear()
+  {
+    this.animations.map((a)=>{a.done=false; a.isComplete=false;})
+  }
+
+  start(fn)
+  {
+    let vals = [];
+    this.animations.map((anime)=>{
+      let toPush = anime.done ? anime.to : rwxAnimate.fromTo(anime.from, anime.to, anime.id, anime.easing, this.duration, ()=>{
+        if(!this.loop){anime.done = true;if(this.animations.every((anime)=>anime.done)){this.complete && this.complete();this.isComplete=true;}}
+      });
+      vals.push(toPush);
+    });
+    fn(...vals);
+  }
+}
+
+class rwxAnimationSequence {
+  constructor({sequence, loop=false, complete=()=>{}})
+  {
+    this.loop = loop;
+    this.counter = 0;
+    this.complete = complete;
+    this.parse(sequence);
+  }
+
+  parse(seq)
+  {
+    this.animations = [];
+    seq.map((s,i)=>{
+      s.loop = false;
+      let c = s.complete;
+      s.complete = ()=>{
+        c();
+        if(i<seq.length-1)
+        {
+          this.counter+=1;
+        }
+        else if(this.loop)
+        {
+          this.animations.map((a)=>{
+            a.anime.clear();
+          })
+          this.counter = 0;
+        }
+        else
+        {
+          this.complete();
+        }
+      };
+      this.animations.push({anime:new rwxAnimation(s), delay:s.delay||0});
+    });
+    console.log(this.animations);
+  }
+
+  start(fnArr)
+  {
+    this.animations[this.counter].anime.start(fnArr[this.counter]);
+  }
+}
+
+// const sequence = (seq)=>{
+//   seq.map((s, i)=>{
+
+//   })
+// }
+export {rwxAnimation, rwxAnimationSequence};
 export default rwxAnimate;

@@ -1,6 +1,6 @@
 import rwxMisc from './helpers/rwxMiscHelpers';
 import rwxCanvas from './helpers/rwxCanvasHelpers';
-import rwxMouseTrack from './common/rwxMouseTracking';
+import rwxMouseTrack from './modules/rwxMouseTrack';
 
 class rwxCore {
 	constructor(selector, canHaveManualControl=false)

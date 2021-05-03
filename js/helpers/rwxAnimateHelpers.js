@@ -159,7 +159,8 @@ class rwxAnimationSequence {
   constructor({sequence, loop=false, complete=()=>{}})
   {
     this.loop = loop;
-    this.counter = 0;
+    this.seqCounter = 0;
+    this.delayCounter = 0;
     this.complete = complete;
     this.parse(sequence);
   }
@@ -174,35 +175,37 @@ class rwxAnimationSequence {
         c();
         if(i<seq.length-1)
         {
-          this.counter+=1;
+          this.seqCounter+=1;
+          this.delayCounter=0;
         }
         else if(this.loop)
         {
           this.animations.map((a)=>{
             a.anime.clear();
           })
-          this.counter = 0;
+          this.seqCounter = 0;
         }
         else
         {
           this.complete();
         }
       };
-      this.animations.push({anime:new rwxAnimation(s), delay:s.delay||0});
+      this.animations.push({anime:new rwxAnimation(s), delay:(s.delay/1000*60)||0});
     });
-    console.log(this.animations);
   }
 
   start(fnArr)
   {
-    this.animations[this.counter].anime.start(fnArr[this.counter]);
+    if(this.delayCounter >= this.animations[this.seqCounter].delay)
+    {
+      this.animations[this.seqCounter].anime.start(fnArr[this.seqCounter]);
+    }
+    else
+    {
+      this.delayCounter+=1;
+    }
   }
 }
 
-// const sequence = (seq)=>{
-//   seq.map((s, i)=>{
-
-//   })
-// }
 export {rwxAnimation, rwxAnimationSequence};
 export default rwxAnimate;

@@ -1,5 +1,5 @@
 import { rwxError } from '../rwxCore';
-import rwxMisc from './rwxMiscHelpers';
+import rwxMisc from '../helpers/rwxMiscHelpers';
 
 const EasingFunctions = {
   linear: t => { return t },
@@ -116,6 +116,7 @@ class rwxAnimation {
         easing: this.sanitizeEasing(Array.isArray(e) ? e[i] || e[0] : e),
         id: rwxMisc.uniqueId(),
         duration: this.duration,
+        isStarted: false,
         cb: ()=>{this.complete();}
       })
     });
@@ -137,21 +138,38 @@ class rwxAnimation {
     return i;  
   }
 
-  clear()
+  reset()
   {
-    this.animations.map((a)=>{a.done=false; a.isComplete=false;})
+    this.animations.map((a)=>{
+    	a.isComplete=false;
+    	a.isStarted=false;
+    });
   }
 
-  start(fn)
+  animate(fn)
   {
     let vals = [];
     this.animations.map((anime)=>{
-      let toPush = anime.done ? anime.to : rwxAnimate.fromTo(anime.from, anime.to, anime.id, anime.easing, this.duration, ()=>{
-        if(!this.loop){anime.done = true;if(this.animations.every((anime)=>anime.done)){this.complete && this.complete();this.isComplete=true;}}
+    	if(!anime.isStarted)
+    	{
+    		anime.toUseFrom = (typeof anime.from === 'function') ? anime.from() : anime.from;
+    		anime.toUseTo = (typeof anime.to === 'function') ? anime.to() : anime.to;
+    	}
+      let toPush = anime.isComplete ? anime.to : rwxAnimate.fromTo(anime.toUseFrom, anime.toUseTo, anime.id, anime.easing, this.duration, ()=>{
+        if(!this.loop)
+        {
+        	anime.isComplete = true;
+        	if(this.animations.every((anime)=>anime.isComplete))
+        	{
+        		this.complete && this.complete();
+        		this.isComplete=true;
+        	}
+        }
       });
+      anime.isStarted = true;
       vals.push(toPush);
     });
-    fn(...vals);
+    return fn(...vals);
   }
 }
 
@@ -165,6 +183,13 @@ class rwxAnimationChain {
     this.parse(sequence);
   }
 
+  reset()
+  {
+  	this.animations.map((a)=>a.anime.reset());
+  	this.seqCounter = 0;
+  	this.delayCounter = 0;
+  }
+
   parse(seq)
   {
     this.animations = [];
@@ -172,7 +197,7 @@ class rwxAnimationChain {
       s.loop = false;
       let c = s.complete;
       s.complete = ()=>{
-        c();
+        c && c();
         if(i<seq.length-1)
         {
           this.seqCounter+=1;
@@ -181,7 +206,7 @@ class rwxAnimationChain {
         else if(this.loop)
         {
           this.animations.map((a)=>{
-            a.anime.clear();
+            a.anime.reset();
           })
           this.seqCounter = 0;
         }
@@ -194,11 +219,11 @@ class rwxAnimationChain {
     });
   }
 
-  start(fnArr)
+  animate(fnArr)
   {
     if(this.delayCounter >= this.animations[this.seqCounter].delay)
     {
-      this.animations[this.seqCounter].anime.start(fnArr[this.seqCounter]);
+      return this.animations[this.seqCounter].anime.animate(fnArr[this.seqCounter]);
     }
     else
     {
@@ -208,4 +233,3 @@ class rwxAnimationChain {
 }
 
 export {rwxAnimation, rwxAnimationChain};
-export default rwxAnimate;

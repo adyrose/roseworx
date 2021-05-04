@@ -5,7 +5,9 @@ import {rwxParticle} from './rwxParticle';
 
 import {rwxBitFont, rwxBitFontGetMatrix} from './rwxBitFont';
 
-import { rwxMath, rwxAnimate, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
+import { rwxMath, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
+
+import { rwxAnimationChain } from '../modules/rwxAnimation';
 
 class rwxBitSystems extends rwxBitFont {
 	constructor()
@@ -71,6 +73,8 @@ class rwxBitSystem extends rwxComponent {
     	let finalx = rwxMath.randomInt(0, this.width);
     	let finaly = rwxMath.randomInt(0, this.height);
    		let radius = rwxMath.randomInt(1,3);
+   		let et = ((radius*2) + rwxMath.randomInt(20,30));
+
   		let p = new rwxParticle(finalx, finaly, radius*2, this.shape, this.convertToColor(this.bitColor), this.c);
 		  p.parallaxMoveValue = 2;
 		  p.parallaxMoveDrag = Math.random() /  15;
@@ -78,13 +82,35 @@ class rwxBitSystem extends rwxComponent {
 		  p.lastMouse = {x:0, y:0};
 		  p.finalx = finalx;
 		  p.finaly = finaly;
-		  p.expandTo = (radius*2) + rwxMath.randomInt(20,30);
-		  p.finalRadius = radius*2;
-		  p.bounceTimeout = rwxMath.randomInt(0,360);
-		  p.timer = 0;
 		  p.cacheColor = this.bitColor;
 		  p.ringSize = rwxMath.randomInt(1,5);
 		  p.parallax = !firstBlood;
+		  p.chain = new rwxAnimationChain({
+		  	sequence:[
+		  		{
+		  			from:[1, 0],
+		  			to:[0.1, et],
+		  			duration:1000,
+		  			easing: 'easeOutQuad',
+		  			delay: rwxMath.randomInt(0,3600)
+		  		},
+		  		{
+		  			from: [0.1, et],
+		  			to: [1, (radius*2)],
+		  			duration: 2000,
+		  			easing: 'easeOutQuint'
+		  		}
+		  	],
+		  	complete: ()=>{
+		  		p.parallax = true;
+		  		p.dontDrawMask=true;
+		  		if(!this.eventAdded)
+		  		{
+		  			this.mouseTrack.add();
+		  			this.eventAdded=true;
+		  		}
+		  	}
+		  })
     	this.particles.push(p);
     	this.maskParticles.push(new rwxParticle(finalx, finaly, (radius*2)+3, this.shape, this.convertToColor(this.background), this.c));
     }
@@ -132,37 +158,21 @@ class rwxBitSystem extends rwxComponent {
   				if(!this.eventAdded){this.mouseTrack.add();this.eventAdded=true}
   				continue;
   			}
-  			p.timer +=1;
-				if(p.timer>=p.bounceTimeout)
-				{
-	  			if(!p.expand)
-	  			{
-	  				let o = rwxAnimate.fromTo(1, 0.1, `systemparticleopacity${this.uniqueID}${index}`, 'easeOutQuad', 1000, ()=>{p.expand=true});
-		  			let r = rwxAnimate.fromTo(0, p.expandTo, `systemparticlebounce${this.uniqueID}${index}`, 'easeOutQuad', 1000, ()=>{p.expand=true});
-		  			p.setRadius(r+p.ringSize);
-		  			p.color = this.convertToColor(p.cacheColor,o);
-		  			this.maskParticles[index].setRadius(r);
-	  			}
-	  			else
-	  			{
-	  				if(!p.collapse)
-	  				{
-			  			let r = rwxAnimate.fromTo(p.expandTo, p.finalRadius, `systemparticlecollapse${this.uniqueID}${index}`, 'easeOutQuint', 2000, ()=>{p.collapse=true});
-			  			let o = rwxAnimate.fromTo(0.1, 1, `systemparticleopacity2${this.uniqueID}${index}`, 'easeOutQuint', 2000, ()=>{});
-			  			p.setRadius(r+p.ringSize);
-			  			p.color = this.convertToColor(p.cacheColor, o);
-			  			this.maskParticles[index].color = this.convertToColor(this.background, (1-o));
-			  			this.maskParticles[index].setRadius(r);
-	  				}
-	  				else
-	  				{
-	  					p.parallax = true;
-	  					if(!this.eventAdded){this.mouseTrack.add();this.eventAdded=true}
-	  				}
-	  			}
-	  			p.draw();
-	  			!p.collapse && this.maskParticles[index].draw();
-	  		}
+  			p.chain.animate([
+  				(opacity, radius)=>{
+  					p.setRadius(radius+p.ringSize);
+  					p.color = this.convertToColor(p.cacheColor, opacity);
+  					this.maskParticles[index].setRadius(radius);
+  				},
+  				(opacity, radius)=>{
+		  			p.setRadius(radius+p.ringSize);
+		  			p.color = this.convertToColor(p.cacheColor, opacity);
+		  			this.maskParticles[index].color = this.convertToColor(this.background, (1-opacity));
+		  			this.maskParticles[index].setRadius(radius);
+  				}
+  			]);
+  			p.draw();
+  			!p.dontDrawMask && this.maskParticles[index].draw();
   		}
 		  if(this.explodenow)
 	    {

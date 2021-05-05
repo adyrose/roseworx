@@ -11,6 +11,12 @@ class rwxParticle {
 		this.size = size;
 	}
 
+	refresh(x,y)
+	{
+		this.x=x;
+		this.y=y;
+	}
+
 	update(x, y)
 	{
 		this.x = x;

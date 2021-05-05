@@ -184,9 +184,7 @@ class rwxBitSwarmLetter {
 		this.boundary = this.bitSize;
 		this.createParticleData();
 		this.particleAnimationCount = [];
-		this.particleAnimationCount2 = [];
-		this.particleAnimationCount3 = [];
-		this.animations = ['start', 'drop', 'fireworx']//['start', 'cyclone', 'explode', 'snake', 'rejiggle', 'drop', 'fireworx', 'swarm'];
+		this.animations = ['start', 'cyclone', 'explode', 'snake', 'rejiggle', 'drop', 'fireworx', 'swarm'];
 		this.startAnimating('start');
 	}
 
@@ -210,9 +208,16 @@ class rwxBitSwarmLetter {
 		return rwxMath.randomInt((toUse-this.boundary), (toUse+this.bitSize+this.boundary));
 	}
 
+	getcyclone(i)
+	{
+		return {
+			distancefromcenter: this.matrixParticles[i].distancefromcenter,
+			cyclonedistancefromcenter: this.matrixParticles[i].cyclonedistancefromcenter,
+		}
+	}
+
 	getcurrentx(i)
 	{
-		// console.log("rn");
 		return this.matrixParticles[i].currentx;
 	}
 
@@ -245,53 +250,101 @@ class rwxBitSwarmLetter {
 			this.matrixParticles.push({
 				finalx: m.x,
 				finaly: m.y,
-				startx: this.randomPositionInBoundary('x'),
-				starty: this.randomPositionInBoundary('y'),
-				startcpx: rwxMath.randomInt(0, this.width),//rwxMath.randomInt(0, this.width) //rwxMath.randomInt((this.xpos - (this.bitSize/20)), (this.xpos+this.bitSize+(this.bitSize/20))),
-				startcpy: rwxMath.randomInt(0, this.height),//rwxMath.randomInt(0, this.height) //rwxMath.randomInt((this.ypos - (this.bitSize/20)), (this.ypos+this.bitSize+(this.bitSize/20))),
-				startcp2x: this.xpos,//rwxMath.randomInt((this.xpos - (this.bitSize/20)), (this.xpos+this.bitSize+(this.bitSize/20))),
-				startcp2y: this.ypos,//rwxMath.randomInt((this.ypos - (this.bitSize/20)), (this.ypos+this.bitSize+(this.bitSize/20))),
-				rejigglecpx: this.randomPositionInBoundary('x'),
-				rejigglecpy: this.randomPositionInBoundary('y'),
-				rejigglecp2x: this.randomPositionInBoundary('x'),
-				rejigglecp2y: this.randomPositionInBoundary('y'),
-				snakestartx,
-				snakestarty,
-				snakecpx,
-				snakecpy,
-				snakecp2x,
-				snakecp2y,
-				swarmx: rwxMath.randomInt(0, this.width),
-				swarmy: rwxMath.randomInt(0, this.height),
 				cycloneangle,
-				explodepointx: explodepoint.x,
-				explodepointy: explodepoint.y,
 				centerx,
 				centery,
 				timeout: i*this.particleTimeout,
+				startAnimation: new rwxAnimation({
+					from: [this.randomPositionInBoundary('x'), this.randomPositionInBoundary('y')],
+					control:[
+						{cp1:rwxMath.randomInt(0, this.width), cp2:this.xpos},
+						{cp1:rwxMath.randomInt(0, this.height), cp2:this.ypos}
+					],
+					to: [m.x, m.y],
+					duration: this.startDuration,
+					easing: 'easeOutQuart',
+					complete: ()=>this.particleAnimationCount.push(i)
+				}),
+				rejiggleAnimation: new rwxAnimation({
+					from:[()=>{return this.getcurrentx(i)}, ()=>{return this.getcurrenty(i)}],
+					control:[
+						{cp1:this.randomPositionInBoundary('x'), cp2: this.randomPositionInBoundary('x')},
+						{cp1:this.randomPositionInBoundary('x'), cp2: this.randomPositionInBoundary('y')}
+					],
+					to: [m.x, m.y],
+					easing: 'easeInOutQuad',
+					duration: this.rejiggleDuration,
+					complete: ()=>this.particleAnimationCount.push(i)
+				}),
+				swarmAnimation: new rwxAnimationChain(
+					{
+						sequence: [
+							{
+								from:[()=>{return this.getcurrentx(i)}, ()=>{return this.getcurrenty(i)}],
+								control: [
+									{cp1:rwxMath.randomInt(0, this.width), cp2:this.xpos},
+									{cp1: rwxMath.randomInt(0, this.height), cp2:this.ypos}
+								],
+								to:[rwxMath.randomInt(0, this.width), rwxMath.randomInt(0, this.height)],
+								duration:this.swarmDuration/2,
+								easing:'easeInOutQuart'
+							},
+							{
+								control: [
+									{cp1:rwxMath.randomInt(0, this.width), cp2:this.xpos},
+									{cp1: rwxMath.randomInt(0, this.height), cp2:this.ypos}
+								],
+								to:[m.x, m.y],
+								duration: this.swarmDuration/2,
+								easing: 'easeInOutQuart'
+							}
+						],
+						complete: ()=>this.particleAnimationCount.push(i)
+					}
+				),
+				snakeAnimation: new rwxAnimationChain(
+					{
+						sequence: [
+							{
+								from:[()=>{return this.getcurrentx(i)}, ()=>{return this.getcurrenty(i)}],
+								to: [snakestartx, snakestarty],
+								easing: 'easeInQuart',
+								duration: this.snakeDuration/3
+							},
+							{
+								control: [
+									{cp1:snakecpx, cp2:snakecp2x},
+									{cp1:snakecpy, cp2:snakecp2y}
+								],
+								to: [m.x, m.y],
+								easing: 'linear',
+								duration: this.snakeDuration
+							}
+						],
+						complete: ()=>this.particleAnimationCount.push(i)
+					}
+				),
 				fireworxAnimation: new rwxAnimationChain(
 					{
 						sequence: [
 							{
 								from:[()=>{return this.getcurrentx(i)}, ()=>{return this.getcurrenty(i)}],
-								to:[(this.xpos + (this.bitSize/2)), (this.ypos + this.boundary + this.bitSize)],
+								to:[droptopx, (this.ypos + this.boundary + this.bitSize)],
 								duration: ((this.fireworxDuration/5)*3),
 								easing: 'easeOutCubic'
 							},
 							{
-								from:[(this.xpos + (this.bitSize/2)), (this.ypos + this.boundary + this.bitSize)],
 								to: [centerx, centery],
 								easing: 'easeInQuint',
 								duration: (this.fireworxDuration/5)
 							},
 							{
-								from:[centerx, centery],
 								to:[m.x, m.y],
 								duration: (this.fireworxDuration/5),
 								easing: 'easeOutQuint'
 							}
 						],
-						complete: ()=>{this.particleAnimationCount.push(i);}
+						complete: ()=>this.particleAnimationCount.push(i)
 					},
 				),
 				dropAnimation: new rwxAnimationChain(
@@ -299,24 +352,54 @@ class rwxBitSwarmLetter {
 						sequence: [
 							{
 								from:[()=>{return this.getcurrentx(i)}, ()=>{return this.getcurrenty(i)}],
-								to:[(this.xpos + (this.bitSize/2)), (this.ypos - this.boundary)],
+								to:[droptopx, droptopy],
 								easing: 'linear',
 								duration: ((this.dropDuration/5)*3)
 							},
-							{						
-								from: [droptopx, droptopy],
+							{
 								to: [dropbottomx, dropbottomy],
 								easing: 'easeInQuint',
 								duration: (this.dropDuration/5)
 							},
 							{
-								from:[dropbottomx, dropbottomy],
 								to: [m.x, m.y],
 								easing: 'easeOutQuint',
 								duration: (this.dropDuration/5)
 							}
 						],
-						complete: ()=>{this.particleAnimationCount.push(i);}
+						complete: ()=>this.particleAnimationCount.push(i)
+					}
+				),
+				cycloneAnimation: new rwxAnimation(
+					{
+						from: ()=>this.getcyclone(i).distancefromcenter,
+						to: ()=>(this.getcyclone(i).cyclonedistancefromcenter*2),
+						easing: 'easeOutCubic',
+						duration: this.cycloneDuration,
+						complete: ()=>this.particleAnimationCount.push(i)
+					}
+				),
+				explodeAnimation: new rwxAnimationChain(
+					{
+						sequence: [
+							{
+								from: [()=>{return this.getcurrentx(i)}, ()=>{return this.getcurrenty(i)}],
+								to: [centerx, centery],
+								easing: 'easeOutCubic',
+								duration: this.explodeDuration/3
+							},
+							{
+								to: [explodepoint.x, explodepoint.y],
+								easing: 'easeOutQuint',
+								duration: this.explodeDuration/2
+							},
+							{
+								to: [m.x, m.y],
+								easing: 'easeInCubic',
+								duration: this.explodeDuration
+							}
+						],
+						complete: ()=>this.particleAnimationCount.push(i)
 					}
 				),
 				particle: new rwxParticle(m.x, m.y, this.particleSize, this.shape, this.bitColor, this.c, 1)
@@ -333,30 +416,29 @@ class rwxBitSwarmLetter {
 			{
 				if(!this.particleAnimationCount.includes(i))
 				{
-					let vals;
 					if(this.startAnimation && this.particleTimeoutTicker >= p.timeout){
-						vals = this.start(p,i);
+						this.start(p);
 					}
 					else if(this.cycloneAnimation && this.particleTimeoutTicker >= p.timeout){
-						vals = this.cyclone(p,i);
+						this.cyclone(p);
 					}
 					else if(this.snakeAnimation && this.particleTimeoutTicker >= p.timeout) {
-						vals = this.snake(p,i);
+						this.snake(p);
 					}
 					else if(this.explodeAnimation){
-						vals = this.explode(p,i);
+						this.explode(p);
 					}
 					else if(this.rejiggleAnimation && this.particleTimeoutTicker >= p.timeout) {
-						vals = this.rejiggle(p,i);
+						this.rejiggle(p);
 					}
 					else if(this.dropAnimation) {
-						vals = this.drop(p,i);
+						this.drop(p);
 					}
 					else if(this.fireworxAnimation) {
-						vals = this.fireworx(p,i);
+						this.fireworx(p);
 					}
 					else if(this.swarmAnimation) {
-						vals = this.swarm(p,i);
+						this.swarm(p);
 					}
 					else if(this.particleTimeoutTicker < p.timeout && !this.startAnimation)
 					{
@@ -366,7 +448,6 @@ class rwxBitSwarmLetter {
 					else{
 						continue;
 					}
-					p.particle.update(vals.x, vals.y);
 				}
 				else
 				{
@@ -396,11 +477,15 @@ class rwxBitSwarmLetter {
 		this.matrixParticles.map((m)=>{
 			m.fireworxAnimation.reset();
 			m.dropAnimation.reset();
+			m.cycloneAnimation.reset();
+			m.explodeAnimation.reset();
+			m.startAnimation.reset();
+			m.snakeAnimation.reset();
+			m.rejiggleAnimation.reset();
+			m.swarmAnimation.reset();
 		});
 		this.particleTimeoutTicker = 0;
 		this.particleAnimationCount = [];
-		this.particleAnimationCount2 = [];
-		this.particleAnimationCount3 = [];
 	}
 
 	isAnimating()
@@ -415,129 +500,80 @@ class rwxBitSwarmLetter {
 		p.particle.draw();
 	}
 
-	fireworx(p, i)
+	fireworx(p)
 	{
-		return p.fireworxAnimation.animate([
-			(x, y)=>{
-				return {x,y};
-			},
-			(x, y)=>{
-				return {x,y};
-			},
-			(x, y)=>{
-				return {x,y};
-			}
+		p.fireworxAnimation.animate([
+			(x, y)=>p.particle.refresh(x,y),
+			(x, y)=>p.particle.refresh(x,y),
+			(x, y)=>p.particle.refresh(x,y)
 		]);
+		p.particle.draw();
 	}
 
-	drop(p, i)
+	drop(p)
 	{
-		return p.dropAnimation.animate([
-			(x, y)=>{
-				return {x,y};
-			},
-			(x, y)=>{
-				return {x,y};
-			},
-			(x, y)=>{
-				return {x,y};
-			}
+		p.dropAnimation.animate([
+			(x, y)=>p.particle.refresh(x,y),
+			(x, y)=>p.particle.refresh(x,y),
+			(x, y)=>p.particle.refresh(x,y)
 		]);
+		p.particle.draw();
 	}
 
-	cyclone(p, i)
+	cyclone(p)
 	{
-		let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlecyclone${i}`, 'easeOutCubic', this.cycloneDuration, ()=>{this.particleAnimationCount.push(i);});
-		let d = rwxAnimate.fromToCalc(p.distancefromcenter, p.cyclonedistancefromcenter*2, val);
-		if(val>=0.5)
-		{
-			d = p.finaldistancefromcenter + (p.cyclonedistancefromcenter - (d-p.cyclonedistancefromcenter));
-		}
-		let x = p.centerx + Math.cos(rwxGeometry.toRadians(rwxAnimate.fromToCalc(0, 1080, val)+p.cycloneangle)) * d;
-		let y = p.centery + Math.sin(rwxGeometry.toRadians(rwxAnimate.fromToCalc(0, 1080, val)+p.cycloneangle)) * d;
-		return {x,y};
+		p.cycloneAnimation.animate((val)=>{
+			if(p.cycloneAnimation.getEasingValue()>=0.5)
+			{
+				val = p.finaldistancefromcenter + (p.cyclonedistancefromcenter - (val-p.cyclonedistancefromcenter));
+			}
+			let x = p.centerx + Math.cos(rwxGeometry.toRadians((0 + (1080 - 0) * p.cycloneAnimation.getEasingValue())+p.cycloneangle)) * val;
+			let y = p.centery + Math.sin(rwxGeometry.toRadians((0 + (1080 - 0) * p.cycloneAnimation.getEasingValue())+p.cycloneangle)) * val;
+			p.particle.refresh(x,y);	
+		});
+		p.particle.draw();
 	}
 
-	start(p, i)
+	start(p)
 	{
-		this.particleAnimationCount.push(i);
-		return{x: 20, y: 20};
-		//return rwxAnimate.fromToBezier({ x: p.startx, y: p.starty }, { x: p.startcpx, y: p.startcpy }, { x: p.startcp2x, y: p.startcp2y }, { x: p.finalx, y: p.finaly }, `${this.uniqueID}particlestart${i}`, 'easeOutQuart', this.startDuration, () => {this.particleAnimationCount.push(i);});	
+		p.startAnimation.animate(
+			(x, y)=>p.particle.refresh(x,y)
+		);
+		p.particle.draw();
 	}
 
 	swarm(p, i)
 	{
-		if(!this.particleAnimationCount2.includes(i))
-		{
-			return rwxAnimate.fromToBezier({ x: p.currentx, y: p.currenty }, { x: p.startcpx, y: p.startcpy }, { x: p.startcp2x, y: p.startcp2y }, { x: p.swarmx, y: p.swarmy }, `${this.uniqueID}particleSwarm1${i}`, 'easeInOutQuart', this.swarmDuration/2, () => {this.particleAnimationCount2.push(i);});	
-		}
-		else
-		{
-			return rwxAnimate.fromToBezier({ x: p.swarmx, y: p.swarmy }, { x: p.startcpx, y: p.startcpy }, { x: p.startcp2x, y: p.startcp2y }, { x: p.finalx, y: p.finaly }, `${this.uniqueID}particleSwarm2${i}`, 'easeInOutQuart', this.swarmDuration/2, () => {this.particleAnimationCount.push(i);});	
-		}
+		p.swarmAnimation.animate([
+			(x, y)=>p.particle.refresh(x,y),
+			(x, y)=>p.particle.refresh(x,y)
+		]);
+		p.particle.draw();
 	}
 
-	explode(p, i)
+	explode(p)
 	{
-		if(!this.particleAnimationCount2.includes(i))
-		{
-			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particleexplodetocenter${i}`, 'easeOutCubic', this.explodeDuration/3, ()=>{this.particleAnimationCount2.push(i);})
-			let x = rwxAnimate.fromToCalc(p.currentx, p.centerx, val);
-			let y = rwxAnimate.fromToCalc(p.currenty, p.centery, val);
-			return {x,y};
-		}
-		else
-		{
-			return this.explodeStep2(p, i);
-		}
+		p.explodeAnimation.animate([
+			(x, y)=>p.particle.refresh(x,y),
+			(x, y)=>p.particle.refresh(x,y),
+			(x, y)=>p.particle.refresh(x,y)
+		]);
+		p.particle.draw();
 	}
 
-	explodeStep2(p, i)
+	snake(p)
 	{
-		if(!this.particleAnimationCount3.includes(i))
-		{
-			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particleexplode${i}`, 'easeOutQuint', this.explodeDuration/2, ()=>{this.particleAnimationCount3.push(i);})
-			let x = rwxAnimate.fromToCalc(p.centerx, p.explodepointx, val);
-			let y = rwxAnimate.fromToCalc(p.centery, p.explodepointy, val);
-			return {x,y};
-		}
-		else
-		{
-			return this.implode(p, i);
-		}
+		p.snakeAnimation.animate([
+			(x, y)=>p.particle.refresh(x,y),
+			(x, y)=>p.particle.refresh(x,y)
+		]);
+		p.particle.draw();	
 	}
 
-	implode(p, i)
+	rejiggle(p)
 	{
-		let val = rwxAnimate.getEasingValue(`${this.uniqueID}particleimplode${i}`, 'easeInCubic', this.explodeDuration, ()=>{this.particleAnimationCount.push(i);})
-		let x = rwxAnimate.fromToCalc(p.explodepointx, p.finalx, val);
-		let y = rwxAnimate.fromToCalc(p.explodepointy, p.finaly, val);
-		return {x,y};
-	}
-
-	snake(p, i)
-	{
-		if(!this.particleAnimationCount2.includes(i))
-		{
-			let val = rwxAnimate.getEasingValue(`${this.uniqueID}particlesnake${i}`, 'easeInQuart', this.snakeDuration/3, ()=>{this.particleAnimationCount2.push(i);})
-			let x = rwxAnimate.fromToCalc(p.currentx, p.snakestartx, val);
-			let y = rwxAnimate.fromToCalc(p.currenty, p.snakestarty, val);
-			return {x,y};
-		}
-		else
-		{
-			return this.snakeStep2(p, i);
-		}		
-	}
-
-	snakeStep2(p, i)
-	{
-		return rwxAnimate.fromToBezier({ x: p.snakestartx, y: p.snakestarty }, { x: p.snakecpx, y: p.snakecpy }, { x: p.snakecp2x, y: p.snakecp2y }, { x: p.finalx, y: p.finaly }, `${this.uniqueID}particlesnake2${i}`, 'linear', this.snakeDuration, () => {this.particleAnimationCount.push(i);});
-	}
-
-	rejiggle(p, i)
-	{
-		return rwxAnimate.fromToBezier({ x: p.currentx, y: p.currenty }, { x: p.rejigglecpx, y: p.rejigglecpy }, { x: p.rejigglecp2x, y: p.rejigglecp2y }, { x: p.finalx, y: p.finaly }, `${this.uniqueID}particlerejiggle${i}`, 'easeInOutQuad', this.rejiggleDuration, () => {this.particleAnimationCount.push(i);});	
+		p.rejiggleAnimation.animate((x, y)=>p.particle.refresh(x,y));
+		p.particle.draw();	
 	}
 }
 

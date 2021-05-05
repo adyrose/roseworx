@@ -7,7 +7,7 @@ import {rwxBitFont, rwxBitFontGetMatrix} from './rwxBitFont';
 
 import { rwxMath, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
 
-import { rwxAnimationChain } from '../modules/rwxAnimation';
+import { rwxAnimationChain, rwxAnimation } from '../modules/rwxAnimation';
 
 class rwxBitSystems extends rwxBitFont {
 	constructor()
@@ -95,7 +95,6 @@ class rwxBitSystem extends rwxComponent {
 		  			delay: rwxMath.randomInt(0,3600)
 		  		},
 		  		{
-		  			from: [0.1, et],
 		  			to: [1, (radius*2)],
 		  			duration: 2000,
 		  			easing: 'easeOutQuint'
@@ -110,10 +109,40 @@ class rwxBitSystem extends rwxComponent {
 		  			this.eventAdded=true;
 		  		}
 		  	}
+		  });
+		  p.explodeAnimation = new rwxAnimation({
+		  	from: [()=>this.getCurrentCoordinates(i).x, ()=>this.getCurrentCoordinates(i).y],
+		  	to: [()=>this.getExplodeCoordinates(i).x, ()=>this.getExplodeCoordinates(i).y],
+		  	easing: 'easeOutQuart',
+		  	duration: 1500,
+		  	complete: ()=>{
+		  		p.implodeAnimation.reset();
+		  	}
+		  });
+		  p.implodeAnimation = new rwxAnimation({
+		  	from: [()=>this.getCurrentCoordinates(i).x, ()=>this.getCurrentCoordinates(i).y],
+		  	to: [finalx, finaly],
+		  	easing: 'easeInQuart',
+		  	duration: 1500,
+		  	complete: ()=>{
+		  		p.lastMouse = {x:0,y:0};
+		  		p.parallax=true;
+		  		p.explodeAnimation.reset();
+		  	}
 		  })
     	this.particles.push(p);
     	this.maskParticles.push(new rwxParticle(finalx, finaly, (radius*2)+3, this.shape, this.convertToColor(this.background), this.c));
     }
+	}
+
+	getCurrentCoordinates(i)
+	{
+		return {x:this.particles[i].x, y:this.particles[i].y};
+	}
+
+	getExplodeCoordinates(i)
+	{
+		return rwxGeometry.closestPointOnCircumference({x:this.particles[i].x, y: this.particles[i].y}, {x:this.centerx, y:this.centery}, this.screenRadius);
 	}
 
   implode()
@@ -176,42 +205,12 @@ class rwxBitSystem extends rwxComponent {
   		}
 		  if(this.explodenow)
 	    {
-	    	p.imploded = false;
 	    	p.parallax = false;
-	    	if(!p.cachePosition)
-	    	{
-	    		p.cachePosition = {};
-	    		p.cachePosition.x = p.x;
-	    		p.cachePosition.y = p.y;
-	    		p.cachePosition.explodeCoords = rwxGeometry.closestPointOnCircumference({x:p.x, y: p.y}, {x:this.centerx, y:this.centery}, this.screenRadius);
-	    	}
-	    	if(!p.exploded)
-	    	{
-		    	let val = rwxAnimate.getEasingValue(`systemparticleexplode${this.uniqueID}${index}`, 'easeOutQuart', 1500, ()=>{p.exploded=true})
-		    	let x = rwxAnimate.fromToCalc(p.cachePosition.x, p.cachePosition.explodeCoords.x, val);
-		    	let y = rwxAnimate.fromToCalc(p.cachePosition.y, p.cachePosition.explodeCoords.y, val);
-		    	p.update(x,y);
-	    	}
-	    	else
-	    	{
-	    		p.draw();
-	    	}
+	    	p.explodeAnimation.animate((x,y)=>{ p.update(x,y); })
 	    }
 	    if(this.implodenow)
 	    {
-	    	p.exploded = false;
-	    	if(!p.imploded)
-	    	{
-	    		p.parallax=false;
-		    	let val = rwxAnimate.getEasingValue(`systemparticleexplode${this.uniqueID}${index}`, 'easeInQuart', 1500, ()=>{p.imploded=true;p.lastMouse = {x:0,y:0};p.parallax=true;})
-		    	let x = rwxAnimate.fromToCalc(p.cachePosition.explodeCoords.x, p.finalx, val);
-		    	let y = rwxAnimate.fromToCalc(p.cachePosition.explodeCoords.y, p.finaly, val);
-		    	p.update(x,y);
-	    	}
-	    	else
-	    	{
-	    		p.draw();
-	    	}   	
+	    	p.implodeAnimation.animate((x,y)=>{ p.update(x,y); })  	
 	    }
   	}
   }

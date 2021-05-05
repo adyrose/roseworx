@@ -18,7 +18,7 @@ const EasingFunctions = {
   easeInElastic: t => { return (.04 - .04 / t) * Math.sin(25 * t) + 1 },
   easeOutElastic: t => { return .04 * t / (--t) * Math.sin(25 * t) },
   easeInOutElastic: t => { return (t -= .5) < 0 ? (.02 + .01 / t) * Math.sin(50 * t) : (.02 - .01 / t) * Math.sin(50 * t) + 1 },
-  easeOutBack: t=> {const c1 = 1.70158;const c3 = c1 + 1;return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);} 
+  easeOutBack: t=> {const c1 = 1.70158;const c3 = c1 + 1;return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);}
 }
 
 const rwxAnimateHelpers = {
@@ -45,7 +45,7 @@ const rwxAnimateHelpers = {
 }
 
 const rwxAnimate = {
-  getEasingValue: function(id, easing, duration, cb=()=>{}) {
+  getEasingValue: function(id, easing, duration, cb) {
     if(!id)return;
     let val = rwxAnimateHelpers.easingFunction(easing, duration, `${id}Ease`, cb);
     let c = (easing==="easeInElastic" || easing==="easeInOutElastic" || easing==="easeOutBack") ? val===1 : val>=1;
@@ -58,7 +58,7 @@ const rwxAnimate = {
     return val;
   },
 
-  fromTo: function(from, to, id, easing="linear", duration=1000, cb=()=>{}) {
+  fromTo: function(from, to, id, easing, duration, cb) {
   	let val = rwxAnimate.getEasingValue(id, easing, duration, cb);
     return rwxAnimate.fromToCalc(from, to, val);
   },
@@ -67,42 +67,28 @@ const rwxAnimate = {
     return (from + (to - from) * val);
   },
 
-  fromToBezier: function(p1, p2, p3, p4, id, easing="linear", duration=1000, cb=()=>{}) {
-  	if(!id)return;
-  	if(!this[`${id}Easing`]){this[`${id}Easing`] = rwxAnimateHelpers.sanitizeEasing(easing, id);}
-  	if(!this[`${id}Duration`]){this[`${id}Duration`] = rwxAnimateHelpers.sanitizeDuration(duration, id);}
-  	let val = rwxAnimateHelpers.easingFunction(this[`${id}Easing`], this[`${id}Duration`], `${id}Ease`, cb);
-    let cx = 3 * (p2.x - p1.x)
-    let bx = 3 * (p3.x - p2.x) - cx;
-    let ax = p4.x - p1.x - cx - bx;
-    let cy = 3 * (p2.y - p1.y);
-    let by = 3 * (p3.y - p2.y) - cy;
-    let ay = p4.y - p1.y - cy - by;
-    let x = ax*(val*val*val) + bx*(val*val) + cx*val + p1.x;
-    let y = ay*(val*val*val) + by*(val*val) + cy*val + p1.y;
-    if(val>=1)
-    {
-      rwxAnimateHelpers.deleteVars(id);
-      cb();
-  		return {x:p4.x, y:p4.y};
-    }
-  	return {x:x, y:y};
+  fromToBezier: function(p1, p2, p3, p4, val) {
+    let c = 3 * (p2 - p1)
+    let b = 3 * (p3 - p2) - c;
+    let a = p4 - p1 - c - b;
+    let v = a*(val*val*val) + b*(val*val) + c*val + p1;
+  	return v;
   }
 }
 
 class rwxAnimation {
-  constructor({from, to, duration, easing, loop=false, complete=()=>{}})
+  constructor({from, to, control, duration, easing, loop=false, complete=()=>{}})
   {
     this.loop = loop;
     this.defaultDuration = 1000;
     this.defaultEasing = 'linear';
     this.complete = complete;
-    this.isComplete = false;
+    this.progressCounter = 0;
     this.duration = this.sanitizeDuration(duration);
-    this.parse(from, to , easing);
+    this.parse(from, to , easing, control);
   }
 
-  parse(f, t, e)
+  parse(f, t, e, c)
   {
     this.animations = [];
     if(!Array.isArray(f)){f=[f]}
@@ -114,9 +100,11 @@ class rwxAnimation {
         from,
         to: Array.isArray(t) ? t[i] || t[0] : t,
         easing: this.sanitizeEasing(Array.isArray(e) ? e[i] || e[0] : e),
+        control: c ? (Array.isArray(c) ? c[i] || c[0] : c) : null,
         id: rwxMisc.uniqueId(),
         duration: this.duration,
         isStarted: false,
+        isComplete: false,
         cb: ()=>{this.complete();}
       })
     });
@@ -140,10 +128,23 @@ class rwxAnimation {
 
   reset()
   {
+  	// console.log("reset");
+  	this.progressCounter = 0;
+  	this.isComplete = false;
     this.animations.map((a)=>{
     	a.isComplete=false;
     	a.isStarted=false;
     });
+  }
+
+  getProgress()
+  {
+  	return (this.progressCounter/60)*100;
+  }
+
+  getEasingValue()
+  {
+  	return this.easingValue;
   }
 
   animate(fn)
@@ -154,8 +155,14 @@ class rwxAnimation {
     	{
     		anime.toUseFrom = (typeof anime.from === 'function') ? anime.from() : anime.from;
     		anime.toUseTo = (typeof anime.to === 'function') ? anime.to() : anime.to;
+    		if(anime.control)
+    		{
+    			anime.tucp1 = (typeof anime.control.cp1 === 'function') ? anime.control.cp1() : anime.control.cp1;
+    			anime.tucp2 = (typeof anime.control.cp2 === 'function') ? anime.control.cp2() : anime.control.cp2;
+    		}
+    		anime.isStarted = true;
     	}
-      let toPush = anime.isComplete ? anime.to : rwxAnimate.fromTo(anime.toUseFrom, anime.toUseTo, anime.id, anime.easing, this.duration, ()=>{
+    	this.easingValue = anime.isComplete ? 1 : rwxAnimate.getEasingValue(anime.id, anime.easing, this.duration, ()=>{
         if(!this.loop)
         {
         	anime.isComplete = true;
@@ -165,11 +172,18 @@ class rwxAnimation {
         		this.isComplete=true;
         	}
         }
-      });
-      anime.isStarted = true;
+        else
+        {
+        	this.reset();
+        }
+    	});
+      let toPush = anime.isComplete ? anime.toUseTo : anime.control ? rwxAnimate.fromToBezier(anime.toUseFrom, anime.tucp1, anime.tucp2, anime.toUseTo, this.easingValue) : rwxAnimate.fromToCalc(anime.toUseFrom, anime.toUseTo, this.easingValue);
       vals.push(toPush);
     });
-    return fn(...vals);
+    if(this.progressCounter<(this.duration/1000*60)){this.progressCounter+=1;}
+    if(!this.isComplete){
+    	if(fn)return fn(...vals);
+    }
   }
 }
 
@@ -185,15 +199,16 @@ class rwxAnimationChain {
 
   reset()
   {
+   	this.seqCounter = 0;
+  	this.delayCounter = 0; 	
   	this.animations.map((a)=>a.anime.reset());
-  	this.seqCounter = 0;
-  	this.delayCounter = 0;
   }
 
   parse(seq)
   {
     this.animations = [];
     seq.map((s,i)=>{
+    	if(i>0 && !s.from){s.from = seq[i-1].to}
       s.loop = false;
       let c = s.complete;
       s.complete = ()=>{
@@ -205,10 +220,7 @@ class rwxAnimationChain {
         }
         else if(this.loop)
         {
-          this.animations.map((a)=>{
-            a.anime.reset();
-          })
-          this.seqCounter = 0;
+          window.requestAnimationFrame(()=>this.reset());
         }
         else
         {

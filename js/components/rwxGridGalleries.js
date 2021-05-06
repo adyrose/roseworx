@@ -26,7 +26,7 @@ class rwxGridGallery extends rwxComponent {
 	scrolledIntoView()
 	{
 		this.el.classList.add('start');
-		this.stopScroll = true;
+		this.stopScroll();
 	}
 
 	createStructure()

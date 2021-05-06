@@ -44,6 +44,7 @@ $emphasis-line:	2px solid $table-color-base;
 		display:flex;
 		span
 		{
+			word-break:break-word;
 			margin-bottom:0px;
 			padding: 0.8rem;
 			flex:1;

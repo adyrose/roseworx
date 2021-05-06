@@ -33,7 +33,7 @@ $grid-classes:
 		flex-wrap:nowrap;
 		@each $selector, $value in $grid-classes
 		{
-			.rwx-split-#{$selector}
+			> .rwx-split-#{$selector}
 			{
 				width: #{$value} !important;
 			}

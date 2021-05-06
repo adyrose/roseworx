@@ -28,7 +28,7 @@ class rwxParallaxItem extends rwxComponent {
 		this.direction = direction;
 	}
 
-	scrollEvent()
+	scroll()
 	{
 		const bounds = this.el.getBoundingClientRect();
 		let inView = ((window.innerHeight-bounds.top)>0 && (bounds.top+bounds.height)>0);
@@ -41,9 +41,8 @@ class rwxParallaxItem extends rwxComponent {
 class rwxSkrollXItem extends rwxComponent {
 	constructor(el, trigger, delay)
 	{
-		super({enableScrollIntoView: true});
+		super({element:el, enableScrollIntoView: true});
 		trigger && this.setScrollTrigger(trigger);
-		this.el = el;
 		this.delay = delay;
 		this.doneFlag = 'rwxsx-end';
 	}
@@ -58,7 +57,7 @@ class rwxSkrollXItem extends rwxComponent {
 		{
 			this.el.classList.add(this.doneFlag);
 		}
-		this.stopScroll = true;
+		this.stopScroll();
 	}
 }
 

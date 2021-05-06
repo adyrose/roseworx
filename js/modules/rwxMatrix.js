@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+import {rwxResizeTrack} from '../common/rwxEventTracking';
+
 class rwxMatrix {
 	constructor(parent=false, lights, fov=70, nv=0.1, fv=1000)
 	{
@@ -26,7 +28,8 @@ class rwxMatrix {
 		this.standardMat = lights ? new THREE.MeshStandardMaterial() : new THREE.MeshNormalMaterial({flatShading:true});
 		this.addShape(this.standardGeo, this.standardMat);
 		this.createRenderer();
-		window.addEventListener('resize', this.resize);
+		if(!window.rwx.resizeTracking){window.rwx.resizeTracking = new rwxResizeTrack();}
+		window.rwx.resizeTracking.add(()=>this.resize(), 'bracketsAnimation');
 	}
 
 	getVisibleBoundsAtDepth(depth) {

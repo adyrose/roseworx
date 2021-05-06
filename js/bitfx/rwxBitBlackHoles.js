@@ -83,7 +83,7 @@ class rwxBitBlackHole extends rwxComponent {
   scrolledIntoView()
   {
     this.startAnimation();
-    this.stopScroll = true;
+    this.stopScroll();
   }
 
   generateLetterParticles()

@@ -178,7 +178,7 @@ class rwxBitExplosion extends rwxComponent {
 			return;
 		}		
 		this.startAnimation();
-		this.stopScroll = true;
+		this.stopScroll();
 	}
 
 	animate()

@@ -1,6 +1,6 @@
 import rwxMisc from './helpers/rwxMiscHelpers';
 import rwxCanvas from './helpers/rwxCanvasHelpers';
-import rwxMouseTrack from './modules/rwxMouseTrack';
+import {rwxScrollTrack, rwxMouseTrack, rwxResizeTrack} from './common/rwxEventTracking';
 
 class rwxCore {
 	constructor(selector, canHaveManualControl=false)
@@ -40,6 +40,7 @@ class rwxCore {
 			if(ime){
 				ime.stopAnimation = true;
 				ime.removeListeners();
+				this.deleteIME(id);
 			}
 		}
 	}
@@ -140,23 +141,27 @@ class rwxComponent {
 
 		if(enableResizeDebounce)
 		{
-			this.debounceThreshold = 250;
-			this.debounceEvent = this.debounceEvent.bind(this);
-			this.resizeDebounce();
+			if(!window.rwx.resizeTracking){window.rwx.resizeTracking = new rwxResizeTrack();}
+			window.rwx.resizeTracking.add(()=>this.resizeEvent(), this.uniqueID);
+			this.resizeEvent = this.resizeEvent.bind(this);
 		}
 
 		if(enableScrollIntoView)
 		{
-			this.stopScroll = false;
+			if(!window.rwx.scrollTracking){window.rwx.scrollTracking = new rwxScrollTrack();}
+			window.rwx.scrollTracking.add(()=>this.scrollIntoViewEvent(), this.uniqueID);
+			this.scrollIntoViewEvent = this.scrollIntoViewEvent.bind(this);
 			this.setScrollTrigger(200);
-			this.scrollEvent = this.scrollEvent.bind(this);
-			this.scroll();
+			this.scrollErrorReported = false;
+			window.requestAnimationFrame(this.scrollIntoViewEvent);
 		}
 
 		if(enableScrollTracking)
 		{
+			if(!window.rwx.scrollTracking){window.rwx.scrollTracking = new rwxScrollTrack();}
+			window.rwx.scrollTracking.add(()=>this.scrollEvent(), this.uniqueID);
 			this.scrollEvent = this.scrollEvent.bind(this);
-			window.addEventListener('scroll', this.scrollEvent);
+			window.requestAnimationFrame(this.scrollEvent);
 		}
 
 		if(enableMouseTracking)
@@ -168,9 +173,10 @@ class rwxComponent {
 
 	removeListeners()
 	{
-		window.removeEventListener('scroll', this.scrollEvent);
 		window.removeEventListener('resize', this.debounceEvent);
 		this.mouseTrack && this.mouseTrack.remove();
+		this.stopScroll();
+		this.stopResize();
 	}
 
 	declareEvent(name)
@@ -202,15 +208,17 @@ class rwxComponent {
 		this.scrollTriggerOffset = window.innerHeight - val;
 	}
 
-	scroll()
+	stopResize()
 	{
-		this.scrollErrorReported = false;
-		window.requestAnimationFrame(()=>this.scrollEvent());
-		window.addEventListener('scroll', this.scrollEvent);
+		window.rwx.resizeTracking && window.rwx.resizeTracking.remove(this.uniqueID);
 	}
 
-	scrollEvent() {
-		if(this.stopScroll){return;}
+	stopScroll()
+	{
+		window.rwx.scrollTracking && window.rwx.scrollTracking.remove(this.uniqueID);
+	}
+
+	scrollIntoViewEvent() {
 		if(!this.scrolledIntoView)
 		{
 			if(!this.scrollErrorReported)
@@ -233,29 +241,33 @@ class rwxComponent {
 		if(t<this.scrollTriggerOffset)
 		{
 			this.scrolledIntoView();
-		}
+		}		
 	}
 
-	debounceEvent()
-	{
-		this.debounce && clearTimeout(this.debounce)
-		this.debounce = setTimeout(()=>{
-			if(!this.resize){
-				if(!this.debounceErrorReported)
-				{
-					this.error('No resize method (this.resize) defined on instance.');
-					this.debounceErrorReported = true;
-				}
-				return;
+	scrollEvent() {
+		if(!this.scroll)
+		{
+			if(!this.scrollError2Reported)
+			{
+				this.error('No scroll method (this.scroll) defined on instance.');
+				this.scrollError2Reported = true;
 			}
-			this.resize();
-		}, this.debounceThreshold);
+			return;			
+		}
+		this.scroll();
 	}
 
-	resizeDebounce()
+	resizeEvent()
 	{
-		this.debounceErrorReported = false;
-	  window.addEventListener('resize', this.debounceEvent);
+		if(!this.resize){
+			if(!this.debounceErrorReported)
+			{
+				this.error('No resize method (this.resize) defined on instance.');
+				this.debounceErrorReported = true;
+			}
+			return;
+		}
+		this.resize();		
 	}
 
 	startAnimation()

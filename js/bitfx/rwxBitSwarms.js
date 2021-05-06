@@ -48,7 +48,7 @@ class rwxBitSwarm extends rwxComponent {
 			return;
 		}
 		this.startAnimation();
-		this.stopScroll = true;
+		this.stopScroll();
 	}
 
 	calculatePosition(firstblood=false, bits)
@@ -77,6 +77,8 @@ class rwxBitSwarm extends rwxComponent {
 				this.letters[i].particleSize = l.dimensions.particleSize;
 				this.letters[i].xpos = l.bitx;
 				this.letters[i].ypos = l.bity;
+				this.letters[i].width = this.width;
+				this.letters[i].height = this.height;
 				this.letters[i].createParticleData();				
 			}
 		});
@@ -229,7 +231,6 @@ class rwxBitSwarmLetter {
 	createParticleData()
 	{
 		this.matrixParticles = [];
-
 		const snakestartx = this.randomPositionInBoundary('x');
 		const snakestarty = this.randomPositionInBoundary('y');
 		const snakecpx = this.randomPositionInBoundary('x');

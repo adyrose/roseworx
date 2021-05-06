@@ -61,7 +61,7 @@ class rwxCountOMeter extends rwxComponent {
 	scrolledIntoView()
 	{
 		this.startAnimation();
-		this.stopScroll = true;
+		this.stopScroll();
 	}
 
 	resize()

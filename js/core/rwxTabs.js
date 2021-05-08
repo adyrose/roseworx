@@ -1,7 +1,8 @@
 import { rwxCore, rwxComponent } from '../rwxCore';
-import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxDOM from '../helpers/rwxDOMHelpers';
 import rwxMist from '../common/rwxMist';
+
+import {rwxAnimationChain} from '../modules/rwxAnimation';
 
 class rwxTabs extends rwxCore {
 	constructor()
@@ -28,8 +29,7 @@ class rwxTab extends rwxComponent {
 		super({element: el, enableCustomEvents: true});
 		this.tabs = [...el.children].filter((c)=>c.classList.contains('rwx-tabs-tab'));
 		if(this.tabs.length == 0){return;}
-		this.showTab = this.showTab.bind(this);
-		this.hideTab = this.hideTab.bind(this);
+		this.change = this.change.bind(this);
 		this.tabHeaders = [];
 		this.activeTab = 1;
 
@@ -38,6 +38,32 @@ class rwxTab extends rwxComponent {
 
 		this.autoActiveTabFromLocationHash();
 		this.createTabs();
+		this.createAnimations();
+	}
+
+	createAnimations()
+	{
+		this.animation = new rwxAnimationChain({
+			sequence: [
+				{
+					from: [1, 1],
+					to: [0, 0.5],
+					easing:['easeInCubic', 'linear'],
+					duration: 300,
+					complete: ()=>this.tabHidden()
+				},
+				{
+					to: [1, 1],
+					easing: ['easeOutCubic', 'linear'],
+					duration:300,
+					complete: ()=>this.tabShown()
+				}
+			],
+			complete: ()=>{
+				this.stopAnimation =true;
+				this.animating=false;
+			}
+		})
 	}
 
 	autoActiveTabFromLocationHash()
@@ -111,10 +137,8 @@ class rwxTab extends rwxComponent {
 
 	resetAnimationFlags()
 	{
-		this.shownScale = false;
-		this.shownOpacity = false;
-		this.hiddenScale = false;
-		this.hiddenOpacity = false;
+		this.stopAnimation = false;
+		this.animation.reset();
 	}
 
 	changeTab(tabNumber)
@@ -124,7 +148,7 @@ class rwxTab extends rwxComponent {
 		this.resetAnimationFlags();
 		this.moveBullet(tabNumber);
 		this.animating = true;
-		this.hideTab();
+		this.change();
 		this.tabHeaders.map((th,i)=>(tabNumber-1 == i) ? th.classList.add('active') : th.classList.remove('active'))
 	}
 
@@ -134,6 +158,22 @@ class rwxTab extends rwxComponent {
 		let left = (rect.left - this.el.getBoundingClientRect().left) + this.container.scrollLeft;
 		this.bullet.style.left = `${left}px`;
 		this.bullet.style.width = `${rect.width}px`;
+	}
+
+	change()
+	{
+		this.animation.animate([
+			(s, o)=>{
+				this.tabs[this.activeTab-1].style.transform = `scale(${s})`;
+				this.tabs[this.activeTab-1].style.opacity = o;				
+			},
+			(s, o)=>{
+				this.tabs[this.activeTab-1].style.transform = `scale(${s})`;
+				this.tabs[this.activeTab-1].style.opacity = o;
+			}
+		]);
+		if(this.stopAnimation){return;}
+		window.requestAnimationFrame(this.change);
 	}
 
 	tabShown()
@@ -152,38 +192,8 @@ class rwxTab extends rwxComponent {
 		this.tabs[this.activeTab-1].classList.remove('initial-hide');
 		this.tabs[this.activeTab-1].style.display = "none";
 		this.tabs[this.activeTab-1].removeAttribute('style');
-		this.showTab();
 		this.executeEvent('tabHide', cache);
 	}
-
-	showTab()
-	{
-		let scale, opacity;
-		if(!this.shownScale){scale = rwxAnimate.fromTo(0.5, 1, 'scaleTab', 'easeOutCubic', 300, ()=>{this.shownScale = true});}
-		if(!this.shownOpacity){opacity = rwxAnimate.fromTo(0, 1, 'normalTab', 'linear', 300, ()=>{this.shownOpacity = true;});}
-		this.tabs[this.activeTab-1].style.transform = `scale(${scale})`;
-		this.tabs[this.activeTab-1].style.opacity = opacity;
-		if(this.shownScale && this.shownOpacity){		
-			this.tabShown();
-			return;
-		}
-		window.requestAnimationFrame(this.showTab)
-	}
-
-	hideTab()
-	{
-		let scale, opacity;
-		if(!this.hiddenScale){scale = rwxAnimate.fromTo(1, 0, 'opaqueTab', 'linear', 300, ()=>{ this.hiddenScale = true; });}
-		if(!this.hiddenOpacity){opacity = rwxAnimate.fromTo(1, 0.5, 'deScaleTab', 'easeInCubic', 300, ()=>{ this.hiddenOpacity = true; });}
-		this.tabs[this.activeTab-1].style.transform = `scale(${scale})`;
-		this.tabs[this.activeTab-1].style.opacity = opacity;
-		if(this.hiddenScale && this.hiddenOpacity) {
-			this.tabHidden();
-			return;
-		}
-		window.requestAnimationFrame(this.hideTab)
-	}
-
 }
 
 export default new rwxTabs();

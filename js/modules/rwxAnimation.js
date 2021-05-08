@@ -128,7 +128,6 @@ class rwxAnimation {
 
   reset()
   {
-  	// console.log("reset");
   	this.progressCounter = 0;
   	this.isComplete = false;
     this.animations.map((a)=>{
@@ -168,13 +167,13 @@ class rwxAnimation {
         	anime.isComplete = true;
         	if(this.animations.every((anime)=>anime.isComplete))
         	{
-        		this.complete && this.complete();
+        		this.complete && window.requestAnimationFrame(()=>this.complete());
         		this.isComplete=true;
         	}
         }
         else
         {
-        	this.reset();
+        	window.requestAnimationFrame(()=>this.reset());
         }
     	});
       let toPush = anime.isComplete ? anime.toUseTo : anime.control ? rwxAnimate.fromToBezier(anime.toUseFrom, anime.tucp1, anime.tucp2, anime.toUseTo, this.easingValue) : rwxAnimate.fromToCalc(anime.toUseFrom, anime.toUseTo, this.easingValue);
@@ -208,7 +207,7 @@ class rwxAnimationChain {
   {
     this.animations = [];
     seq.map((s,i)=>{
-    	if(i>0 && !s.from){s.from = seq[i-1].to}
+    	if(i>0 && s.from===undefined){s.from = seq[i-1].to}
       s.loop = false;
       let c = s.complete;
       s.complete = ()=>{
@@ -224,7 +223,7 @@ class rwxAnimationChain {
         }
         else
         {
-          this.complete();
+          window.requestAnimationFrame(()=>this.complete());
         }
       };
       this.animations.push({anime:new rwxAnimation(s), delay:(s.delay/1000*60)||0});
@@ -244,4 +243,4 @@ class rwxAnimationChain {
   }
 }
 
-export {rwxAnimation, rwxAnimationChain};
+export {rwxAnimation, rwxAnimationChain, rwxAnimate};

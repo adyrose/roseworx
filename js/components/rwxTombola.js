@@ -1,7 +1,7 @@
-import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxMath from '../helpers/rwxMathHelpers';
 
 import { rwxCore } from '../rwxCore';
+import { rwxAnimation } from '../modules/rwxAnimation';
 import rwxAnimatedBorder from '../common/rwxAnimatedBorder';
 
 class rwxTombola extends rwxCore {
@@ -149,9 +149,15 @@ class rwxTombola extends rwxCore {
   pickWinner()
   {
     this.pickingWinner = true;
-
     this.winner = rwxMath.randomInt(0,this.items.length-1);
     this.scrollToWinner = this.winner > this.items.length-3 ? this.winner*this.height : (this.maxHeight-this.height);
+    this.winnerAnimation = new rwxAnimation({
+      from: this.currentScroll,
+      to: this.scrollToWinner,
+      easing: 'easeOutQuad',
+      duration: 3000,
+      complete: ()=>{this.stop=true;}
+    })
   }
 
   spin()
@@ -174,7 +180,8 @@ class rwxTombola extends rwxCore {
         this.currentScroll = this.tombolaContainer.scrollTop;
         this.mask.innerHTML = this.items[this.winner].innerHTML;
       }
-      this.tombolaContainer.scrollTop = rwxAnimate.fromTo(this.currentScroll, this.scrollToWinner, 'rwxTombola', 'easeOutQuad', 3000, ()=>{this.stop = true;})
+      this.winnerAnimation.animate((v)=>this.tombolaContainer.scrollTop=v)
+      // this.tombolaContainer.scrollTop = rwxAnimate.fromTo(this.currentScroll, this.scrollToWinner, 'rwxTombola', 'easeOutQuad', 3000, ()=>{this.stop = true;})
     }
     else
     {

@@ -1,10 +1,12 @@
 import { rwxComponent } from '../rwxCore';
 
-import { rwxCanvas, rwxMath, rwxAnimate, rwxDOM, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
+import { rwxCanvas, rwxMath, rwxDOM, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
 
 import {rwxParticle} from './rwxParticle';
 
 import {rwxBitFont, rwxBitFontGetMatrix} from './rwxBitFont';
+
+import { rwxAnimation, rwxAnimationChain } from '../modules/rwxAnimation';
 
 class rwxBitExplosions extends rwxBitFont {
 	constructor()
@@ -116,14 +118,55 @@ class rwxBitExplosion extends rwxComponent {
 		this.calculateCluster(start);
 
 		let xbound = start.x < this.width/2 ? [0, this.width/2] : [this.width/2, this.width];
-		let cp1 = {x:rwxMath.randomInt(xbound[0],xbound[1]), y:0};
+		let cpx = rwxMath.randomInt(xbound[0],xbound[1]);
 
-		let cp2 = {x:center.x, y:0};
 		this.allParticles.map((p,i)=>{
-			p.animationPath = [{from:{x:p.cluster.x, y:p.cluster.y}, to:{x:center.x, y:center.y}, cp1, cp2, duration:4000, easing:'easeInQuint'}];
-			p.animationPath.push({from:{x:center.x, y:center.y}, to:{x:p.x, y:p.y}, duration:rwxMath.randomInt(1000,5000), easing:'easeOutQuart'});
+			p.initialAnimation = new rwxAnimationChain({
+				sequence: [
+					{
+						from:[p.cluster.x, p.cluster.y],
+						control: [
+							{cp1:cpx, cp2:center.x},
+							{cp1:0, cp2:0}
+						],
+						to: [center.x, center.y],
+						easing: 'easeInQuint',
+						duration: 4000,
+					},
+					{
+						to: [p.x, p.y],
+						easing: 'easeOutQuad',
+						duration: rwxMath.randomInt(1000,5000)
+					}
+				],
+				complete: ()=>p.doneInit=true
+			})
+			const flash = p.isLetter ? 
+				new rwxAnimation({
+					from: this.startParticlesize,
+					to: p.actualparticlesize,
+					duration: 1000,
+					easing: 'easeOutQuad'
+				})
+			:
+				new rwxAnimationChain({
+					sequence: [
+						{
+							from: this.startParticlesize,
+							to: this.spareParticleSize,
+							easing: 'easeOutQuad',
+							duration:1000
+						},
+						{
+							to: this.startParticlesize,
+							easing: 'easeInQuad',
+							duration:1000
+						}
+					],
+					loop:true
+				});
+			p.flashAnimation = flash;
 			p.final = {x: p.x, y: p.y};
-			p.animationStep = 0;
 			return;
 		});
 
@@ -184,51 +227,17 @@ class rwxBitExplosion extends rwxComponent {
 	animate()
 	{
 		this.allParticles.map((p, i)=>{
-			if(p.animationPath && p.animationPath.length > p.animationStep)
+			if(!p.doneInit)
 			{
-				p.dont = false;
-				let particle = p.animationPath[p.animationStep];
-				let val, xt, yt;
-				if(p.animationStep == 0)
-				{
-					let { x, y } = rwxAnimate.fromToBezier(particle.from, particle.cp1, particle.cp2, particle.to, `${this.uniqueID}particleinit${i}${p.animationStep}`, particle.easing, particle.duration, ()=>{p.animationStep+=1; p.dont = true});
-					xt = x;
-					yt = y;
-				}
-				else
-				{
-					val = rwxAnimate.getEasingValue(`${this.uniqueID}particleinit${i}${p.animationStep}`, particle.easing, particle.duration, ()=>{p.animationStep+=1; p.dont = true});
-					xt = rwxAnimate.fromToCalc(particle.from.x, particle.to.x, val);
-					yt = rwxAnimate.fromToCalc(particle.from.y, particle.to.y, val);
-				}
-				if(!p.dont)
-				{
-					p.update(xt,yt);
-				}
-				else
-				{
-					p.draw();
-				}
+				p.initialAnimation.animate([
+					(x,y)=>p.refresh(x,y),
+					(x,y)=>p.refresh(x,y)
+				])
 			}
 			else
 			{
-				if(!p.radiusExpanded)
-				{
-					let r = p.isLetter ? p.actualparticlesize : this.spareParticleSize;
-					p.setRadius(rwxAnimate.fromTo(this.startParticlesize, r, `${this.uniqueID}particleradius${i}`, 'easeOutQuad', 1000, ()=>{p.radiusExpanded=true;}));
-					if(p.isLetter)
-					{
-						p.color = this.bitColor;
-					}
-				}
-				else
-				{
-					if(!p.isLetter)
-					{
-						p.setRadius(rwxAnimate.fromTo(this.spareParticleSize, this.startParticlesize, `${this.uniqueID}particleradiuse${i}`, 'easeInQuad', 1000, ()=>{p.radiusExpanded=false;}));
-					}				
-				}
-
+				let toPass = p.isLetter ? (r)=>p.setRadius(r) : [(r)=>p.setRadius(r),(r)=>p.setRadius(r)];
+				p.flashAnimation.animate(toPass);
 				let coords;
 				if(rwxGeometry.isInsideCircle(p.final, this.mouseTrack.mouse, this.matrix[0].dimensions.bitSize))
 				{
@@ -238,8 +247,9 @@ class rwxBitExplosion extends rwxComponent {
 				{
 					coords = p.final;
 				}
-				p.update(coords.x, coords.y);
+				p.refresh(coords.x, coords.y);
 			}
+			p.draw();
 			return;
 		});
 	}

@@ -2,9 +2,10 @@ require('../../scss/components/rwxPhotoTiles.scss');
 
 import { rwxCore, rwxComponent } from '../rwxCore';
 import rwxMath from '../helpers/rwxMathHelpers';
-import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxMisc from '../helpers/rwxMiscHelpers';
 import rwxCanvas from '../helpers/rwxCanvasHelpers';
+
+import { rwxAnimation, rwxAnimationChain, rwxAnimate } from '../modules/rwxAnimation';
 
 class rwxPhotoTiles extends rwxCore {
 	constructor()
@@ -274,7 +275,7 @@ class rwxPhotoTile extends rwxComponent {
   {
     this.stopAnimation = true;
     this.animeCounter = [];
-    this.tileMatrix.map((t)=>{t.reset()});    
+    this.tileMatrix.map((t)=>{t.reset();t.animation=this.effect;});    
   }
 
   animate()
@@ -309,20 +310,118 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
 
   Object.assign(this, {value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pixelRatio});
 
+  this.buildAnimations = function() {
+    if(this.animation==="bubble")
+    {
+      this.bubbleAnimation = new rwxAnimationChain({
+        sequence: [
+          {
+            from:this.initradius,
+            to:0,
+            easing: 'linear',
+            duration: this.duration,
+            complete: ()=>{
+              this.switch();
+            }
+          },
+          {
+            to: ()=>{return (this.getCenterX() - this.nextMatrix.dx + 10)},
+            easing: 'linear',
+            duration: this.duration
+          }
+        ],
+        complete: ()=>this.animeDone=true
+      });
+    }
+    if(this.animation==="spin")
+    {
+      this.spinAnimation = new rwxAnimationChain({
+        sequence:[
+          {
+            from: [this.initdw, this.initdh, this.initdx, this.initdy],
+            to: [(this.initdw/this.scaleFactor), (this.initdh/this.scaleFactor), (this.initdx+(this.initdw/this.scaleFactor)/2), (this.initdy+(this.initdh/this.scaleFactor)/2)],
+            easing: 'easeOutQuart',
+            duration: this.duration
+          },
+          {
+            from: 0,
+            to: 1,
+            easing: 'easeInOutQuad',
+            duration: this.duration
+          },
+          {
+            from: 0,
+            to: 1,
+            easing: 'easeInQuart',
+            duration: this.duration
+          }
+        ],
+        complete: ()=>this.animeDone=true
+      });
+    }
+    if(this.slideDirections.includes(this.animation) || this.animation==="slideRandom")
+    {
+      this.slideDirection = this.animation;
+      if(this.animation==="slideRandom")
+      {
+        this.slideDirection = this.slideDirections[rwxMath.randomInt(0,this.slideDirections.length-1)];
+      }
+
+      this.slideAnimation = new rwxAnimationChain({
+        sequence: [
+          {
+            from: 0,
+            to:1,
+            easing: 'easeInQuad',
+            duration: this.duration,
+            complete: ()=>window.requestAnimationFrame(()=>this.switch())
+          },
+          {
+            from:0,
+            to:1,
+            easing: 'easeOutQuad',
+            duration:this.duration
+          }
+        ],
+        complete: ()=>this.animeDone=true
+      })
+    }
+    if(this.animation === "pixelated")
+    {
+      this.pixelatedAnimation = new rwxAnimationChain({
+        sequence: [
+          {
+            from: 1,
+            to: 0,
+            duration: this.duration,
+            easing: 'easeInOutQuint',
+            complete: ()=>this.switch()
+          },
+          {
+            to:1,
+            duration: this.duration,
+            easing: 'easeInOutQuint'
+          }
+        ],
+        complete: ()=>this.animeDone=true 
+      })
+    }
+  }
+
+  this.getCenterX = ()=>{
+    return this.centerX;
+  }
+
   this.reset = function() {
-    this.shrunk = false;
     this.timeoutCounter = 0;
     this.animeDone = false;
-    this.slideShrunk = false;
     this.nextMatrix = false;
-    this.slideDirection = false;
-    this.opaque = false;
-    this.scaled = false;
-    this.unscaled = false;
-    this.rotated = false;
     this.switched = false;
     this.initialised = false;
-    this.bubbled = false;
+    delete this.bubbleAnimation;
+    delete this.spinAnimation;
+    delete this.slideAnimation;
+    delete this.pixelatedAnimation;
   }
 
   this.initialise = function() {
@@ -339,8 +438,9 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
       this.initcenterX = this.dx + (this.dw*0.5);
       this.initcenterY = this.dy + (this.dh*0.5);
       this.initradius = this.initcenterX - this.dx + 10; // + 10 bit of breathign room
+      this.initialised = true;
+      this.buildAnimations();
     }
-    this.initialised = true;
   }
 
   this.switch = function(translate=true) {
@@ -354,7 +454,6 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
       this.sy = this.nextMatrix.sy;
       this.centerX = this.nextMatrix.dx + (this.nextMatrix.dw*0.5);
       this.centerY = this.nextMatrix.dy + (this.nextMatrix.dh*0.5);
-      this.radius = this.centerX - this.nextMatrix.dx + 10; // + 10 bit of breathign room
       if(translate)
       {
         this.dw = this.nextMatrix.dw;
@@ -362,61 +461,37 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
         this.dh = this.nextMatrix.dh;
         this.dy = this.nextMatrix.dy;
       }
+      this.switched = true;
     }
-    this.switched = true;
-  }
-
-  this.unscale = function()
-  {
-    let val = rwxAnimate.getEasingValue(`${this.uniqueID}-UnscaleAnimation`, 'easeInQuart', this.duration, ()=>{this.unscaled = true;} )
-    this.dw += (this.nextMatrix.dw - this.dw)*val;
-    this.dh += (this.nextMatrix.dh - this.dh)*val;
-    this.dx += (this.nextMatrix.dx - this.dx)*val;
-    this.dy += (this.nextMatrix.dy - this.dy)*val;      
-  }
-
-  this.scale = function ()
-  {
-    let val = rwxAnimate.getEasingValue(`${this.uniqueID}-ScaleAnimation`, 'easeOutQuart', this.duration, ()=>{this.scaled = true;} )
-    this.dw = rwxAnimate.fromToCalc(this.initdw, (this.initdw/this.scaleFactor), val);
-    this.dh = rwxAnimate.fromToCalc(this.initdh, (this.initdh/this.scaleFactor), val);
-    this.dx = rwxAnimate.fromToCalc(this.initdx, (this.initdx+(this.initdw/this.scaleFactor)/2), val);
-    this.dy = rwxAnimate.fromToCalc(this.initdy, (this.initdy+(this.initdh/this.scaleFactor)/2), val);   
   }
 
   this.spin = function() {
     this.initialise();
     if(this.timeoutCounter >= this.timeout && !this.animeDone) 
     {
-      if(this.scaled)
-      {
-        if(this.rotated)
-        {
-          if(this.unscaled)
-          {
-            this.animeDone = true;
-          }
-          else
-          {
-            this.unscale();
-          }
-        }
-        else
-        {
-        	let val = rwxAnimate.getEasingValue(`${this.uniqueID}-RotatedAnimation`, 'easeInOutQuad', this.duration, ()=>{this.rotated = true;} )
+      this.spinAnimation.animate([
+        (w, h, x, y)=>{
+          this.dw = w;
+          this.dh = h;
+          this.dx = x;
+          this.dy = y;
+        },
+        (v)=>{
           c.translate(this.initcenterX, this.initcenterY);
-          c.rotate((val*360) * Math.PI / 180);
+          c.rotate((v*360) * Math.PI / 180);
           c.translate(-this.initcenterX, -this.initcenterY);
-          if(val > 0.5)
+          if(v > 0.5)
           {
             this.switch(false);
           }
+        },
+        (v)=>{
+          this.dw += (this.nextMatrix.dw - this.dw)*v;
+          this.dh += (this.nextMatrix.dh - this.dh)*v;
+          this.dx += (this.nextMatrix.dx - this.dx)*v;
+          this.dy += (this.nextMatrix.dy - this.dy)*v;
         }
-      }
-      else
-      {
-        this.scale();
-      }
+      ])
     } 
     this[this.changeType]();
     c.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
@@ -425,85 +500,76 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
 
   this.pixelated = function ()
   {
+    this.initialise();
     if(this.timeoutCounter >= this.timeout && !this.animeDone) 
     {
-      if(this.opaque)
-      {
-      	let val2 = rwxAnimate.getEasingValue(`${this.uniqueID}-DoneAnimation`, 'easeInOutQuint', this.duration, ()=>{this.animeDone = true;} )
-        this.switch();
-        c.globalAlpha = val2;
-      }
-      else
-      {
-      	let val = rwxAnimate.getEasingValue(`${this.uniqueID}-OpaqueAnimation`, 'easeInOutQuint', this.duration, ()=>{this.opaque = true;} )
-        c.globalAlpha = 1 - val;
-      }
+      this.pixelatedAnimation.animate([
+        (o)=>c.globalAlpha=o,
+        (o)=>c.globalAlpha=o
+      ])
     } 
     this[this.changeType]();
     this.timeoutCounter++;  
   }
 
-  this.slideRandom = function() {if(!this.slideDirection){this.slideDirection = this.slideDirections[Math.floor(Math.random() * ((this.slideDirections.length-1)-0+1) + 0)];} this.slide();}
-  this.slideLeft = function(){if(!this.slideDirection){this.slideDirection = "slideLeft"}this.slide();}
-  this.slideRight = function(){if(!this.slideDirection){this.slideDirection = "slideRight"}this.slide();}
-  this.slideUp = function(){if(!this.slideDirection){this.slideDirection = "slideUp"}this.slide();}
-  this.slideDown = function(){if(!this.slideDirection){this.slideDirection = "slideDown"}this.slide();}
+  this.slideRandom = ()=>this.slide();
+  this.slideLeft = ()=>this.slide();
+  this.slideRight = ()=>this.slide();
+  this.slideUp = ()=>this.slide();
+  this.slideDown = ()=>this.slide();
 
   this.slide = function () {
     this.initialise();
     if(this.timeoutCounter >= this.timeout && !this.animeDone) 
     {
-      if(this.slideShrunk)
-      {
-      	let val2 = rwxAnimate.getEasingValue(`${this.uniqueID}-DoneAnimation`, 'easeInQuad', this.duration, ()=>{this.animeDone = true;} )
-        this.switch();
-        if(this.slideDirection == "slideLeft" || this.slideDirection == "slideRight")
-        {
-          this.dw = rwxAnimate.fromToCalc(0, this.nextMatrix.dw, val2);
-          this.sw = rwxAnimate.fromToCalc(0, this.nextMatrix.sw, val2);
-          if(this.slideDirection == "slideRight")
+      this.slideAnimation.animate([
+        (val)=>{
+          if(this.slideDirection == "slideLeft" || this.slideDirection == "slideRight")
           {
-          	this.dx = rwxAnimate.fromToCalc((this.nextMatrix.dx + this.nextMatrix.dw), this.nextMatrix.dx, val2); 
-            this.sx = rwxAnimate.fromToCalc((this.nextMatrix.sx + this.nextMatrix.sw), this.nextMatrix.sx, val2);
+            this.dw = rwxAnimate.fromToCalc(this.initdw, 0, val);
+            this.sw = rwxAnimate.fromToCalc(this.initsw, 0, val);
+            if(this.slideDirection == "slideRight")
+            {
+              this.dx = rwxAnimate.fromToCalc(this.initdx, (this.initdx+this.initdw), val); 
+              this.sx = rwxAnimate.fromToCalc(this.initsx, (this.initsx+this.initsw), val); 
+            }
           }
-        }
-        if(this.slideDirection == "slideUp" || this.slideDirection == "slideDown")
-        {
-          this.dh = rwxAnimate.fromToCalc(0, this.nextMatrix.dh, val2);
-          this.sh = rwxAnimate.fromToCalc(0, this.nextMatrix.sh, val2);
-          if(this.slideDirection == "slideDown")
-          {
 
-            this.dy = rwxAnimate.fromToCalc((this.nextMatrix.dy + this.nextMatrix.dh), this.nextMatrix.dy, val2); 
-            this.sy = rwxAnimate.fromToCalc((this.nextMatrix.sy + this.nextMatrix.sh), this.nextMatrix.sy, val2);
-          }
-        }
-      }
-      else
-      {
-        let val = rwxAnimate.getEasingValue(`${this.uniqueID}-SlideAnimation`, 'easeOutQuad', this.duration, ()=>{this.slideShrunk = true;} )
-        if(this.slideDirection == "slideLeft" || this.slideDirection == "slideRight")
-        {
-        	this.dw = rwxAnimate.fromToCalc(this.initdw, 0, val);
-        	this.sw = rwxAnimate.fromToCalc(this.initsw, 0, val);
-          if(this.slideDirection == "slideRight")
+          if(this.slideDirection == "slideUp" || this.slideDirection == "slideDown")
           {
-            this.dx = rwxAnimate.fromToCalc(this.initdx, (this.initdx+this.initdw), val); 
-            this.sx = rwxAnimate.fromToCalc(this.initsx, (this.initsx+this.initsw), val); 
+            this.dh = rwxAnimate.fromToCalc(this.initdh, 0, val); 
+            this.sh = rwxAnimate.fromToCalc(this.initsh, 0, val);
+            if(this.slideDirection == "slideDown")
+            {
+              this.dy = rwxAnimate.fromToCalc(this.initdy, (this.initdy+this.initdh), val);
+              this.sy = rwxAnimate.fromToCalc(this.initsy, (this.initsy+this.initsh), val);
+            }
+          }          
+        },
+        (val2)=>{
+          if(this.slideDirection == "slideLeft" || this.slideDirection == "slideRight")
+          {
+            this.dw = rwxAnimate.fromToCalc(0, this.nextMatrix.dw, val2);
+            this.sw = rwxAnimate.fromToCalc(0, this.nextMatrix.sw, val2);
+            if(this.slideDirection == "slideRight")
+            {
+              this.dx = rwxAnimate.fromToCalc((this.nextMatrix.dx + this.nextMatrix.dw), this.nextMatrix.dx, val2); 
+              this.sx = rwxAnimate.fromToCalc((this.nextMatrix.sx + this.nextMatrix.sw), this.nextMatrix.sx, val2);
+            }
           }
-        }
+          if(this.slideDirection == "slideUp" || this.slideDirection == "slideDown")
+          {
+            this.dh = rwxAnimate.fromToCalc(0, this.nextMatrix.dh, val2);
+            this.sh = rwxAnimate.fromToCalc(0, this.nextMatrix.sh, val2);
+            if(this.slideDirection == "slideDown")
+            {
 
-        if(this.slideDirection == "slideUp" || this.slideDirection == "slideDown")
-        {
-          this.dh = rwxAnimate.fromToCalc(this.initdh, 0, val); 
-          this.sh = rwxAnimate.fromToCalc(this.initsh, 0, val);
-          if(this.slideDirection == "slideDown")
-          {
-          	this.dy = rwxAnimate.fromToCalc(this.initdy, (this.initdy+this.initdh), val);
-            this.sy = rwxAnimate.fromToCalc(this.initsy, (this.initsy+this.initsh), val);
+              this.dy = rwxAnimate.fromToCalc((this.nextMatrix.dy + this.nextMatrix.dh), this.nextMatrix.dy, val2); 
+              this.sy = rwxAnimate.fromToCalc((this.nextMatrix.sy + this.nextMatrix.sh), this.nextMatrix.sy, val2);
+            }
           }
         }
-      }
+      ]);
     }
     this[this.changeType]();
     this.timeoutCounter++;
@@ -513,25 +579,17 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
     this.initialise();
     if(this.timeoutCounter >= this.timeout && !this.animeDone) 
     {
-      if(this.bubbled)
-      {
-        this.switch();
-        let val2 = rwxAnimate.getEasingValue(`${this.uniqueID}-DoneAnimation`, 'linear', this.duration, ()=>{this.animeDone = true;} );
-        this.radius = rwxAnimate.fromToCalc(0,(this.centerX - this.nextMatrix.dx + 10) , val2);
-      }
-      else
-      {
-      	let val = rwxAnimate.getEasingValue(`${this.uniqueID}-BubbleAnimation`, 'linear', this.duration, ()=>{this.bubbled = true;} );
-        this.centerX = this.initcenterX;
-        this.centerY = this.initcenterY;
-        this.radius = rwxAnimate.fromToCalc(this.initradius, 0 , val);
-      }
+      this.bubbleAnimation.animate([
+        (r)=>this.radius=r,
+        (r)=>this.radius=r
+      ])
       c.save();
       c.beginPath();
-      c.arc(this.centerX, this.centerY, this.radius, 0, Math.PI*2);
+      c.arc(this.centerX||this.initcenterX, this.centerY||this.initcenterY, this.radius, 0, Math.PI*2);
       c.clip();
-      c.closePath();   
+      c.closePath();  
     }
+
     this[this.changeType]();
     c.restore();
     this.timeoutCounter++;

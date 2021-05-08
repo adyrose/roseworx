@@ -1,7 +1,8 @@
 import { rwxCore, rwxComponent } from '../rwxCore';
-import rwxAnimate from '../helpers/rwxAnimateHelpers';
 import rwxCanvas from '../helpers/rwxCanvasHelpers';
 import rwxMisc from '../helpers/rwxMiscHelpers';
+import {rwxAnimation} from '../modules/rwxAnimation';
+import {rwxParticle} from '../bitfx/rwxParticle';
 
 class rwxCountOMeters extends rwxCore {
 	constructor()
@@ -46,13 +47,13 @@ class rwxCountOMeter extends rwxComponent {
 		];
     this.canvasHeight = this.el.getBoundingClientRect().width/2;
     this.createCanvas();
-		this.animeCounter = [];
 		this.value = value
     this.rating = this.value/10*2;
     this.timeout = 10;
     this.timeoutCounter = 0;
     this.timeoutLimit = this.timeout * this.colors.length;
     this.particleCounter = 0;
+    this.animeDone = 0;
     this.particles = [];
 		this.makeParticles(true);
 		this.makeText(true);
@@ -114,7 +115,15 @@ class rwxCountOMeter extends rwxComponent {
       }
       if(firstblood)
       {
-      	this.particles.push(new Particle(x, y, moveToX, moveToY, particleRadius, this.colors[p], this.c));
+        let pr = new rwxParticle(x, y, particleRadius*2, 'circle', this.colors[p], this.c);
+        pr.animation = new rwxAnimation({
+          from: [x,y],
+          to: [moveToX, moveToY],
+          easing: 'easeOutQuint',
+          duration: 1000,
+          complete: ()=>this.animeDone+=1
+        })
+      	this.particles.push(pr);
       }
       else
       {
@@ -141,11 +150,8 @@ class rwxCountOMeter extends rwxComponent {
     {
     	if(this.particles[sp])
     	{
-	      if(this.particles[sp].xDone && this.particles[sp].yDone && !this.animeCounter.includes(this.particles[sp].uniqueID))
-	      {
-	        this.animeCounter.push(this.particles[sp].uniqueID);
-	      }
-	      this.particles[sp].update();
+	      this.particles[sp].animation.animate((x,y)=>this.particles[sp].refresh(x,y));
+        this.particles[sp].draw();
     	}
     }
     if(this.particleCounter<this.rating)
@@ -156,7 +162,7 @@ class rwxCountOMeter extends rwxComponent {
     {
       this.text.update();
     }
-    if(this.animeCounter.length == this.particles.length)
+    if(this.animeDone == this.particles.length)
     {
     	this.stopAnimation = true;
     }
@@ -185,28 +191,6 @@ function renderText(numberValue, c, width, height, fontSize)
     c.font = this.fontSize + 'px monospace';
     c.textAlign = 'center';
     c.fillText(this.number+"%", this.width/2, this.height-(this.fontSize));
-  }
-}
-
-function Particle(x, y, moveToX, moveToY, radius, color, c)
-{
-  this.uniqueID = rwxMisc.uniqueId();
-  this.radius  = radius;
-  this.update = function() {
-  	if(!this.xDone && !this.yDone)
-  	{
-  		this.x = rwxAnimate.fromTo(x, moveToX, `${this.uniqueID}x`, 'easeOutQuint', 1000, ()=>{this.xDone = true});
-  		this.y = rwxAnimate.fromTo(y, moveToY, `${this.uniqueID}y`, 'easeOutQuint', 1000, ()=>{this.yDone = true});
-  	}
-  	this.draw();
-  }
-
-  this.draw = function() {
-    c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI *2, false);
-    c.fillStyle = color;
-    c.fill();
-    c.closePath();
   }
 }
 

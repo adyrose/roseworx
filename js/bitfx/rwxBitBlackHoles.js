@@ -2,9 +2,11 @@ import { rwxComponent } from '../rwxCore';
 
 import {rwxParticle} from './rwxParticle';
 
-import { rwxCanvas, rwxMath, rwxAnimate, rwxDOM, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
+import { rwxCanvas, rwxMath, rwxDOM, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
 
 import {rwxBitFont, rwxBitFontGetMatrix} from './rwxBitFont';
+
+import { rwxAnimation } from '../modules/rwxAnimation';
 
 class rwxBitBlackHoles extends rwxBitFont {
   constructor()
@@ -121,13 +123,17 @@ class rwxBitBlackHole extends rwxComponent {
     letterparticles.map((p, i)=>{
       coords = rwxGeometry.getCoordinatesFromAngle({x:this.centerPoints.x, y:this.centerPoints.y}, radianCounter, this.innerRingRadius);
       coords2 = rwxGeometry.getCoordinatesFromAngle({x:this.centerPoints.x, y:this.centerPoints.y}, radianCounter2, this.innerRingRadius);
-      p.x = coords.x;
-      p.y = coords.y;
-      p.startx = coords.x;
-      p.starty = coords.y;
-      p.cpx = coords2.x;
-      p.cpy = coords2.y;
-      p.id = `letterparticle${i}`;
+      p.initAnimation = new rwxAnimation({
+        from:[coords.x, coords.y],
+        control:[
+          {cp1: coords2.x, cp2: coords2.x},
+          {cp1: coords2.y, cp2: coords2.y}
+        ],
+        to:[p.finalx, p.finaly],
+        easing: 'easeInOutQuad',
+        duration: 5000,
+        complete: ()=>p.doneInit=true
+      })
       radianCounter += radian;
       radianCounter2 -= radian;
       return;
@@ -241,11 +247,9 @@ class rwxBitBlackHole extends rwxComponent {
       }
       else
       {
-        if(!p.initAnimation)
+        if(!p.doneInit)
         {
-          let {x,y} = rwxAnimate.fromToBezier({ x: p.startx, y: p.starty }, { x: p.cpx, y: p.cpy }, { x: p.cpx, y: p.cpy }, { x: p.finalx, y: p.finaly }, p.id, 'easeInOutQuad', 5000, () => { p.initAnimation = true; this.initAnimationCounter.push(true); if(this.initAnimationCounter.length === this.letterparticles.length){this.initAnimationDone = true;} });
-          p.x = x;
-          p.y = y;
+          p.initAnimation.animate((x,y)=>p.refresh(x,y));
         }
       }
       p.draw();

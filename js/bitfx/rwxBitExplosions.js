@@ -101,7 +101,25 @@ class rwxBitExplosion extends rwxComponent {
 						continue toContinue;
 					}
 				}
-				this.spareParticles.push(new rwxParticle(xCounter, yCounter, this.startParticlesize, this.shape, this.spareParticleColor, this.c));
+				let pa = new rwxParticle(xCounter, yCounter, this.startParticlesize, this.shape, this.spareParticleColor, this.c);
+				pa.flashAnimation = new rwxAnimationChain({
+					sequence: [
+						{
+							from: this.startParticlesize,
+							to: this.spareParticleSize,
+							easing: 'easeInQuad',
+							duration:1000,
+							delay: rwxMath.randomInt(1000,3000)
+						},
+						{
+							to: this.startParticlesize,
+							easing: 'easeOutQuad',
+							duration:1000
+						}
+					],
+					loop:true
+				});
+				this.spareParticles.push(pa);
 				yCounter += yIncrement;
 			}
 			xCounter+=xIncrement;
@@ -141,35 +159,19 @@ class rwxBitExplosion extends rwxComponent {
 				],
 				complete: ()=>p.doneInit=true
 			})
-			const flash = p.isLetter ? 
-				new rwxAnimation({
+			if(p.isLetter)
+			{
+				p.flashAnimation = new rwxAnimation({
 					from: this.startParticlesize,
 					to: p.actualparticlesize,
 					duration: 1000,
-					easing: 'easeOutQuad'
+					easing: 'easeOutQuad',
+					complete: ()=>p.color = this.bitColor
 				})
-			:
-				new rwxAnimationChain({
-					sequence: [
-						{
-							from: this.startParticlesize,
-							to: this.spareParticleSize,
-							easing: 'easeOutQuad',
-							duration:1000
-						},
-						{
-							to: this.startParticlesize,
-							easing: 'easeInQuad',
-							duration:1000
-						}
-					],
-					loop:true
-				});
-			p.flashAnimation = flash;
+			}
 			p.final = {x: p.x, y: p.y};
 			return;
 		});
-
 	}
 
 	calculateCluster(center)
@@ -272,7 +274,7 @@ class rwxBitExplosion extends rwxComponent {
 		});
 		this.calculateSpareParticles();
 		this.allParticles = [...this.spareParticles, ...this.wordParticles];
-		this.allParticles.map((p)=>p.final={x:p.x,y:p.y});
+		this.allParticles.map((p)=>{p.final={x:p.x,y:p.y};p.doneInit=true;});
 	}
 }
 

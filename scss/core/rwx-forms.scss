@@ -1,12 +1,11 @@
+$inlineinputsize: 67%;
+
 @mixin required
 {
-	position:relative;
 	&:after
 	{
 		content:"*";
-		position:absolute;
-		right:0px;
-		top:0px;
+		padding-left:8px;
 	}
 }
 
@@ -18,7 +17,38 @@
 	{
 		display:flex;
 		flex-direction:column;
-		margin-bottom:20px;
+		margin-bottom:$large-spacing;
+		textarea, select[multiple]
+		{
+			height:$form-item-size*2;
+		}
+		&.\--inline
+		{
+			@include snap-up-from('sm')
+			{
+				flex-direction:row;
+				flex-wrap:wrap;
+				align-items:center;
+				input,select,textarea
+				{
+					flex-basis:$inlineinputsize;
+				}
+				label{
+					margin-bottom:0px;
+					flex-basis:100 - $inlineinputsize;
+					word-break:break-word;
+					padding-right: 24px;
+				}
+				&.invalid
+				{
+					.invalid-message
+					{
+						width:$inlineinputsize;
+						padding-left:100 - $inlineinputsize;
+					}
+				}
+			}
+		}
 		label
 		{
 			color:$form-color-base;
@@ -39,12 +69,13 @@
 		{
 			order:2;
 			color: $form-color-base;
-			padding-left:15px;
-			padding-right:15px;
+			padding-left:16px;
+			padding-right:16px;
 			width:100%;
 			border:1px solid $form-color-secondary;
 			transition: 0.5s border $transition-base;
 			font: inherit;
+			background-color: transparent;
 			&:focus
 			{
 				@include focus-ring;
@@ -55,28 +86,11 @@
 			}
 		}
 
-		&.required
-		{
-			@include required;
-			label
-			{
-				padding-right:20px;
-			}	
-		}
-
 		&.valid, &.invalid
 		{
 			input, select, textarea
 			{
 				transition: 0.5s border $transition-base;
-			}
-			&.rwx-checkbox, &.rwx-toggle
-			{
-				label:after
-				{
-					transition: 0.5s border $transition-base;
-					border: 1px solid $form-color-invalid;
-				}
 			}
 		}
 
@@ -85,13 +99,6 @@
 			input, select, textarea
 			{
 				border: 1px solid $form-color-valid;
-			}
-			&.rwx-checkbox, &.rwx-toggle
-			{
-				label:after
-				{
-					border: 1px solid $form-color-valid;
-				}
 			}
 		}
 		&.invalid
@@ -103,14 +110,8 @@
 			.invalid-message
 			{
 				display:block;
+				width:100%;
 				margin-bottom:0px !important;
-			}
-			&.rwx-checkbox, &.rwx-toggle
-			{
-				label:after
-				{
-					border: 1px solid $form-color-invalid;
-				}
 			}
 		}
 		.invalid-message
@@ -122,207 +123,157 @@
 			display:none;
 		}
 
+		&.required
+		{
+			label
+			{
+				@include required;
+			}	
+		}
 
 		&.rwx-checkbox, &.rwx-toggle, &.rwx-radio
 		{
 			input[type="checkbox"], input[type="radio"]
 			{
-				position:absolute;
-				width:1px;
-				left:-$form-item-size;
-				&:focus
+				flex-shrink:0;
+				appearance:none;
+				cursor:pointer;
+				margin:0px;
+				background-repeat: no-repeat;
+				transition: all 0.5s $transition-base;
+				&:checked
 				{
-					box-shadow: none;
-				}
-				&:focus + label
-				{
-					&:after
-					{
-						transition: 0.5s border $transition-base;
-						@include focus-ring;
-						border:1px solid $form-color-secondary;
-					}
+					transition: all 0.5s $transition-base;
 				}
 			}
 			label
 			{
 				cursor:pointer;
 				position:relative;
-				&:after, &:before
-				{
-					content:"";
-				}
-				&:after
-				{
-					margin-top:10px;
-					display:block;
-					border:1px solid $form-color-secondary;
-				}
-				&:before
-				{
-					position:absolute;
-				}
-			}
-		}
-
-		&.rwx-radio
-		{
-			input[type="radio"]
-			{
-				&:checked + label
-				{
-					&:before
-					{
-						width: $form-item-size;
-						height: $form-item-size;
-						left:0;
-						bottom:0;
-						transition: all 0.5s $transition-base;
-					}
-				}
-			}
-			label
-			{
-				&:after
-				{
-					width: $form-item-size;
-					height: $form-item-size;
-					border-radius: $form-item-size/2;
-				}
-				&:before
-				{
-					width: 0;
-					height: 0;
-					border-radius: $form-item-size/2;
-					background-color: $form-color-base;
-					left:$form-item-size/2;
-					bottom:$form-item-size/2;
-					transition: all 0.5s $transition-base;
-				}
 			}
 		}
 
 		&.rwx-checkbox
 		{
-			input[type="checkbox"]
+			&.\--inline
 			{
-				&:checked + label
+				@include snap-up-from('sm')
 				{
-					&:before
+					input[type="checkbox"]
 					{
-						opacity:1;
-						transition: opacity 1s $transition-base;
+						flex-basis:$form-item-size;
 					}
 				}
 			}
-			label
+			input[type="checkbox"]
 			{
-				&:after
-				{
-					width: $form-item-size;
-					height: $form-item-size;
-				}
-				&:before
+				width:$form-item-size;
+				background-image: icon('tick', 'transparent');
+				background-size: $form-item-size/2;
+  			background-position: center;
+				&:checked
 				{
 					background-image: icon('tick', $form-color-base);
-					bottom:$form-item-size/4;
-					left:$form-item-size/4;
-					width:$form-item-size/2;
-					height:$form-item-size/2;
-					opacity:0;
-					transition: opacity 0.5s $transition-base;
 				}
 			}
 		}
 
 		&.rwx-toggle
 		{
-			input[type="checkbox"]
+			&.\--inline
 			{
-				&:checked + label
+				@include snap-up-from('sm')
 				{
-					&:before
+					input[type="checkbox"]
 					{
-						left:$form-item-size;
-						background-color: $form-color-base;
-						transition: all 0.5s $transition-base;
+						flex-basis:$form-item-size*2;
 					}
 				}
 			}
-			label
+			input[type="checkbox"]
 			{
-				&:after
+				width:$form-item-size*2;
+				border-radius: $form-item-size/2;
+  			background-position: left;
+  			background-image: icon('circle', $form-color-secondary, $form-color-secondary);
+				&:checked
 				{
-					width:$form-item-size*2;
-					height:$form-item-size;
-					background-color: transparent;
-					border-radius:$form-item-size/2;
-				}
-				&:before
-				{
-					bottom:0px;
-					left:0px;
-					height:$form-item-size;
-					width:$form-item-size;
-					border-radius:$form-item-size/2;
-					background-color: $form-color-secondary;
-					transition: all 0.5s $transition-base;
+					background-position: right;
+					background-image: icon('circle', $form-color-base, $form-color-base);
 				}
 			}
 		}
+
+		&.rwx-radio
+		{
+			&.\--inline
+			{
+				@include snap-up-from('sm')
+				{
+					input[type="radio"]
+					{
+						flex-basis:$form-item-size;
+					}
+				}
+			}
+			input[type="radio"]
+			{
+				width: $form-item-size;
+				background-image: icon('circle', $form-color-base, $form-color-base);
+				background-size: 0;
+  			background-position: center;
+  			border-radius:$form-item-size/2;
+				&:checked
+				{
+					background-size: $form-item-size;
+				}				
+			}
+		}	
 
 		&.rwx-select
 		{
 			select
 			{
-				background-color:$white;
 				padding-right:$form-item-size;
 				cursor:pointer;
-			}
-			position:relative;
-			select:not([multiple]) + label
-			{
-				&:after, &:before
-				{
-					content:"";
-					position:absolute;
-				}
-				&:after
-				{
-					bottom:1px;
-					right:1px;
-					height:$form-item-size - 2px;
-					width:$form-item-size - 2px;
-					z-index:1;
-					background-color:$white;
-				}
-				&:before
-				{
-					right: $form-item-size / 4;
-					bottom: $form-item-size / 4;
-					height:$form-item-size / 2;
-					width:$form-item-size / 2;
-					z-index:2;
-					content:"";
-					background-image: icon('select-list', $form-color-base);
-				}
+				background-image: icon('select-list', $form-color-base);
+				background-size: $form-item-size/2;
+				background-repeat: no-repeat;
+  			background-position: right 16px center;				
 			}
 		}
 	}
 	&-radio-group
 	{
-		p{color:$form-color-base;width:100%;}
-		display:flex;
-		flex-wrap:wrap;
-		justify-content: space-between;
-		align-items:center;
+		padding-top:$large-spacing;
+		padding-bottom:$large-spacing;
+		&.\--inline
+		{
+			@include snap-up-from('sm')
+			{
+				display: flex;
+				flex-wrap:wrap;
+				p
+				{
+					flex-basis:100%
+				}
+				.rwx-form-item
+				{
+					&:not(:nth-of-type(3n))
+					{
+						padding-right:24px;
+					}
+					flex-basis:33%;
+					label
+					{
+						flex-basis:auto;
+					}
+				}
+			}
+		}
 		&.required
 		{
-			p{@include required;padding-right:20px;}
-		}
-		label
-		{
-			text-align:center;
+			p{@include required;}
 		}
 	}
 }

@@ -196,6 +196,11 @@ class rwxAnimationChain {
     this.parse(sequence);
   }
 
+  stop()
+  {
+    this.stopNow=true;
+  }
+
   reset()
   {
    	this.seqCounter = 0;
@@ -232,6 +237,7 @@ class rwxAnimationChain {
 
   animate(fnArr)
   {
+    if(this.stopNow){return;}
     if(this.delayCounter >= this.animations[this.seqCounter].delay)
     {
       return this.animations[this.seqCounter].anime.animate(fnArr[this.seqCounter]);

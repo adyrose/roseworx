@@ -39,7 +39,8 @@ class rwxCore {
 			let ime = this.getIME(id);
 			if(ime){
 				ime.stopAnimation = true;
-				ime.removeListeners();
+				ime.removeListeners && ime.removeListeners();
+				ime.canvas && ime.removeCanvas();
 				this.deleteIME(id);
 			}
 		}
@@ -292,7 +293,11 @@ class rwxComponent {
 
 	elFullSizeAbsolute()
 	{
-		this.el.parentNode.style.position = "relative";
+		const currentPosition = window.getComputedStyle(this.el.parentNode).position;
+		if(currentPosition!=="absolute" && currentPosition!=="fixed")
+		{
+			this.el.parentNode.style.position = "relative";
+		}
 		this.el.style.position = 'absolute';
 		this.el.style.top = '0px';
 		this.el.style.left = '0px';
@@ -300,6 +305,11 @@ class rwxComponent {
 		this.el.style.bottom = '0px';
 		this.el.style.width = '100%';
 		this.el.style.height = '100%';
+	}
+
+	removeCanvas()
+	{
+		this.el.removeChild(this.canvas);
 	}
 
 	createCanvas()

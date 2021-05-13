@@ -3,6 +3,18 @@ class rwxParticle {
 	{
 		Object.assign(this, {x, y, size, shape, color, c, mass, velocity});
 		this.setRadius(size);
+		this.fill = true;
+		this.stroke = false;
+	}
+
+	setStroke(ts)
+	{
+		this.stroke = ts;
+	}
+
+	setFill(tf)
+	{
+		this.fill = tf;
 	}
 
 	setRadius(size)
@@ -27,9 +39,17 @@ class rwxParticle {
 	draw()
 	{
 		this.c.beginPath();
-		this.c.fillStyle = this.color;
+		if(this.stroke)
+		{
+			this.c.strokeStyle = this.color;
+		}
+		if(this.fill)
+		{
+			this.c.fillStyle = this.color;
+		}
 		this[this.shape]();
-		this.c.fill();
+		if(this.stroke)this.c.stroke();
+		if(this.fill)this.c.fill();
 		this.c.closePath();
 	}
 

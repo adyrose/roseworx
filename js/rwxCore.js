@@ -142,6 +142,7 @@ class rwxComponent {
 
 		if(enableResizeDebounce)
 		{
+			if(!window.rwx){window.rwx = {};}
 			if(!window.rwx.resizeTracking){window.rwx.resizeTracking = new rwxResizeTrack();}
 			window.rwx.resizeTracking.add(()=>this.resizeEvent(), this.uniqueID);
 			this.resizeEvent = this.resizeEvent.bind(this);
@@ -149,6 +150,7 @@ class rwxComponent {
 
 		if(enableScrollIntoView)
 		{
+			if(!window.rwx){window.rwx = {};}
 			if(!window.rwx.scrollTracking){window.rwx.scrollTracking = new rwxScrollTrack();}
 			window.rwx.scrollTracking.add(()=>this.scrollIntoViewEvent(), this.uniqueID);
 			this.scrollIntoViewEvent = this.scrollIntoViewEvent.bind(this);
@@ -159,6 +161,7 @@ class rwxComponent {
 
 		if(enableScrollTracking)
 		{
+			if(!window.rwx){window.rwx = {};}
 			if(!window.rwx.scrollTracking){window.rwx.scrollTracking = new rwxScrollTrack();}
 			window.rwx.scrollTracking.add(()=>this.scrollEvent(), this.uniqueID);
 			this.scrollEvent = this.scrollEvent.bind(this);

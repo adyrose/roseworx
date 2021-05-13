@@ -161,12 +161,21 @@ class rwxBitExplosion extends rwxComponent {
 			})
 			if(p.isLetter)
 			{
-				p.flashAnimation = new rwxAnimation({
-					from: this.startParticlesize,
-					to: p.actualparticlesize,
-					duration: 1000,
-					easing: 'easeOutQuad',
-					complete: ()=>p.color = this.bitColor
+				p.flashAnimation = new rwxAnimationChain({
+					sequence: [
+						{
+							from: this.startParticlesize,
+							to: 0,
+							duration: 1000,
+							easing: 'easeInQuad',
+							complete: ()=>p.color = this.bitColor
+						},
+						{
+							to:p.actualparticlesize,
+							duration:900,
+							easing: 'easeOutQuad'
+						}
+					]
 				})
 			}
 			p.final = {x: p.x, y: p.y};
@@ -238,8 +247,8 @@ class rwxBitExplosion extends rwxComponent {
 			}
 			else
 			{
-				let toPass = p.isLetter ? (r)=>p.setRadius(r) : [(r)=>p.setRadius(r),(r)=>p.setRadius(r)];
-				p.flashAnimation.animate(toPass);
+				// let toPass = p.isLetter ? [(r)=>p.setRadius(r)] : [(r)=>p.setRadius(r),(r)=>p.setRadius(r)];
+				p.flashAnimation.animate([(r)=>p.setRadius(r),(r)=>p.setRadius(r)]);
 				let coords;
 				if(rwxGeometry.isInsideCircle(p.final, this.mouseTrack.mouse, this.matrix[0].dimensions.bitSize))
 				{

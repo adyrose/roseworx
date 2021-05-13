@@ -18,7 +18,7 @@ class rwxBitSystems extends rwxBitFont {
 	execute2(el, mc, bits, orientation, shape, color, bgcolor)
 	{
 		let disableInit = el.hasAttribute('data-rwx-bit-system-disable-init');
-		return new rwxBitSystem(el, mc, this.sanitizeColor(bgcolor, this.backgroundColorDefault), this.sanitizeColor(color,this.colorDefault), shape, disableInit);
+		return new rwxBitSystem(el, mc, bgcolor, this.sanitizeColor(color,this.colorDefault), shape, disableInit);
 	}
 
 	explode(id)
@@ -42,7 +42,7 @@ class rwxBitSystem extends rwxComponent {
 		this.bitColor = bitColor;
 		this.disableInit = disableInit;
 		this.shape = shape;
-		this.el.style.backgroundColor = this.convertToColor(this.background);
+		this.el.style.backgroundColor = this.background;
 		this.mouseTrack.remove();
 		this.elFullSizeAbsolute();
 		this.createCanvas();
@@ -56,23 +56,18 @@ class rwxBitSystem extends rwxComponent {
 		this.stopScroll();
 	}
 
-	convertToColor(obj, o=null)
-	{
-		return `rgba(${obj.r},${obj.g},${obj.b},${o===null ? 1:o})`
-	}
-
 	createConfig()
 	{
 		this.screenRadius = Math.sqrt(Math.pow((this.width - this.width/2), 2) + Math.pow((this.height - this.height/2), 2)) + 100;
 		this.centerx = this.width/2;
     this.centery = this.height/2;
     this.numberofparticles = 133;
+    this.c.lineWidth = 2;
 	}
 
 	calculate(firstBlood=true)
 	{
     this.particles = [];
-    this.maskParticles = [];
     for(let i=0;i<this.numberofparticles;i++)
     {
     	let finalx = rwxMath.randomInt(0, this.width);
@@ -80,7 +75,7 @@ class rwxBitSystem extends rwxComponent {
    		let radius = rwxMath.randomInt(1,3);
    		let et = ((radius*2) + rwxMath.randomInt(20,30));
 
-  		let p = new rwxParticle(finalx, finaly, radius*2, this.shape, this.convertToColor(this.bitColor), this.c);
+  		let p = new rwxParticle(finalx, finaly, radius*2, this.shape, this.convertToColor(this.bitColor, 0), this.c);
 		  p.parallaxMoveValue = 2;
 		  p.parallaxMoveDrag = Math.random() /  15;
 		  p.parallaxMoveAmount = Math.floor(Math.random() * (20- p.parallaxMoveValue+1) +  p.parallaxMoveValue);
@@ -107,7 +102,6 @@ class rwxBitSystem extends rwxComponent {
 		  	],
 		  	complete: ()=>{
 		  		p.parallax = true;
-		  		p.dontDrawMask=true;
 		  		if(!this.eventAdded)
 		  		{
 		  			this.mouseTrack.add();
@@ -134,10 +128,16 @@ class rwxBitSystem extends rwxComponent {
 		  		p.parallax=true;
 		  		p.explodeAnimation.reset();
 		  	}
-		  })
+		  });
+		  p.setFill(false);
+		  p.setStroke(true);
     	this.particles.push(p);
-    	this.maskParticles.push(new rwxParticle(finalx, finaly, (radius*2)+3, this.shape, this.convertToColor(this.background), this.c));
     }
+	}
+
+	convertToColor(obj, o=null)
+	{
+		return `rgba(${obj.r},${obj.g},${obj.b},${o===null ? 1:o})`
 	}
 
 	getCurrentCoordinates(i)
@@ -194,19 +194,16 @@ class rwxBitSystem extends rwxComponent {
   			}
   			p.chain.animate([
   				(opacity, radius)=>{
-  					p.setRadius(radius+p.ringSize);
+  					p.setRadius(radius);
   					p.color = this.convertToColor(p.cacheColor, opacity);
-  					this.maskParticles[index].setRadius(radius);
   				},
   				(opacity, radius)=>{
-		  			p.setRadius(radius+p.ringSize);
+  					p.setFill(true);
+		  			p.setRadius(radius);
 		  			p.color = this.convertToColor(p.cacheColor, opacity);
-		  			this.maskParticles[index].color = this.convertToColor(this.background, (1-opacity));
-		  			this.maskParticles[index].setRadius(radius);
   				}
   			]);
-  			p.draw();
-  			!p.dontDrawMask && this.maskParticles[index].draw();
+		  	p.draw();
   		}
 		  if(this.explodenow)
 	    {

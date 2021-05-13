@@ -282,9 +282,19 @@ class rwxBitBlackHole extends rwxComponent {
 
   animate()
   {
-    this.c.fillStyle = 'rgba(0, 0, 0, 0.05)';
-    this.c.fillRect(0, 0, this.width, this.height);
-    this.disableTrail ? rwxCanvas.drawSector(this.c, {x:this.centerPoints.x, y:this.centerPoints.y}, this.maxRingRadiusLimit*2, rwxGeometry.toRadians(0), rwxGeometry.toRadians(360)) : rwxCanvas.drawSector(this.c, {x:this.centerPoints.x, y:this.centerPoints.y}, this.innerRingRadius+1, rwxGeometry.toRadians(0), rwxGeometry.toRadians(360));
+    if(!this.disableTrail)
+    {
+      this.c.globalCompositeOperation = 'destination-out';
+      this.c.fillStyle = `rgba(255, 255, 255, 0.05)`;
+      this.c.beginPath();
+      this.c.fillRect(0, 0, this.width, this.height);
+      this.c.fill();
+      this.c.globalCompositeOperation = 'source-over';
+    }
+    else
+    {
+      this.c.clearRect(0, 0, this.width, this.height);
+    }
     this.updateParticles(); 
   }
 }

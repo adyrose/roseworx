@@ -13,14 +13,14 @@ class rwxBitSwarms extends rwxBitFont {
 		super('rwx-bit-swarm');
 	}
 
-	execute2(el, mc, bits, orientation, shape, color, bgcolor)
+	execute2(el, mc, bits, orientation, shape, color, bgcolor, nofill)
 	{
-		return new rwxBitSwarm(el, mc, bits, orientation, shape, color, bgcolor);
+		return new rwxBitSwarm(el, mc, bits, orientation, shape, color, bgcolor, nofill);
 	}
 }
 
 class rwxBitSwarm extends rwxComponent {
-	constructor(el, manualControl, bits, orientation, shape, color, bgcolor)
+	constructor(el, manualControl, bits, orientation, shape, color, bgcolor, nofill)
 	{
 		super({element: el, enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true});
 		this.el.style.backgroundColor = bgcolor;
@@ -28,6 +28,7 @@ class rwxBitSwarm extends rwxComponent {
 		this.orientation = orientation;
 		this.backgroundColor = bgcolor;
 		this.bitColor = color;
+		this.nofill = nofill;
 		this.repeatAnimations = true;
 		this.letters = [];
 		this.animationsStarted = [];
@@ -67,7 +68,7 @@ class rwxBitSwarm extends rwxComponent {
 		letters.map((l,i)=>{
 			if(firstblood)
 			{
-				this.letters.push(new rwxBitSwarmLetter(l.matrix, l.bitx, l.bity, l.dimensions.bitSize, l.dimensions.particleSize, this.bitColor, this.shape, this.c, this.canvas, this.width, this.height, `${this.uniqueID}letter${i}`));
+				this.letters.push(new rwxBitSwarmLetter(l.matrix, l.bitx, l.bity, l.dimensions.bitSize, l.dimensions.particleSize, this.bitColor, this.shape, this.c, this.canvas, this.width, this.height, `${this.uniqueID}letter${i}`, this.nofill));
 			}
 			else
 			{
@@ -169,9 +170,9 @@ class rwxBitSwarm extends rwxComponent {
 }
 
 class rwxBitSwarmLetter {
-	constructor(matrix, xpos, ypos, bitSize, particleSize, bitColor, shape, c, canvas, width, height, uniqueID)
+	constructor(matrix, xpos, ypos, bitSize, particleSize, bitColor, shape, c, canvas, width, height, uniqueID, nofill)
 	{
-		Object.assign(this, {matrix, xpos, ypos, bitSize, particleSize, bitColor, shape, c, canvas, width, height, uniqueID});
+		Object.assign(this, {matrix, xpos, ypos, bitSize, particleSize, bitColor, shape, c, canvas, width, height, uniqueID, nofill});
 		this.particleTimeout = 5;
 		this.particleTimeoutTicker = 0;
 		this.startDuration = 4000;
@@ -248,6 +249,12 @@ class rwxBitSwarmLetter {
 			let droptopy = (this.ypos - this.boundary);
 			let dropbottomx = (this.xpos + (this.bitSize/2));
 			let dropbottomy = (this.ypos + this.bitSize);
+			let particle = new rwxParticle(m.x, m.y, this.particleSize, this.shape, this.bitColor, this.c, 1);
+			if(this.nofill)
+			{
+				particle.setFill(false);
+				particle.setStroke(true)
+			}
 			this.matrixParticles.push({
 				finalx: m.x,
 				finaly: m.y,
@@ -403,7 +410,7 @@ class rwxBitSwarmLetter {
 						complete: ()=>this.particleAnimationCount.push(i)
 					}
 				),
-				particle: new rwxParticle(m.x, m.y, this.particleSize, this.shape, this.bitColor, this.c, 1)
+				particle
 			});
 			return;
 		});

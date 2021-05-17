@@ -1,88 +1,4 @@
-class rwxResizeTrack {
-	constructor()
-	{
-		this.debounceEvent = this.debounceEvent.bind(this);
-		this.events = [];
-		this.debounceThreshold = 250;
-	}
-
-	removeEvent()
-	{
-		window.removeEventListener('resize', this.debounceEvent);
-	}
-
-	addEvent()
-	{
-		window.addEventListener('resize', this.debounceEvent);
-	}
-
-	remove(id){
-		this.events = this.events.filter((ev)=>ev.id!==id);
-		if(this.events.length === 0)
-		{
-			this.removeEvent();
-		}
-	}
-
-	add(ev, id)
-	{
-		if(this.events.length===0)
-		{
-			this.addEvent();
-		}
-		this.events.push({ev,id});
-	}
-
-	debounceEvent()
-	{
-		this.debounce && clearTimeout(this.debounce)
-		this.debounce = setTimeout(()=>{
-			this.events.map((ev)=>ev.ev());
-		}, this.debounceThreshold);
-	}
-}
-
-class rwxScrollTrack {
-
-	constructor(){
-		this.scrollEvent = this.scrollEvent.bind(this);
-		this.events = [];
-	}
-
-	removeEvent()
-	{
-		document.removeEventListener('wheel', this.scrollEvent, { capture: true, passive: true});
-	}
-
-	addEvent()
-	{
-		document.addEventListener('wheel', this.scrollEvent, { capture: true, passive: true});
-	}
-
-	remove(id){
-		this.events = this.events.filter((ev)=>ev.id!==id);
-		if(this.events.length === 0)
-		{
-			this.removeEvent();
-		}
-	}
-
-	add(ev, id)
-	{
-		if(this.events.length===0)
-		{
-			this.addEvent();
-		}
-		this.events.push({ev,id});
-	}
-
-	scrollEvent()
-	{
-		this.events.map((ev)=>ev.ev());
-	}
-}
-
-class rwxMouseTrack {
+class rwxMouseTracking {
 	constructor(node, ev=()=>{}){
 		this.mousedEvent = this.mousedEvent.bind(this);
 		this.handleOrientation = this.handleOrientation.bind(this);
@@ -122,7 +38,7 @@ class rwxMouseTrack {
 
 	mousedEvent(e)
 	{
-		this.dimensions = this.node.getBoundingClientRect();
+		this.dimensions = this.node === window ? {top:0, left:0} : this.node.getBoundingClientRect();
 		let x = e.type=="touchmove" ? e.touches[0].clientX : e.clientX;
 		x = x-this.dimensions.left;
 		let y = e.type=="touchmove" ? e.touches[0].clientY : e.clientY;
@@ -136,4 +52,4 @@ class rwxMouseTrack {
 	}
 }
 
-export {rwxScrollTrack, rwxMouseTrack, rwxResizeTrack};
+export default rwxMouseTracking

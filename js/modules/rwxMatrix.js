@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import {rwxResizeTrack} from '../common/rwxEventTracking';
+import rwxResizeTrack from '../common/rwxResizeTracking';
 
 class rwxMatrix {
 	constructor(parent=false, lights, fov=70, nv=0.1, fv=1000)
@@ -28,8 +28,7 @@ class rwxMatrix {
 		this.standardMat = lights ? new THREE.MeshStandardMaterial() : new THREE.MeshNormalMaterial({flatShading:true});
 		this.addShape(this.standardGeo, this.standardMat);
 		this.createRenderer();
-		if(!window.rwx.resizeTracking){window.rwx.resizeTracking = new rwxResizeTrack();}
-		window.rwx.resizeTracking.add(()=>this.resize(), 'bracketsAnimation');
+		rwxResizeTrack.add(()=>this.resize(), 'bracketsAnimation');
 	}
 
 	getVisibleBoundsAtDepth(depth) {
@@ -61,8 +60,8 @@ class rwxMatrix {
     this.scene.add( this.directLight );
     this.ambience = new THREE.AmbientLight( 0xe65c00, 0.75 );
     this.scene.add( this.ambience );
-    const helper = new THREE.DirectionalLightHelper( this.directLight, 5 );
-    this.scene.add(helper);
+    // const helper = new THREE.DirectionalLightHelper( this.directLight, 5 );
+    // this.scene.add(helper);
   }
 
 	calculateBounds()

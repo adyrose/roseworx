@@ -15,10 +15,10 @@ class rwxBitSystems extends rwxBitFont {
 		super('rwx-bit-system', true);
 	}
 
-	execute2(el, mc, bits, orientation, shape, color, bgcolor)
+	execute2(el, mc, bits, orientation, shape, color, bgcolor, nofill)
 	{
 		let disableInit = el.hasAttribute('data-rwx-bit-system-disable-init');
-		return new rwxBitSystem(el, mc, bgcolor, this.sanitizeColor(color,this.colorDefault), shape, disableInit);
+		return new rwxBitSystem(el, mc, bgcolor, this.sanitizeColor(color,this.colorDefault), shape, disableInit, nofill);
 	}
 
 	explode(id)
@@ -35,13 +35,14 @@ class rwxBitSystems extends rwxBitFont {
 
 class rwxBitSystem extends rwxComponent {
 
-	constructor(el, manualControl, bgColor, bitColor, shape, disableInit)
+	constructor(el, manualControl, bgColor, bitColor, shape, disableInit, nofill)
 	{
 		super({element: el, enableAnimationLoop: true, enableResizeDebounce: true, enableScrollIntoView: !manualControl, enableMouseTracking:true})
 		this.background = bgColor;
 		this.bitColor = bitColor;
 		this.disableInit = disableInit;
 		this.shape = shape;
+		this.nofill = nofill;
 		this.el.style.backgroundColor = this.background;
 		this.mouseTrack.remove();
 		this.elFullSizeAbsolute();
@@ -72,10 +73,10 @@ class rwxBitSystem extends rwxComponent {
     {
     	let finalx = rwxMath.randomInt(0, this.width);
     	let finaly = rwxMath.randomInt(0, this.height);
-   		let radius = rwxMath.randomInt(1,3);
+   		let radius = rwxMath.randomInt(3,5);
    		let et = ((radius*2) + rwxMath.randomInt(20,30));
 
-  		let p = new rwxParticle(finalx, finaly, radius*2, this.shape, this.convertToColor(this.bitColor, 0), this.c);
+  		let p = new rwxParticle(finalx, finaly, radius*2, this.shape, firstBlood ? this.convertToColor(this.bitColor, 0) : this.convertToColor(this.bitColor, 1), this.c);
 		  p.parallaxMoveValue = 2;
 		  p.parallaxMoveDrag = Math.random() /  15;
 		  p.parallaxMoveAmount = Math.floor(Math.random() * (20- p.parallaxMoveValue+1) +  p.parallaxMoveValue);
@@ -83,7 +84,7 @@ class rwxBitSystem extends rwxComponent {
 		  p.finalx = finalx;
 		  p.finaly = finaly;
 		  p.cacheColor = this.bitColor;
-		  p.ringSize = rwxMath.randomInt(1,5);
+		  p.ringSize = radius + rwxMath.randomInt(1,2);
 		  p.parallax = !firstBlood;
 		  p.chain = new rwxAnimationChain({
 		  	sequence:[
@@ -92,7 +93,8 @@ class rwxBitSystem extends rwxComponent {
 		  			to:[0.1, et],
 		  			duration:1000,
 		  			easing: 'easeOutQuad',
-		  			delay: rwxMath.randomInt(0,3600)
+		  			delay: rwxMath.randomInt(0,3600),
+		  			complete: ()=>{if(!this.nofill)p.setFill(true)}
 		  		},
 		  		{
 		  			to: [1, (radius*2)],
@@ -129,8 +131,16 @@ class rwxBitSystem extends rwxComponent {
 		  		p.explodeAnimation.reset();
 		  	}
 		  });
-		  p.setFill(false);
+		  p.setFill(!firstBlood);
 		  p.setStroke(true);
+		  if(!firstBlood)
+		  {
+	  		if(!this.eventAdded)
+	  		{
+	  			this.mouseTrack.add();
+	  			this.eventAdded=true;
+	  		}
+		  }
     	this.particles.push(p);
     }
 	}
@@ -179,7 +189,7 @@ class rwxBitSystem extends rwxComponent {
   		if(p.parallax)
   		{
   			let x = p.finalx + (p.lastMouse.x/p.parallaxMoveAmount);
-		    let y = p.finaly + (p.lastMouse.y/p.parallaxMoveAmount);	
+		    let y = p.finaly + (p.lastMouse.y/p.parallaxMoveAmount);
 		    p.update(x,y);
 		    p.lastMouse.x += (this.mouseTrack.parallaxmouse.x - p.lastMouse.x) * p.parallaxMoveDrag;
 		    p.lastMouse.y += (this.mouseTrack.parallaxmouse.y - p.lastMouse.y) * p.parallaxMoveDrag;
@@ -198,7 +208,6 @@ class rwxBitSystem extends rwxComponent {
   					p.color = this.convertToColor(p.cacheColor, opacity);
   				},
   				(opacity, radius)=>{
-  					p.setFill(true);
 		  			p.setRadius(radius);
 		  			p.color = this.convertToColor(p.cacheColor, opacity);
   				}

@@ -1,10 +1,13 @@
+import { rwxMisc } from '../helpers/rwxHelpers';
+
 class rwxParticle {
 	constructor(x, y, size, shape, color, c, mass=1, velocity={x:0,y:0})
 	{
+		shape = shape === "mixed" ? rwxMisc.randomValueFromArray(rwxParticleShapes.filter((ps)=>ps!=="mixed")) : shape;
 		Object.assign(this, {x, y, size, shape, color, c, mass, velocity});
 		this.setRadius(size);
-		this.fill = true;
-		this.stroke = false;
+		this.fill = shape==="cross" ? false : true;
+		this.stroke = shape==="cross" ? true : false;
 	}
 
 	setStroke(ts)
@@ -48,9 +51,44 @@ class rwxParticle {
 			this.c.fillStyle = this.color;
 		}
 		this[this.shape]();
+		this.c.closePath();
 		if(this.stroke)this.c.stroke();
 		if(this.fill)this.c.fill();
-		this.c.closePath();
+	}
+
+	cross()
+	{
+		this.c.moveTo(this.x-this.radius, this.y-this.radius);
+		this.c.lineTo(this.x+this.radius, this.y+this.radius);
+		this.c.moveTo(this.x-this.radius, this.y+this.radius);
+		this.c.lineTo(this.x+this.radius, this.y-this.radius);
+	}
+
+	diamond()
+	{
+		this.c.moveTo(this.x, this.y-this.radius);
+		this.c.lineTo(this.x+(this.size/3), this.y);
+		this.c.lineTo(this.x, this.y+this.radius);
+		this.c.lineTo(this.x-(this.size/3), this.y);
+		this.c.lineTo(this.x, this.y-this.radius);
+	}
+
+	pentagon()
+	{
+		this.c.moveTo(this.x, this.y-this.radius);
+		this.c.lineTo(this.x+this.radius, this.y-(this.size/14));
+		this.c.lineTo(this.x+(this.size/4), this.y+this.radius);
+		this.c.lineTo(this.x-(this.size/4), this.y+this.radius);
+		this.c.lineTo(this.x-this.radius, this.y-(this.size/14));
+		this.c.lineTo(this.x, this.y-this.radius);
+	}
+
+	triangle()
+	{
+		this.c.moveTo(this.x, this.y-this.radius);
+		this.c.lineTo((this.x+this.size), (this.y+this.size));
+		this.c.lineTo((this.x-this.size), (this.y+this.size));
+		this.c.lineTo(this.x, this.y-this.radius)
 	}
 
 	square()
@@ -64,6 +102,6 @@ class rwxParticle {
 	}
 }
 
-const rwxParticleShapes = ['square', 'circle'];
+const rwxParticleShapes = ['square', 'circle', 'triangle', 'pentagon', 'diamond', 'cross', 'mixed'];
 
 export {rwxParticle, rwxParticleShapes};

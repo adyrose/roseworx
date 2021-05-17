@@ -15,20 +15,21 @@ class rwxBitExplosions extends rwxBitFont {
 		this.spareColorDefault = "#FFFFFF";
 	}
 
-	execute2(el, mc, bits, orientation, shape, color, bgcolor)
+	execute2(el, mc, bits, orientation, shape, color, bgcolor, nofill)
 	{
 		let sparecolor = el.hasAttribute('data-rwx-bit-explosion-secondary-color') ? el.getAttribute('data-rwx-bit-explosion-secondary-color') : this.spareColorDefault;
-		return new rwxBitExplosion(el, mc, bits, orientation, shape, color, bgcolor, sparecolor);
+		return new rwxBitExplosion(el, mc, bits, orientation, shape, color, bgcolor, sparecolor, nofill);
 	}
 }
 
 class rwxBitExplosion extends rwxComponent {
-	constructor(el, manualControl, bits, orientation, shape, color, bgcolor, sparecolor)
+	constructor(el, manualControl, bits, orientation, shape, color, bgcolor, sparecolor, nofill)
 	{
 		super({element: el, enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true})
 		this.el.style.backgroundColor = bgcolor;
 		this.shape = shape;
 		this.bits = bits;
+		this.nofill = nofill;
 		this.orientation = orientation;
 		this.bitColor = color;
 		this.backgroundColor = bgcolor;
@@ -61,6 +62,11 @@ class rwxBitExplosion extends rwxComponent {
 				let letterparticle = new rwxParticle(mp.x, mp.y, this.startParticlesize, this.shape, this.spareParticleColor, this.c)
 				letterparticle.isLetter = true;
 				letterparticle.actualparticlesize = m.dimensions.particleSize;
+        if(this.nofill)
+        {
+          letterparticle.setFill(false);
+          letterparticle.setStroke(true);
+        }
 				this.wordParticles.push(letterparticle);
 				return;
 			});

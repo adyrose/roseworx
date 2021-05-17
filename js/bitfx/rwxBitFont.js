@@ -34,8 +34,10 @@ class rwxBitFont extends rwxCore {
 		let color = el.hasAttribute(`data-${this.component}-color`) ? el.getAttribute(`data-${this.component}-color`) : this.colorDefault;
 		let bgcolor = el.hasAttribute(`data-${this.component}-background-color`) ? el.getAttribute(`data-${this.component}-background-color`) : this.backgroundColorDefault;
 		if(!rwxParticleShapes.includes(shape)){this.error(`${shape} is not a valid shape. Valid shapes include ['${rwxParticleShapes.join("', '")}']. Using '${this.shapeDefault}'.`); shape = this.shapeDefault;}
-		
-		return this.execute2(el, mc, bits, orientation, shape, color, bgcolor)
+	
+		let nofill = el.hasAttribute(`data-${this.component}-nofill`);
+
+		return this.execute2(el, mc, bits, orientation, shape, color, bgcolor, nofill)
 	}
 
   sanitizeColor(c, def)
@@ -66,7 +68,8 @@ const rwxBitFontGetMatrix = (letters, orientation, width, height, forceSize=fals
 	}
 	else
 	{
-		dimensions.push(calculateDimensions(letters.length, 0, 0, orientation, width, height, size));
+		let use = orientation==="wrap" ? "horizontal" : orientation;
+		dimensions.push(calculateDimensions(letters.length, 0, 0, use, width, height, size));
 	}
 
 	let bitx = dimensions[counter].x;
@@ -120,7 +123,7 @@ const calculateDimensions = (bitlength, index=0, length=0, orientation, width, h
 		bitXPlus = (size.bitSize + size.bitSpacing);
 		bitYPlus = 0;
 		//bitYPlus = 10; wrap slanted
-		y = (height/2) - (((length*size.bitSize) + ((length-1)*size.bitSpacing))/2) + (index * (size.bitSize + (size.bitSpacing*1.5)));
+		y = (height/2) - (((length*size.bitSize) + ((length)*size.bitSpacing))/2) + (index * (size.bitSize + (size.bitSpacing*1.5)));
 		x = (width/2) - (((bitlength*size.bitSize) + ((bitlength-1)*size.bitSpacing))/2);
 	}
 	else if (orientation == "vertical")

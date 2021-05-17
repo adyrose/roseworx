@@ -1,6 +1,8 @@
 import rwxMisc from './helpers/rwxMiscHelpers';
 import rwxCanvas from './helpers/rwxCanvasHelpers';
-import {rwxScrollTrack, rwxMouseTrack, rwxResizeTrack} from './common/rwxEventTracking';
+import rwxResizeTrack from './common/rwxResizeTracking';
+import rwxScrollTrack from './common/rwxScrollTracking';
+import rwxMouseTrack from './common/rwxMouseTracking';
 
 class rwxCore {
 	constructor(selector, canHaveManualControl=false)
@@ -142,17 +144,13 @@ class rwxComponent {
 
 		if(enableResizeDebounce)
 		{
-			if(!window.rwx){window.rwx = {};}
-			if(!window.rwx.resizeTracking){window.rwx.resizeTracking = new rwxResizeTrack();}
-			window.rwx.resizeTracking.add(()=>this.resizeEvent(), this.uniqueID);
+			rwxResizeTrack.add(()=>this.resizeEvent(), this.uniqueID);
 			this.resizeEvent = this.resizeEvent.bind(this);
 		}
 
 		if(enableScrollIntoView)
 		{
-			if(!window.rwx){window.rwx = {};}
-			if(!window.rwx.scrollTracking){window.rwx.scrollTracking = new rwxScrollTrack();}
-			window.rwx.scrollTracking.add(()=>this.scrollIntoViewEvent(), this.uniqueID);
+			rwxScrollTrack.add(()=>this.scrollIntoViewEvent(), this.uniqueID);
 			this.scrollIntoViewEvent = this.scrollIntoViewEvent.bind(this);
 			this.setScrollTrigger(200);
 			this.scrollErrorReported = false;
@@ -161,9 +159,7 @@ class rwxComponent {
 
 		if(enableScrollTracking)
 		{
-			if(!window.rwx){window.rwx = {};}
-			if(!window.rwx.scrollTracking){window.rwx.scrollTracking = new rwxScrollTrack();}
-			window.rwx.scrollTracking.add(()=>this.scrollEvent(), this.uniqueID);
+			rwxScrollTrack.add(()=>this.scrollEvent(), this.uniqueID);
 			this.scrollEvent = this.scrollEvent.bind(this);
 			window.requestAnimationFrame(this.scrollEvent);
 		}
@@ -171,7 +167,7 @@ class rwxComponent {
 		if(enableMouseTracking)
 		{
 			let fn = this.moused ? ()=>{this.moused()} : ()=>{};
-			this.mouseTrack = new rwxMouseTrack(this.el, fn);
+			this.mouseTrack = new rwxMouseTrack(this.el.hasAttribute('rwx-mouse-track-use-window') ? window : this.el, fn);
 		}
 	}
 

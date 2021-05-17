@@ -52,6 +52,10 @@ const rwxMisc =
     }
   },
 
+  randomValueFromArray: (arr) => {
+    return arr[Math.floor(Math.random() * ((arr.length-1)-0+1) + 0)];
+  },
+
   isHexValue: (v) => {
     const re = /^#(?:[0-9a-f]{3}){1,2}$/i;
     return re.test(v);

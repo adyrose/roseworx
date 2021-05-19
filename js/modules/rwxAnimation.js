@@ -59,12 +59,12 @@ const rwxAnimate = {
   },
 
   fromTo: function(from, to, id, easing, duration, cb) {
-  	let val = rwxAnimate.getEasingValue(id, easing, duration, cb);
+    let val = rwxAnimate.getEasingValue(id, easing, duration, cb);
     return rwxAnimate.fromToCalc(from, to, val);
   },
 
   fromToCalc: function(from, to, val) {
-    return (from + (to - from) * val);
+    return from + (to - from) * val;
   },
 
   fromToBezier: function(p1, p2, p3, p4, val) {
@@ -72,7 +72,7 @@ const rwxAnimate = {
     let b = 3 * (p3 - p2) - c;
     let a = p4 - p1 - c - b;
     let v = a*(val*val*val) + b*(val*val) + c*val + p1;
-  	return v;
+    return v;
   }
 }
 
@@ -128,60 +128,60 @@ class rwxAnimation {
 
   reset()
   {
-  	this.progressCounter = 0;
-  	this.isComplete = false;
+    this.progressCounter = 0;
+    this.isComplete = false;
     this.animations.map((a)=>{
-    	a.isComplete=false;
-    	a.isStarted=false;
+      a.isComplete=false;
+      a.isStarted=false;
     });
   }
 
   getProgress()
   {
-  	return (this.progressCounter/60)*100;
+    return (this.progressCounter/60)*100;
   }
 
   getEasingValue()
   {
-  	return this.easingValue;
+    return this.easingValue;
   }
 
   animate(fn)
   {
     let vals = [];
     this.animations.map((anime)=>{
-    	if(!anime.isStarted)
-    	{
-    		anime.toUseFrom = (typeof anime.from === 'function') ? anime.from() : anime.from;
-    		anime.toUseTo = (typeof anime.to === 'function') ? anime.to() : anime.to;
-    		if(anime.control)
-    		{
-    			anime.tucp1 = (typeof anime.control.cp1 === 'function') ? anime.control.cp1() : anime.control.cp1;
-    			anime.tucp2 = (typeof anime.control.cp2 === 'function') ? anime.control.cp2() : anime.control.cp2;
-    		}
-    		anime.isStarted = true;
-    	}
-    	this.easingValue = anime.isComplete ? 1 : rwxAnimate.getEasingValue(anime.id, anime.easing, this.duration, ()=>{
+      if(!anime.isStarted)
+      {
+        anime.toUseFrom = (typeof anime.from === 'function') ? anime.from() : anime.from;
+        anime.toUseTo = (typeof anime.to === 'function') ? anime.to() : anime.to;
+        if(anime.control)
+        {
+          anime.tucp1 = (typeof anime.control.cp1 === 'function') ? anime.control.cp1() : anime.control.cp1;
+          anime.tucp2 = (typeof anime.control.cp2 === 'function') ? anime.control.cp2() : anime.control.cp2;
+        }
+        anime.isStarted = true;
+      }
+      this.easingValue = anime.isComplete ? 1 : rwxAnimate.getEasingValue(anime.id, anime.easing, this.duration, ()=>{
         if(!this.loop)
         {
-        	anime.isComplete = true;
-        	if(this.animations.every((anime)=>anime.isComplete))
-        	{
-        		this.complete && window.requestAnimationFrame(()=>this.complete());
-        		this.isComplete=true;
-        	}
+          anime.isComplete = true;
         }
         else
         {
-        	window.requestAnimationFrame(()=>this.reset());
+          window.requestAnimationFrame(()=>this.reset());
         }
-    	});
+      });
       let toPush = anime.isComplete ? anime.toUseTo : anime.control ? rwxAnimate.fromToBezier(anime.toUseFrom, anime.tucp1, anime.tucp2, anime.toUseTo, this.easingValue) : rwxAnimate.fromToCalc(anime.toUseFrom, anime.toUseTo, this.easingValue);
       vals.push(toPush);
     });
+
     if(this.progressCounter<(this.duration/1000*60)){this.progressCounter+=1;}
     if(!this.isComplete){
-    	if(fn)return fn(...vals);
+      if(fn) fn(...vals);
+      if(this.animations.every((anime)=>anime.isComplete)){
+        this.isComplete=true;
+        this.complete && window.requestAnimationFrame(()=>this.complete());
+      }
     }
   }
 }
@@ -203,16 +203,16 @@ class rwxAnimationChain {
 
   reset()
   {
-   	this.seqCounter = 0;
-  	this.delayCounter = 0; 	
-  	this.animations.map((a)=>a.anime.reset());
+    this.seqCounter = 0;
+    this.delayCounter = 0;  
+    this.animations.map((a)=>a.anime.reset());
   }
 
   parse(seq)
   {
     this.animations = [];
     seq.map((s,i)=>{
-    	if(i>0 && s.from===undefined){s.from = seq[i-1].to}
+      if(i>0 && s.from===undefined){s.from = seq[i-1].to}
       s.loop = false;
       let c = s.complete;
       s.complete = ()=>{
@@ -240,7 +240,7 @@ class rwxAnimationChain {
     if(this.stopNow){return;}
     if(this.delayCounter >= this.animations[this.seqCounter].delay)
     {
-      return this.animations[this.seqCounter].anime.animate(fnArr[this.seqCounter]);
+      this.animations[this.seqCounter].anime.animate(fnArr[this.seqCounter]);
     }
     else
     {

@@ -11,7 +11,7 @@ import { rwxAnimation } from '../modules/rwxAnimation';
 class rwxBitBlackHoles extends rwxBitFont {
   constructor()
   {
-    super('rwx-bit-black-hole');
+    super('rwx-bit-black-hole', false, true);
     this.spareColorDefault = "#FFFFFF";
   }
 
@@ -67,9 +67,15 @@ class rwxBitBlackHole extends rwxComponent {
         max: 0.0006   
       }
     };
-
-    this.generateLetterParticles();
-    if(!this.matrix)return;
+    if(this.bits)
+    {
+      this.generateLetterParticles();
+    }
+    else
+    {
+      this.innerRingRadius = 150;
+    }
+    if(this.bits && !this.matrix)return;
     this.isLandscape = this.width > this.height;
     this.aspectRatio = this.isLandscape ? (this.width / this.height) : (this.height / this.width);
     this.elongationToChange = this.isLandscape ? "x" : "y";
@@ -264,7 +270,7 @@ class rwxBitBlackHole extends rwxComponent {
       x: this.width/2,
       y: this.height/2
     }
-
+    if(!this.bits)return
     this.matrix = rwxBitFontGetMatrix(this.bits, this.orientation, this.width, this.height, 'sm');
     let counter = 0;
     this.matrix.map((m)=>{

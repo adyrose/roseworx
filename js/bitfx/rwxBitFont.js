@@ -6,7 +6,7 @@ import { rwxMisc } from '../helpers/rwxHelpers';
 const rwxBitFontOrientations = ['horizontal', 'vertical', 'slanted', 'wrap'];
 
 class rwxBitFont extends rwxCore {
-	constructor(selector, noFont=false)
+	constructor(selector, noFont=false, allowNoValue=false)
 	{
 		super(`[${selector}]`, true);
 		this.component = selector;
@@ -15,6 +15,7 @@ class rwxBitFont extends rwxCore {
 		this.orientationDefault = "horizontal";
 		this.backgroundColorDefault = '#000000';
 		this.noFont = noFont;
+		this.noValue = allowNoValue;
 	}
 
 	execute(el, mc)
@@ -25,7 +26,8 @@ class rwxBitFont extends rwxCore {
 			bits = el.hasAttribute(`data-${this.component}-value`);
 			if(!bits){this.error(`There is no value (data-${this.component}-value) attribute detected on the ${this.component} element.`); return;}
 			bits = el.getAttribute(`data-${this.component}-value`);
-			if(!bits){this.error(`There is no value in the (data-${this.component}-value) attribute.`); return;}
+			if(!bits && !this.noValue){this.error(`There is no value in the (data-${this.component}-value) attribute.`); return;}
+			if(bits.length===0)bits=null;
 			orientation = el.hasAttribute(`data-${this.component}-orientation`) ? el.getAttribute(`data-${this.component}-orientation`) : this.orientationDefault;
 			if(!rwxBitFontOrientations.includes(orientation)){rwxError(`${orientation} is not a valid orientation. Valid orientations include ['${rwxBitFontOrientations.join("', '")}']. Using '${rwxBitFontOrientationDefault}'.`, 'rwxBitFont'); orientation = rwxBitFontOrientationDefault;}
 		}

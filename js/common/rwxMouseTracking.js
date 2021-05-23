@@ -47,7 +47,7 @@ class rwxMouseTracking {
 		this.velocity = {x: ((this.mouse.x - this.lastmouse.x)/2), y: ((this.mouse.y - this.lastmouse.y)/2)};
     this.parallaxmouse.x = x- window.innerWidth/2;
     this.parallaxmouse.y = y - window.innerHeight/2; 
-		this.moused();
+		this.moused(e);
 		this.lastmouse = this.mouse;
 	}
 }

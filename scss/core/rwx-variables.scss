@@ -5,6 +5,7 @@
 $black: #000000 !default;
 $grey: #e3e3e3 !default;
 $dark-grey: #313131 !default;
+$silver: #263547 !default;
 $white: #ffffff !default;
 $orange: #e65c00 !default;
 $red: #ff3333 !default;
@@ -32,7 +33,8 @@ $ecolors: ('black':$black,
 					'yellow': $yellow,
 					'purple': $purple,
 					'pink': $pink,
-					'brown': $brown
+					'brown': $brown,
+					'silver': $silver
 					);
 $colors: null !default;
 @if $colors

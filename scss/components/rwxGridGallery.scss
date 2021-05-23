@@ -80,6 +80,10 @@
 	  background: rgba(0, 0, 0, 0.75);
 	  padding: 10px;
 	  color: white;
+	  &.vertical
+	  {
+	  	writing-mode: vertical-rl;
+	  }
 	}
 
 	&-overlay

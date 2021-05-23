@@ -33,11 +33,11 @@ class rwxResizeTracking {
 		this.events.push({ev,id});
 	}
 
-	debounceEvent()
+	debounceEvent(e)
 	{
 		this.debounce && clearTimeout(this.debounce)
 		this.debounce = setTimeout(()=>{
-			this.events.map((ev)=>ev.ev());
+			this.events.map((ev)=>ev.ev(e));
 		}, this.debounceThreshold);
 	}
 }

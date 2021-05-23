@@ -9,15 +9,15 @@ body {
   margin-bottom: 1.3rem;
   &.underline
   {
-    text-decoration:underline;
+    @extend .rwxt-underline;
   }
   &.no-underline
   {
-    text-decoration:none;
+    @extend .rwxt-no-underline;
   }
   @if $underline-headings
   {
-    text-decoration: underline;
+    @extend .rwxt-underline;
   }
 }
 
@@ -208,6 +208,14 @@ section, .section
   }
 }
 
+strong.asheading
+{
+  color:$silver;
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  display: block;
+  margin-bottom: 0.3rem;
+}
 
 p, strong
 {

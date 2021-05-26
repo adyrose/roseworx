@@ -1,10 +1,10 @@
 import { rwxMisc } from '../helpers/rwxHelpers';
 
 class rwxParticle {
-	constructor(x, y, size, shape, color, c, mass=1)
+	constructor(x, y, size, shape, color, c, mass=1, velocity={x:0,y:0})
 	{
 		shape = shape === "mixed" ? rwxMisc.randomValueFromArray(rwxParticleShapes.filter((ps)=>ps!=="mixed")) : shape;
-		Object.assign(this, {x, y, size, shape, color, c, mass});
+		Object.assign(this, {x, y, size, shape, color, c, mass, velocity});
 		this.setRadius(size);
 		this.fill = shape==="cross" ? false : true;
 		this.stroke = shape==="cross" ? true : false;

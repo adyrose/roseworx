@@ -53,7 +53,7 @@ class rwxCore {
 		if(id)
 		{
 			let el = document.getElementById(id);
-			if(!el){console.log(`Element #${id} not found on page.`); return;}
+			if(!el){console.warn(`Element #${id} not found on page.`); return;}
 			if(this.checkMap(el)){return;}
 			const mc = this.canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
 			this.addIME(el.id, mc);			
@@ -210,15 +210,18 @@ class rwxComponent {
 
 	stopResize()
 	{
+		this.hasResized = true;
 		window.rwx.resizeTracking && window.rwx.resizeTracking.remove(this.uniqueID);
 	}
 
 	stopScroll()
 	{
+		this.hasScrolled = true;
 		window.rwx.scrollTracking && window.rwx.scrollTracking.remove(this.uniqueID);
 	}
 
 	scrollIntoViewEvent() {
+		if(this.hasScrolled)return;
 		if(!this.scrolledIntoView)
 		{
 			if(!this.scrollErrorReported)
@@ -245,6 +248,7 @@ class rwxComponent {
 	}
 
 	scrollEvent() {
+		if(this.hasScrolled)return;
 		if(!this.scroll)
 		{
 			if(!this.scrollError2Reported)
@@ -259,6 +263,7 @@ class rwxComponent {
 
 	resizeEvent()
 	{
+		if(this.hasResized)return;
 		if(!this.resize){
 			if(!this.debounceErrorReported)
 			{

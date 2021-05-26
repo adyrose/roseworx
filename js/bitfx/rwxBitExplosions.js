@@ -236,7 +236,7 @@ class rwxBitExplosion extends rwxComponent {
 		if(this.allParticles.length == 0){
 			this.stopAnimation = true;
 			return;
-		}		
+		}
 		this.startAnimation();
 		this.stopScroll();
 	}
@@ -253,7 +253,6 @@ class rwxBitExplosion extends rwxComponent {
 			}
 			else
 			{
-				// let toPass = p.isLetter ? [(r)=>p.setRadius(r)] : [(r)=>p.setRadius(r),(r)=>p.setRadius(r)];
 				p.flashAnimation.animate([(r)=>p.setRadius(r),(r)=>p.setRadius(r)]);
 				let coords;
 				if(rwxGeometry.isInsideCircle(p.final, this.mouseTrack.mouse, this.matrix[0].dimensions.bitSize))

@@ -124,16 +124,17 @@ class rwxBitSystem extends rwxComponent {
     let yCounter2 = 0;
     for(let i=0;i<this.numberofparticles;i++)
     {
+    	let finalx =rwxMath.randomInt(xCounter2, (window.innerWidth/grid)*(xCounter+1));
+    	let finaly =rwxMath.randomInt(yCounter2, (window.innerHeight/grid)*(yCounter+1));
+    	xCounter+=1;
+    	xCounter2 = xCounter*(window.innerWidth/grid);
+
     	if(xCounter === grid){
     		xCounter=0;
     		xCounter2=0;
     		yCounter+=1;
     		yCounter2 = yCounter*(window.innerHeight/grid);
     	}
-    	let finalx =rwxMath.randomInt(xCounter2, (window.innerWidth/grid)*(xCounter+1));
-    	let finaly =rwxMath.randomInt(yCounter2, (window.innerHeight/grid)*(yCounter+1));
-    	xCounter+=1;
-    	xCounter2 = xCounter*(window.innerWidth/grid);
 
    		let radius = rwxMath.randomInt(3,5);
    		let et = ((radius*2) + rwxMath.randomInt(20,30));

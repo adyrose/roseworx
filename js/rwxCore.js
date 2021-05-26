@@ -69,7 +69,27 @@ class rwxCore {
   commence(id)
   {
     const IME = this.getIME(id);
-    IME && IME.scrolledIntoView();    
+  	if(IME)
+  	{
+  		if(IME.hasScrolled)
+  		{
+  			IME.startedAnimation = false;
+  			IME.startAnimation();
+  		}
+  		else
+  		{
+  			IME.scrolledIntoView(); 
+  		}
+  	}   
+  }
+
+  uncommence(id)
+  {
+    const IME = this.getIME(id);
+  	if(IME)
+  	{
+  		IME.stopAnimation = true;
+  	}  	
   }
 
 	getIMES()
@@ -278,7 +298,11 @@ class rwxComponent {
 	startAnimation()
 	{
 		this.stopAnimation = false;
-		this.animateLoop();
+		if(!this.startedAnimation)
+		{
+			this.startedAnimation = true;
+			this.animateLoop();
+		}
 	}
 
 	animateLoop()

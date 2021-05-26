@@ -291,6 +291,10 @@ ul
       position:relative;
       margin-bottom:0.75rem;
       padding-left: 25px;
+      ul
+      {
+        margin-top:16px;
+      }
       &:before {
         position:absolute;
         left:0px;

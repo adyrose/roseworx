@@ -1,10 +1,10 @@
 import { rwxMisc } from '../helpers/rwxHelpers';
 
 class rwxParticle {
-	constructor(x, y, size, shape, color, c, mass=1, velocity={x:0,y:0})
+	constructor(x, y, size, shape, color, c, mass=1)
 	{
 		shape = shape === "mixed" ? rwxMisc.randomValueFromArray(rwxParticleShapes.filter((ps)=>ps!=="mixed")) : shape;
-		Object.assign(this, {x, y, size, shape, color, c, mass, velocity});
+		Object.assign(this, {x, y, size, shape, color, c, mass});
 		this.setRadius(size);
 		this.fill = shape==="cross" ? false : true;
 		this.stroke = shape==="cross" ? true : false;
@@ -54,6 +54,21 @@ class rwxParticle {
 		this.c.closePath();
 		if(this.stroke)this.c.stroke();
 		if(this.fill)this.c.fill();
+
+		if(this.joinTo)
+		{
+			if(this.lineDash){
+				this.c.setLineDash([this.lineDash]);
+				this.c.lineDashOffset = this.lineDashOffset !==undefined ? this.lineDashOffset : this.lineDash;
+			}
+			this.c.beginPath();
+			this.c.strokeStyle = this.joinColor;
+			this.c.moveTo(this.x, this.y);
+			this.c.lineTo(this.joinTo.x, this.joinTo.y);
+			this.c.stroke();
+			this.c.closePath();
+			this.c.setLineDash([])
+		}
 	}
 
 	cross()
@@ -86,8 +101,8 @@ class rwxParticle {
 	triangle()
 	{
 		this.c.moveTo(this.x, this.y-this.radius);
-		this.c.lineTo((this.x+this.size), (this.y+this.size));
-		this.c.lineTo((this.x-this.size), (this.y+this.size));
+		this.c.lineTo((this.x+this.size/2), (this.y+this.size/2));
+		this.c.lineTo((this.x-this.size/2), (this.y+this.size/2));
 		this.c.lineTo(this.x, this.y-this.radius)
 	}
 

@@ -13,12 +13,20 @@ class rwxBitSystems extends rwxBitFont {
 	constructor()
 	{
 		super('rwx-bit-system', true);
+		this.allowedJoins = ['molecule', 'nucleus', 'atom'];
+		this.defaultJoin = 'molecule';
 	}
 
 	execute2(el, mc, bits, orientation, shape, color, bgcolor, nofill)
 	{
 		let disableInit = el.hasAttribute('data-rwx-bit-system-disable-init');
-		return new rwxBitSystem(el, mc, bgcolor, this.sanitizeColor(color,this.colorDefault), shape, disableInit, nofill);
+		let joinShape = el.hasAttribute('data-rwx-bit-system-join') ? el.getAttribute('data-rwx-bit-system-join') : false;
+		if(joinShape && !this.allowedJoins.includes(joinShape))
+		{
+			this.error(`${joinShape} is not an accepted value. Value must be one of ${this.allowedJoins.join(", ")}`);
+			joinShape = this.defaultJoin;
+		}
+		return new rwxBitSystem(el, mc, bgcolor, this.sanitizeColor(color,this.colorDefault), shape, disableInit, nofill, joinShape);
 	}
 
 	explode(id)
@@ -35,7 +43,7 @@ class rwxBitSystems extends rwxBitFont {
 
 class rwxBitSystem extends rwxComponent {
 
-	constructor(el, manualControl, bgColor, bitColor, shape, disableInit, nofill)
+	constructor(el, manualControl, bgColor, bitColor, shape, disableInit, nofill, joinShape)
 	{
 		super({element: el, enableAnimationLoop: true, enableResizeDebounce: true, enableScrollIntoView: !manualControl, enableMouseTracking:true})
 		this.background = bgColor;
@@ -43,12 +51,17 @@ class rwxBitSystem extends rwxComponent {
 		this.disableInit = disableInit;
 		this.shape = shape;
 		this.nofill = nofill;
+		this.joinShapes = joinShape;
 		this.el.style.backgroundColor = this.background;
 		this.mouseTrack.remove();
 		this.elFullSizeAbsolute();
 		this.createCanvas();
 		this.createConfig();
 		this.calculate();
+		if(this.joinShapes)
+		{
+			this.calculateShapeJoin();
+		}
 	}
 
 	scrolledIntoView()
@@ -62,46 +75,95 @@ class rwxBitSystem extends rwxComponent {
 		this.screenRadius = Math.sqrt(Math.pow((this.width - this.width/2), 2) + Math.pow((this.height - this.height/2), 2)) + 100;
 		this.centerx = this.width/2;
     this.centery = this.height/2;
-    this.numberofparticles = 133;
+    this.numberofparticles = 100;
     this.c.lineWidth = 2;
+	}
+
+	calculateShapeJoin()
+	{
+		let rcp;
+		if(this.joinShapes==="molecule")rcp=20
+		else if(this.joinShapes==="atom")rcp=6
+		else if(this.joinShapes==="nucleus")rcp=1
+
+		let molecules = [];
+		for(let s=0;s<rcp;s++)
+		{
+			molecules.push(this.particles[rwxMath.randomInt(0, this.particles.length-1)])
+		}
+
+		this.particles.map((p)=>{
+			let track = molecules.map((m)=>rwxGeometry.getDistance({x:p.x,y:p.y},{x:m.x,y:m.y}));
+			let closestMolecule = track.findIndex((m)=>m===Math.min(...track));
+			let joinTo;
+			if(this.joinShapes==="molecule")joinTo = molecules[closestMolecule]
+			else if(this.joinShapes==="atom")joinTo = molecules[rwxMath.randomInt(0, molecules.length-1)]
+			else if(this.joinShapes==="nucleus")joinTo = molecules[0];
+
+			p.joinTo = joinTo;
+			p.joinColor = this.convertToColor(this.bitColor, 0.1);
+			p.lineDash = rwxGeometry.getDistance({x: p.x, y: p.y}, {x:p.joinTo.x, y:p.joinTo.y});
+			p.lineAnimation = new rwxAnimation({
+				from: p.lineDash,
+				to: 0,
+				duration: 1500,
+				easing: 'easeInOutQuint',
+				complete: ()=>p.lineDash=false
+			})
+				return false;
+		})
 	}
 
 	calculate(firstBlood=true)
 	{
     this.particles = [];
+    let grid = 10;
+    let xCounter = 0;
+    let xCounter2 = 0;
+    let yCounter = 0;
+    let yCounter2 = 0;
     for(let i=0;i<this.numberofparticles;i++)
     {
-    	let finalx = rwxMath.randomInt(0, this.width);
-    	let finaly = rwxMath.randomInt(0, this.height);
+    	if(xCounter === grid){
+    		xCounter=0;
+    		xCounter2=0;
+    		yCounter+=1;
+    		yCounter2 = yCounter*(window.innerHeight/grid);
+    	}
+    	let finalx =rwxMath.randomInt(xCounter2, (window.innerWidth/grid)*(xCounter+1));
+    	let finaly =rwxMath.randomInt(yCounter2, (window.innerHeight/grid)*(yCounter+1));
+    	xCounter+=1;
+    	xCounter2 = xCounter*(window.innerWidth/grid);
+
    		let radius = rwxMath.randomInt(3,5);
    		let et = ((radius*2) + rwxMath.randomInt(20,30));
-
   		let p = new rwxParticle(finalx, finaly, radius*2, this.shape, firstBlood ? this.convertToColor(this.bitColor, 0) : this.convertToColor(this.bitColor, 1), this.c);
 		  p.parallaxMoveValue = 2;
-		  p.parallaxMoveDrag = Math.random() /  15;
-		  p.parallaxMoveAmount = Math.floor(Math.random() * (20- p.parallaxMoveValue+1) +  p.parallaxMoveValue);
+		  p.parallaxMoveDrag = Math.random() /  30;
+		  p.parallaxMoveAmount = Math.floor(Math.random() * (30- p.parallaxMoveValue+1) +  p.parallaxMoveValue);
 		  p.lastMouse = {x:0, y:0};
 		  p.finalx = finalx;
 		  p.finaly = finaly;
 		  p.cacheColor = this.bitColor;
 		  p.ringSize = radius + rwxMath.randomInt(1,2);
 		  p.parallax = !firstBlood;
+		  let animationSequence = [
+	  		{
+	  			from:[1, 0],
+	  			to:[0.1, et],
+	  			duration:1000,
+	  			easing: 'easeOutQuad',
+	  			delay: rwxMath.randomInt(0,3600),
+	  			complete: ()=>{if(!this.nofill)p.setFill(true)}
+	  		},
+	  		{
+	  			to: [1, (radius*2)],
+	  			duration: 2000,
+	  			easing: 'easeOutQuint'
+	  		}
+		  ];
 		  p.chain = new rwxAnimationChain({
-		  	sequence:[
-		  		{
-		  			from:[1, 0],
-		  			to:[0.1, et],
-		  			duration:1000,
-		  			easing: 'easeOutQuad',
-		  			delay: rwxMath.randomInt(0,3600),
-		  			complete: ()=>{if(!this.nofill)p.setFill(true)}
-		  		},
-		  		{
-		  			to: [1, (radius*2)],
-		  			duration: 2000,
-		  			easing: 'easeOutQuint'
-		  		}
-		  	],
+		  	sequence:animationSequence,
 		  	complete: ()=>{
 		  		p.parallax = true;
 		  		if(!this.eventAdded)
@@ -190,6 +252,12 @@ class rwxBitSystem extends rwxComponent {
   		{
   			let x = p.finalx + (p.lastMouse.x/p.parallaxMoveAmount);
 		    let y = p.finaly + (p.lastMouse.y/p.parallaxMoveAmount);
+		    if(p.lineAnimation)
+		    {
+		    	p.lineAnimation.animate((ldo)=>{
+		    		p.lineDashOffset = ldo;
+		    	});
+		    }
 		    p.update(x,y);
 		    p.lastMouse.x += (this.mouseTrack.parallaxmouse.x - p.lastMouse.x) * p.parallaxMoveDrag;
 		    p.lastMouse.y += (this.mouseTrack.parallaxmouse.y - p.lastMouse.y) * p.parallaxMoveDrag;

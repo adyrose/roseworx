@@ -1,16 +1,15 @@
-require('../../scss/components/rwxTimeline.scss');
 import { rwxCore, rwxComponent } from '../rwxCore';
 import {rwxAnimationChain} from '../modules/rwxAnimation';
 
 class rwxTimelines extends rwxCore {
 	constructor()
 	{
-		super('[rwx-timeline]');
+		super('[rwx-timeline]', true);
 	}
 
-	execute(el)
+	execute(el, mc)
 	{
-		return new rwxTimeline(el);
+		return new rwxTimeline(el, mc);
 	}
 }
 
@@ -33,12 +32,12 @@ class rwxTimeline extends rwxComponent {
 			}
 		}
 		let arr = [];
-		for(let time of this.times)
+		for(let [index,time] of this.times.entries())
 		{
 			obj.sequence.push({
 				complete: ()=>{time.classList.add('activated')},
 				easing: 'easeInOutQuad',
-				duration: 800,
+				duration: index === 0 ? 800 : this.times[index-1].offsetHeight*5,
 				to: ()=>time.offsetTop+14
 			});
 			arr.push((t)=>this.blob.style.top = `${t}px`)

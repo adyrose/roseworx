@@ -261,7 +261,7 @@ a
         width:5%;
       }
     }
-    &.inverted
+    &.\--inverted
     {
       &:after
       {
@@ -418,7 +418,8 @@ $cards: ("help": $orange, "note": $light-blue, "warning": $red, "hint": $yellow,
     box-shadow: 1px 1px 2px $card-border-color;
     min-height:80px;
     border-radius:8px;
-    overflow:hidden;;
+    overflow:hidden;
+    transform: skewX(-5deg);
     &:before
     {
       content: "";

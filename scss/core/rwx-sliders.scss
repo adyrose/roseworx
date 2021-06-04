@@ -11,12 +11,12 @@
 		transition: transform 0.7s $transition-base;
 	}
 
-	&[data-rwx-slider-vertical]
+	&[data-rwx-slider-vertical="true"]
 	{
 		flex-direction:column;
 	}
 
-	&[data-rwx-slider-vertical] &-counters
+	&[data-rwx-slider-vertical="true"] &-counters
 	{
 		left:20px;
 		flex-direction:column;
@@ -32,7 +32,7 @@
 		}
 	}
 
-	&[data-rwx-slider-counters]:not([data-rwx-slider-vertical])
+	&[data-rwx-slider-counters]:not([data-rwx-slider-vertical="true"])
 	{
 		padding-bottom:$slider-counter-size+30;
 		@include snap-down-from('md')
@@ -41,7 +41,7 @@
 		}
 	}
 
-	&:not([data-rwx-slider-vertical]) &-counters
+	&:not([data-rwx-slider-vertical="true"]) &-counters
 	{
 		bottom:5px;
 		width:100%;

@@ -1,6 +1,6 @@
 import {rwxAnimation} from './rwxAnimation';
 import rwxScrollTrack from '../common/rwxScrollTracking';
-
+require('../../scss/modules/rwx-skroll-highjack.scss');
 class rwxSkrollHighjack {
 	constructor(fn, m, i)
 	{
@@ -15,9 +15,51 @@ class rwxSkrollHighjack {
 		window.rwx.scrollTracking.events = [];
 		this.animate = this.animate.bind(this);
 		this.ignore = i;
+		this.htmlDefinition();
 		this.immediate();
 		rwxScrollTrack.add((e)=>this.scrolling(e), 'rwxScrollHighjacking');
 		window.addEventListener('beforeunload', ()=>{window.scrollTo(0,0)});
+	}
+
+	hideAppropriate()
+	{
+		if(this.index === 0)this.up.style.setProperty('display', 'none', 'important')
+		else this.up.style.removeProperty('display')
+		if(this.index === this.m.length)this.down.style.setProperty('display', 'none', 'important')
+		else this.down.style.removeProperty('display')
+	}
+
+	htmlDefinition()
+	{
+		let down = document.createElement('span');
+		down.classList.add('scroll-highjack-manual-control-down');
+		let t = document.createElement('span');
+		down.appendChild(t);
+		this.down = down;
+		document.body.append(down);
+		this.down.addEventListener('click', ()=>{
+			this.animation.reset();
+			this.index +=1;
+			this.highjacked = true;
+			this.hideAppropriate();
+			this.animate();
+		});
+
+		let up = document.createElement('span');
+		up.classList.add('scroll-highjack-manual-control-up');
+		let t2 = document.createElement('span');
+		up.appendChild(t2);
+		this.up = up;
+		document.body.append(up);
+		this.up.addEventListener('click', ()=>{
+			this.animation.reset();
+			this.index -=1;
+			this.highjacked = true;
+			this.hideAppropriate();
+			this.animate();
+		});
+
+		this.hideAppropriate();
 	}
 
 	animate()
@@ -57,6 +99,7 @@ class rwxSkrollHighjack {
 					window.scrollY = newTop;
 					this.fn && this.fn(newTop);
 					this.clonedEvents.map((ev)=>ev.ev());	
+					this.hideAppropriate();
 				})		
 			}
 		}

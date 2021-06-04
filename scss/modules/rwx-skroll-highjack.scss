@@ -1,0 +1,46 @@
+@import '../core/rwx-variables';
+@import '../core/rwx-mixins';
+$size: 10px;
+.scroll-highjack-manual-control-down, .scroll-highjack-manual-control-up
+{
+	position: fixed;
+	right:0px;
+	width: 60px;
+	height: 60px;
+	background: rgba($black, 0.8);
+	z-index: 9999;
+	cursor: pointer;
+	@include snap-up-from('md')
+	{
+		display: none;
+	}
+	>span
+	{
+		width:0px;
+		height:0px;
+		border-left: $size solid transparent;
+		border-right: $size solid transparent;
+		position: absolute;
+		top:50%;
+		left:50%;
+		transform: translate(-50%, -50%);
+	}
+}
+
+.scroll-highjack-manual-control-down
+{
+	bottom:0px;
+	>span
+	{
+		border-top: $size solid $white;
+	}
+}
+
+.scroll-highjack-manual-control-up
+{
+	top:0px;
+	>span
+	{
+		border-bottom: $size solid $white;
+	}
+}

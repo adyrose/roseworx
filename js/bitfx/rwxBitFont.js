@@ -14,6 +14,7 @@ class rwxBitFont extends rwxCore {
 		this.colorDefault = '#FFFFFF';
 		this.orientationDefault = "horizontal";
 		this.backgroundColorDefault = '#000000';
+		this.valueDefault = "rwx";
 		this.noFont = noFont;
 		this.noValue = allowNoValue;
 	}
@@ -23,21 +24,17 @@ class rwxBitFont extends rwxCore {
 		let bits, orientation;
 		if(!this.noFont)
 		{
-			bits = el.hasAttribute(`data-${this.component}-value`);
-			if(!bits){this.error(`There is no value (data-${this.component}-value) attribute detected on the ${this.component} element.`); return;}
-			bits = el.getAttribute(`data-${this.component}-value`);
-			if(!bits && !this.noValue){this.error(`There is no value in the (data-${this.component}-value) attribute.`); return;}
-			if(bits.length===0)bits=null;
-			orientation = el.hasAttribute(`data-${this.component}-orientation`) ? el.getAttribute(`data-${this.component}-orientation`) : this.orientationDefault;
+			bits = this.checkAttributeOrDefault(el, `data-${this.component}-value`, this.noValue ? null : this.valueDefault);
+			orientation = this.checkAttributeOrDefault(el, `data-${this.component}-orientation`, this.orientationDefault);
 			if(!rwxBitFontOrientations.includes(orientation)){rwxError(`${orientation} is not a valid orientation. Valid orientations include ['${rwxBitFontOrientations.join("', '")}']. Using '${rwxBitFontOrientationDefault}'.`, 'rwxBitFont'); orientation = rwxBitFontOrientationDefault;}
 		}
 
-		let shape = el.hasAttribute(`data-${this.component}-shape`) ? el.getAttribute(`data-${this.component}-shape`) : this.shapeDefault;
-		let color = el.hasAttribute(`data-${this.component}-color`) ? el.getAttribute(`data-${this.component}-color`) : this.colorDefault;
-		let bgcolor = el.hasAttribute(`data-${this.component}-background-color`) ? el.getAttribute(`data-${this.component}-background-color`) : this.backgroundColorDefault;
+		let shape = this.checkAttributeOrDefault(el, `data-${this.component}-shape`, this.shapeDefault);
+		let color = this.checkAttributeOrDefault(el, `data-${this.component}-color`, this.colorDefault);
+		let bgcolor = this.checkAttributeOrDefault(el, `data-${this.component}-background-color`, this.backgroundColorDefault);
 		if(!rwxParticleShapes.includes(shape)){this.error(`${shape} is not a valid shape. Valid shapes include ['${rwxParticleShapes.join("', '")}']. Using '${this.shapeDefault}'.`); shape = this.shapeDefault;}
 	
-		let nofill = el.hasAttribute(`data-${this.component}-nofill`);
+		let nofill = this.checkAttributeForBool(el, `data-${this.component}-nofill`);
 
 		return this.execute2(el, mc, bits, orientation, shape, color, bgcolor, nofill)
 	}

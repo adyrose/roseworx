@@ -6,12 +6,13 @@ class rwxNumberSwitchers extends rwxCore {
 	constructor()
 	{
 		super('[rwx-number-switcher]');
+		this.defaultValue = 0;
 	}
 
 	execute(el)
 	{
-		const initialValue = el.hasAttribute('data-rwx-number-switcher-initial-value') ? el.getAttribute('data-rwx-number-switcher-initial-value') : 0;
-		const stopAtZero = el.hasAttribute('data-rwx-number-switcher-stop-at-zero');
+		const initialValue = this.checkAttributeOrDefault(el, 'data-rwx-number-switcher-initial-value', this.defaultValue);
+		const stopAtZero = this.checkAttributeForBool(el, 'data-rwx-number-switcher-stop-at-zero');
 		return new rwxNumberSwitcher(el, initialValue, stopAtZero);
 	}
 

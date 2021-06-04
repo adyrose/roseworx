@@ -4,16 +4,17 @@ class rwxSliders extends rwxCore {
 	constructor()
 	{
 		super('[rwx-slider]');
+		this.defaultAutoSlideTimeout = 5;
 	}
 
 	execute(el)
 	{
-		const counters = el.hasAttribute('data-rwx-slider-counters');
-		const autoSlide = el.hasAttribute('data-rwx-slider-auto-slide');
-		const autoSlideTimeout = autoSlide ? el.getAttribute('data-rwx-slider-auto-slide') : false;
-		const reeling = el.hasAttribute('data-rwx-slider-reeling');
-		const vertical = el.hasAttribute('data-rwx-slider-vertical');
-	 	return new rwxSlider(el, vertical, autoSlide, counters, reeling, autoSlideTimeout ? autoSlideTimeout : 5);
+		const counters = this.checkAttributeForBool(el, 'data-rwx-slider-counters');
+		const autoSlide = this.checkAttributeForBool(el, 'data-rwx-slider-auto-slide');
+		const autoSlideTimeout = this.checkAttributeOrDefault(el, 'data-rwx-slider-auto-slide-timeout', this.defaultAutoSlideTimeout);
+		const reeling = this.checkAttributeForBool(el, 'data-rwx-slider-reeling');
+		const vertical = this.checkAttributeForBool(el, 'data-rwx-slider-vertical');
+	 	return new rwxSlider(el, vertical, autoSlide, counters, reeling, autoSlideTimeout);
 	}
 
 	goToSlide(id, slideNumber)
@@ -28,7 +29,7 @@ class rwxSliders extends rwxCore {
 class rwxSlider extends rwxComponent {
 	constructor(el, vertical, autoSlide, counters, reeling, autoSlideTimeout)
 	{
-		super({enableCustomEvents: true});
+		super({enableCustomEvents: true, element:el});
 		this.slides = [...el.children].filter((c)=>c.classList.contains('rwx-slider-slide'));
 		if(this.slides.length == 0)return;
 		this.reeling = reeling;

@@ -14,17 +14,16 @@ class rwxBitSystems extends rwxBitFont {
 	{
 		super('rwx-bit-system', true);
 		this.allowedJoins = ['molecule', 'nucleus', 'atom'];
-		this.defaultJoin = 'molecule';
 	}
 
 	execute2(el, mc, bits, orientation, shape, color, bgcolor, nofill)
 	{
-		let disableInit = el.hasAttribute('data-rwx-bit-system-disable-init');
-		let joinShape = el.hasAttribute('data-rwx-bit-system-join') ? el.getAttribute('data-rwx-bit-system-join') : false;
+		let disableInit = this.checkAttributeForBool(el, 'data-rwx-bit-system-disable-init');
+		let joinShape = this.checkAttributeOrDefault(el, 'data-rwx-bit-system-join', false);
 		if(joinShape && !this.allowedJoins.includes(joinShape))
 		{
-			this.error(`${joinShape} is not an accepted value. Value must be one of ${this.allowedJoins.join(", ")}`);
-			joinShape = this.defaultJoin;
+			joinShape !== "false" && this.error(`${joinShape} is not an accepted join value. Value must be one of ${this.allowedJoins.join(", ")}`);
+			joinShape = false;
 		}
 		return new rwxBitSystem(el, mc, bgcolor, this.sanitizeColor(color,this.colorDefault), shape, disableInit, nofill, joinShape);
 	}
@@ -138,7 +137,7 @@ class rwxBitSystem extends rwxComponent {
 
    		let radius = rwxMath.randomInt(3,5);
    		let et = ((radius*2) + rwxMath.randomInt(20,30));
-  		let p = new rwxParticle(finalx, finaly, radius*2, this.shape, firstBlood ? this.convertToColor(this.bitColor, 0) : this.convertToColor(this.bitColor, 1), this.c);
+  		let p = new rwxParticle(finalx, finaly, radius*2, this.shape, (firstBlood && !this.disableInit) ? this.convertToColor(this.bitColor, 0) : this.convertToColor(this.bitColor, 1), this.c);
 		  p.parallaxMoveValue = 2;
 		  p.parallaxMoveDrag = Math.random() /  30;
 		  p.parallaxMoveAmount = Math.floor(Math.random() * (30- p.parallaxMoveValue+1) +  p.parallaxMoveValue);

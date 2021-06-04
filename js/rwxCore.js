@@ -17,10 +17,21 @@ class rwxCore {
 			this.canHaveManualControl = canHaveManualControl;
 			[...document.querySelectorAll(this.selector)].map((el) => {
 				if(this.checkMap(el)){return;}
-				const mc = this.canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
+				const ismc = this.checkAttributeForBool(el, 'data-rwx-manual-control');
+				const mc = this.canHaveManualControl ? this.execute(el, ismc) : this.execute(el);
 				this.addIME(el.id, mc);
 			});
 		});
+	}
+
+	checkAttributeOrDefault(el, att, def)
+	{
+		return el.hasAttribute(att) ? el.getAttribute(att) : def;
+	}
+
+	checkAttributeForBool(el, att)
+	{
+		return el.hasAttribute(att) ? el.getAttribute(att) === "true" : false;
 	}
 
 	checkMap(el)
@@ -73,7 +84,6 @@ class rwxCore {
   	{
   		if(IME.hasScrolled)
   		{
-  			IME.startedAnimation = false;
   			IME.startAnimation();
   		}
   		else
@@ -89,6 +99,7 @@ class rwxCore {
   	if(IME)
   	{
   		IME.stopAnimation = true;
+  		IME.startedAnimation = false;
   	}  	
   }
 

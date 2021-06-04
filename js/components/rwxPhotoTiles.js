@@ -11,14 +11,15 @@ class rwxPhotoTiles extends rwxCore {
 	constructor()
 	{
 		super('[rwx-phototile]');
+    this.defaultEffect = 'random';
 	}
 
 	execute(el)
 	{
-		const effect = el.hasAttribute('data-rwx-phototile-effect') ? el.getAttribute('data-rwx-phototile-effect') : 'random';
-		const auto = el.hasAttribute('data-rwx-phototile-auto')
-		const autoTimeout = auto ? el.getAttribute('data-rwx-phototile-auto') : false;
-		const noThumbnails = el.hasAttribute('data-rwx-phototile-no-thumbnails');
+		const effect = this.checkAttributeOrDefault(el, 'data-rwx-phototile-effect', this.defaultEffect);
+		const auto = this.checkAttributeForBool(el, 'data-rwx-phototile-auto');
+		const autoTimeout = this.checkAttributeOrDefault(el, 'data-rwx-phototile-auto', false);
+		const noThumbnails = this.checkAttributeForBool(el, 'data-rwx-phototile-no-thumbnails');
 		return new rwxPhotoTile(el, effect, auto, autoTimeout ? autoTimeout : 5, noThumbnails);
 	}
 

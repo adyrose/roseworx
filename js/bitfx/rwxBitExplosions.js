@@ -17,7 +17,7 @@ class rwxBitExplosions extends rwxBitFont {
 
 	execute2(el, mc, bits, orientation, shape, color, bgcolor, nofill)
 	{
-		let sparecolor = el.hasAttribute('data-rwx-bit-explosion-secondary-color') ? el.getAttribute('data-rwx-bit-explosion-secondary-color') : this.spareColorDefault;
+		let sparecolor = this.checkAttributeOrDefault(el, 'data-rwx-bit-explosion-secondary-color', this.spareColorDefault);
 		return new rwxBitExplosion(el, mc, bits, orientation, shape, color, bgcolor, sparecolor, nofill);
 	}
 }

@@ -14,13 +14,10 @@ $emphasis-line:	2px solid $table-color-base;
 @include component-spacing('rwx-table');
 .rwx-table
 {
-	&[rwx-table]
-	{
-		max-height:$table-height-limit;
-		overflow:auto;
-		position:relative;
-	}
-
+	max-height:$table-height-limit;
+	overflow:auto;
+	position:relative;
+		
 	.scroll-mask
 	{
 		&-vertical, &

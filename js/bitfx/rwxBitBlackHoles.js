@@ -17,8 +17,8 @@ class rwxBitBlackHoles extends rwxBitFont {
 
   execute2(el, mc, bits, orientation, shape, color, bgcolor)
   {
-    let sparecolor = el.hasAttribute('data-rwx-bit-black-hole-secondary-color') ? el.getAttribute('data-rwx-bit-black-hole-secondary-color') : this.spareColorDefault;
-    let disableTrail = el.hasAttribute('data-rwx-bit-black-hole-disable-trail');
+    let sparecolor = this.checkAttributeOrDefault(el, 'data-rwx-bit-black-hole-secondary-color', this.spareColorDefault);
+    let disableTrail =  this.checkAttributeForBool(el, 'data-rwx-bit-black-hole-disable-trail');
     return new rwxBitBlackHole(el, mc, bits, orientation, shape, color, bgcolor, this.sanitizeColor(sparecolor, this.spareColorDefault), disableTrail);
   }
 }
@@ -105,7 +105,7 @@ class rwxBitBlackHole extends rwxComponent {
       m.matrix.map((mp)=>{
         xs.push(mp.x);
         ys.push(mp.y);
-        let letterparticle = new rwxParticle(mp.x, mp.y, m.dimensions.particleSize, this.shape, this.bitColor, this.c);
+        let letterparticle = new rwxParticle(mp.x, mp.y, m.dimensions.particleSize, 'circle', this.bitColor, this.c);
         letterparticle.isLetter = true;
         letterparticle.finalx = mp.x;
         letterparticle.finaly = mp.y;

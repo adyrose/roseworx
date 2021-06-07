@@ -74,7 +74,7 @@ class rwxTab extends rwxComponent {
 			if(el)
 			{
 				let tab = rwxDOM.hasAncestor(el, '.rwx-tabs-tab');
-				let parent = rwxDOM.hasAncestor(tab, '.rwx-tabs-tab');
+				let parent = tab ? rwxDOM.hasAncestor(tab, '.rwx-tabs-tab') : false;
 				if(parent && this.el.contains(parent)){this.compareAndOpen(parent); return;}
 				if(tab){this.compareAndOpen(tab); this.hash = el;}
 			}
@@ -143,7 +143,7 @@ class rwxTab extends rwxComponent {
 
 	changeTab(tabNumber)
 	{
-		if(tabNumber == this.activeTab || this.animating){return;}
+		if(tabNumber == this.activeTab || this.animating || tabNumber < 0 || tabNumber > this.tabs.length){return;}
 		this.newTabNumber = tabNumber;
 		this.resetAnimationFlags();
 		this.moveBullet(tabNumber);

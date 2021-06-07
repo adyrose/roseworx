@@ -1,7 +1,6 @@
 const rwxDOM = {
 	hasAncestor: (el, selector) => {
 		const element = el.parentNode;
-		console.log(typeof selector);
 		if(element.matches('body'))
 		{
 			return false;

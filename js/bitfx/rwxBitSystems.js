@@ -177,7 +177,7 @@ class rwxBitSystem extends rwxComponent {
 		  	from: [()=>this.getCurrentCoordinates(i).x, ()=>this.getCurrentCoordinates(i).y],
 		  	to: [()=>this.getExplodeCoordinates(i).x, ()=>this.getExplodeCoordinates(i).y],
 		  	easing: 'easeOutQuart',
-		  	duration: 1500,
+		  	duration: 1000,
 		  	complete: ()=>{
 		  		p.implodeAnimation.reset();
 		  	}
@@ -185,15 +185,15 @@ class rwxBitSystem extends rwxComponent {
 		  p.implodeAnimation = new rwxAnimation({
 		  	from: [()=>this.getCurrentCoordinates(i).x, ()=>this.getCurrentCoordinates(i).y],
 		  	to: [finalx, finaly],
-		  	easing: 'easeInQuart',
-		  	duration: 1500,
+		  	easing: 'easeInQuad',
+		  	duration: 800,
 		  	complete: ()=>{
 		  		p.lastMouse = {x:0,y:0};
 		  		p.parallax=true;
 		  		p.explodeAnimation.reset();
 		  	}
 		  });
-		  p.setFill(!firstBlood);
+		  p.setFill(this.disableInit && !this.nofill ? true : (!firstBlood && !this.nofill));
 		  p.setStroke(true);
 		  if(!firstBlood)
 		  {

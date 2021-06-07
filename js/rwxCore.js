@@ -54,6 +54,7 @@ class rwxCore {
 				ime.stopAnimation = true;
 				ime.removeListeners && ime.removeListeners();
 				ime.canvas && ime.removeCanvas();
+				ime.cleanUp && ime.cleanUp();
 				this.deleteIME(id);
 			}
 		}

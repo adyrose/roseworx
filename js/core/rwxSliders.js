@@ -5,11 +5,12 @@ class rwxSliders extends rwxCore {
 	{
 		super('[rwx-slider]');
 		this.defaultAutoSlideTimeout = 5;
+		this.defaultCounters = true;
 	}
 
 	execute(el)
 	{
-		const counters = this.checkAttributeForBool(el, 'data-rwx-slider-counters');
+		const counters = this.checkAttributeOrDefault(el, 'data-rwx-slider-counters', this.defaultCounters) === "true";
 		const autoSlide = this.checkAttributeForBool(el, 'data-rwx-slider-auto-slide');
 		const autoSlideTimeout = this.checkAttributeOrDefault(el, 'data-rwx-slider-auto-slide-timeout', this.defaultAutoSlideTimeout);
 		const reeling = this.checkAttributeForBool(el, 'data-rwx-slider-reeling');
@@ -34,6 +35,7 @@ class rwxSlider extends rwxComponent {
 		if(this.slides.length == 0)return;
 		this.reeling = reeling;
 		this.currentSlide = 1;
+		this.autoSlide = autoSlide;
 		this.counter = 0;
 		this.direction = vertical ? "Y" : "X";
 		this.autoSlideLoop = this.autoSlideLoop.bind(this);
@@ -43,11 +45,11 @@ class rwxSlider extends rwxComponent {
 		this.declareEvent('slideHide');
 
 		autoSlide && this.autoSlideLoop();
-		counters && this.createCounter(el);
-		vertical && this.setToHighest(el);
+		counters && this.createCounter();
+		vertical && this.setToHighest();
 	}
 
-	setToHighest(el)
+	setToHighest()
 	{
 		let height = Math.max(...this.slides.map((s)=>s.getBoundingClientRect().height));
 		if(this.dotDiv)
@@ -56,10 +58,19 @@ class rwxSlider extends rwxComponent {
 			if(height2 > height) { height = height2;}
 			this.slides.map((s)=>s.style.height = height + "px")
 		}
-		el.style.height = height+ "px";
+		this.el.style.height = height+ "px";
 	}
 
-	createCounter(el)
+	cleanUp()
+	{
+		this.slides.map((s)=>{
+			s.removeAttribute('style');
+		})
+		this.dotDiv && this.el.removeChild(this.dotDiv);
+		this.el.removeAttribute('style');
+	}
+
+	createCounter()
 	{
 		this.counters = [];
 		this.dotDiv = document.createElement('div');
@@ -86,14 +97,15 @@ class rwxSlider extends rwxComponent {
 			this.counters.push(dot);
 			return;
 		});
-		el.appendChild(this.dotDiv);
+		this.el.appendChild(this.dotDiv);
 	}
 
 	autoSlideLoop()
 	{
-		if(this.counter === this.autoSlideTimeout)
+		if(this.stopAnimation){return;}
+		if(this.counter >= this.autoSlideTimeout)
 		{
-			this.goToSlide(this.currentSlide+1);
+			this.goToSlide(this.currentSlide+1, true);
 			this.counter = 0;
 		}
 		else
@@ -103,9 +115,9 @@ class rwxSlider extends rwxComponent {
 		window.requestAnimationFrame(this.autoSlideLoop);
 	}
 
-	isSlideNumberInRange(number)
+	isSlideNumberInRange(number, dontAllowOutOfBounds)
 	{
-		return (number > this.slides.length || number < 0) ? 1 : number;
+		return (number > this.slides.length || number < 0) ? dontAllowOutOfBounds ? 1 : false : number;
 	}
 
 	slideComplete(slidOut, slidIn)
@@ -117,9 +129,11 @@ class rwxSlider extends rwxComponent {
 		}, 700);
 	}
 
-	goToSlide(number)
+	goToSlide(number, fromAutoLoop=false)
 	{
-		let num = this.isSlideNumberInRange(number);
+
+		let num = this.isSlideNumberInRange(number, fromAutoLoop);
+		if(!num)return;
 		if(this.reeling)
 		{
 			this.slides.map((s)=>window.requestAnimationFrame(()=>{

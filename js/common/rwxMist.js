@@ -7,7 +7,12 @@ class rwxMist extends rwxComponent {
 		this.el = el;
 		this.update = this.update.bind(this);
 		this.calculate();
-		el.addEventListener('scroll', this.update);
+		this.el.addEventListener('scroll', this.update);
+	}
+
+	cleanUp()
+	{
+		this.el.removeEventListener('scroll', this.update);
 	}
 
 	resize()
@@ -22,13 +27,13 @@ class rwxMist extends rwxComponent {
 			{
 				this.rightMist = document.createElement('div');
 				this.rightMist.classList.add('rwx-mist-right');
-				this.el.appendChild(this.rightMist);
+				this.addElement(this.el, this.rightMist);
 			}
 		} 
 		else {
 			if(this.rightMist)
 			{
-				this.el.removeChild(this.rightMist); 
+				this.removeElement(this.el, this.rightMist);
 				this.rightMist = false;
 			}
 		}
@@ -37,13 +42,13 @@ class rwxMist extends rwxComponent {
 			{
 				this.bottomMist = document.createElement('div');
 				this.bottomMist.classList.add('rwx-mist-bottom');
-				this.el.appendChild(this.bottomMist);
+				this.addElement(this.el, this.bottomMist);
 			}
 		} 
 		else {
 			if(this.bottomMist)
 			{
-				this.el.removeChild(this.bottomMist); 
+				this.removeElement(this.el, this.bottomMist);
 				this.bottomMist = false;
 			}
 		}

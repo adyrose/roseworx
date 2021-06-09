@@ -19,7 +19,7 @@ class rwxCore {
 				if(this.checkMap(el)){return;}
 				const ismc = this.checkAttributeForBool(el, 'data-rwx-manual-control');
 				const mc = this.canHaveManualControl ? this.execute(el, ismc) : this.execute(el);
-				this.addIME(el.id, mc);
+				mc && this.addIME(el.id, mc);
 			});
 		});
 	}
@@ -49,11 +49,12 @@ class rwxCore {
 	{
 		if(id)
 		{
-			let ime = this.getIME(id);
+			let ime = this.getIME(id, true);
 			if(ime){
 				ime.stopAnimation = true;
 				ime.removeListeners && ime.removeListeners();
-				ime.canvas && ime.removeCanvas();
+				ime.removeElements && ime.removeElements();
+				ime.removeStyles && ime.removeStyles();
 				ime.cleanUp && ime.cleanUp();
 				this.deleteIME(id);
 			}
@@ -65,10 +66,10 @@ class rwxCore {
 		if(id)
 		{
 			let el = document.getElementById(id);
-			if(!el){console.warn(`Element #${id} not found on page.`); return;}
+			if(!el){this.error(`Hook - Element #${id} not found on page.`); return;}
 			if(this.checkMap(el)){return;}
 			const mc = this.canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
-			this.addIME(el.id, mc);			
+			mc && this.addIME(el.id, mc);			
 		}
 	}
 
@@ -127,7 +128,7 @@ class rwxCore {
 		delete this.internalMap[id];
 	}
 
-	getIME(id)
+	getIME(id, noerr=false)
 	{
 		if(this.internalMap && this.internalMap[id])
 		{
@@ -135,7 +136,7 @@ class rwxCore {
 		}
 		else
 		{
-			if(Object.keys(this.internalMap).length > 0)
+			if(Object.keys(this.internalMap).length > 0 && !noerr)
 			{
 				this.error(`No element detected with id - ${id} \n[rwx] Possible ID's on this page are - ${Object.keys(this.internalMap).join(', ')}`);
 			}
@@ -162,6 +163,8 @@ class rwxComponent {
 		this.resourceName = this.constructor.name;
 		this.el = element;
 		this.uniqueID = rwxMisc.uniqueId();
+		this.addedElements = [];
+		this.addedStyles = [];
 		if(enableCustomEvents)
 		{
 			this.customEventsEnabled = true;
@@ -201,6 +204,35 @@ class rwxComponent {
 			let fn = this.moused ? ()=>{this.moused()} : ()=>{};
 			this.mouseTrack = new rwxMouseTrack(this.el.hasAttribute('rwx-mouse-track-use-window') ? window : this.el, fn);
 		}
+	}
+
+	removeElements()
+	{
+		this.addedElements.map((a)=>a.parent.removeChild(a.child));
+		this.addedElements = [];
+	}
+
+	removeElement(parent, child)
+	{
+		parent.removeChild(child);
+		this.addedElements = this.addedElements.filter((ae)=>ae.parent!==parent && ae.child!==child);
+	}
+
+	addElement(parent, child)
+	{
+		parent.appendChild(child);
+		this.addedElements.push({parent, child});
+	}
+
+	addStyle(parent, style, val)
+	{
+		parent.style[style] = val;
+		this.addedStyles.push({parent, style});
+	}
+
+	removeStyles()
+	{
+		this.addedStyles.map((s)=>s.parent.style[s.style] = '');
 	}
 
 	removeListeners()
@@ -331,32 +363,28 @@ class rwxComponent {
     }
 	}
 
-	elFullSizeAbsolute()
+	elFullSizeAbsolute(color)
 	{
 		const currentPosition = window.getComputedStyle(this.el.parentNode).position;
 		if(currentPosition!=="absolute" && currentPosition!=="fixed")
 		{
-			this.el.parentNode.style.position = "relative";
+			this.addStyle(this.el.parentNode, 'position', 'relative');
 		}
-		this.el.style.position = 'absolute';
-		this.el.style.top = '0px';
-		this.el.style.left = '0px';
-		this.el.style.right = '0px';
-		this.el.style.bottom = '0px';
-		this.el.style.width = '100%';
-		this.el.style.height = '100%';
-	}
-
-	removeCanvas()
-	{
-		this.el.removeChild(this.canvas);
+		this.addStyle(this.el, 'position', 'absolute');
+		this.addStyle(this.el, 'top', '0px');
+		this.addStyle(this.el, 'left', '0px');
+		this.addStyle(this.el, 'right', '0px');
+		this.addStyle(this.el, 'bottom', '0px');
+		this.addStyle(this.el, 'width', '100%');
+		this.addStyle(this.el, 'height', '100%');
+		if(color)this.addStyle(this.el, 'backgroundColor', color);
 	}
 
 	createCanvas()
 	{
 		this.canvas = document.createElement('canvas');
 		this.c = this.canvas.getContext('2d');
-		this.el.appendChild(this.canvas);
+		this.addElement(this.el, this.canvas);
     this.sizeCanvas();
 	}
 

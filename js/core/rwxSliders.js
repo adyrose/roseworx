@@ -63,11 +63,10 @@ class rwxSlider extends rwxComponent {
 
 	cleanUp()
 	{
-		this.slides.map((s)=>{
-			s.removeAttribute('style');
+		this.slides.map((s, i)=>{
+			s.style.transform = '';
+			s.style.display = i===0 ? '' : 'none';
 		})
-		this.dotDiv && this.el.removeChild(this.dotDiv);
-		this.el.removeAttribute('style');
 	}
 
 	createCounter()
@@ -97,7 +96,7 @@ class rwxSlider extends rwxComponent {
 			this.counters.push(dot);
 			return;
 		});
-		this.el.appendChild(this.dotDiv);
+		this.addElement(this.el, this.dotDiv);
 	}
 
 	autoSlideLoop()

@@ -23,7 +23,6 @@ class rwxBitSwarm extends rwxComponent {
 	constructor(el, manualControl, bits, orientation, shape, color, bgcolor, nofill)
 	{
 		super({element: el, enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true});
-		this.el.style.backgroundColor = bgcolor;
 		this.shape = shape;
 		this.orientation = orientation;
 		this.backgroundColor = bgcolor;
@@ -37,7 +36,7 @@ class rwxBitSwarm extends rwxComponent {
 		this.letterTimeoutTicker2 = 0;
 		this.wordAnimationTimeout = 300;
 		this.wordAnimationTicker = 0;
-		this.elFullSizeAbsolute();
+		this.elFullSizeAbsolute(bgcolor);
 		this.createCanvas();
 		this.calculatePosition(true, bits);
 	}

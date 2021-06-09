@@ -1,4 +1,4 @@
-import { rwxCore } from '../rwxCore';
+import { rwxCore, rwxComponent } from '../rwxCore';
 import rwxMist from '../common/rwxMist';
 
 class rwxTables extends rwxCore {
@@ -9,13 +9,16 @@ class rwxTables extends rwxCore {
 	
 	execute(el)
 	{
-		const dual = el.classList.contains('dual-headings');
-		const vertical = el.classList.contains('vertical');
-		const verticalLine = el.classList.contains('vertical-line');
-		const noMist = el.hasAttribute('data-rwx-table-no-mist');
-		const noStick = el.hasAttribute('data-rwx-table-no-stick');
+		const dual = el.classList.contains('--dual-headings');
+		const vertical = el.classList.contains('--vertical');
+		const verticalLine = el.classList.contains('--vertical-line');
+
+		const noMist = this.checkAttributeForBool(el, 'data-rwx-table-no-mist');
+		const noStick = this.checkAttributeForBool(el, 'data-rwx-table-no-stick');
 
 		let mist, stick;
+
+		if([...el.querySelectorAll('.rwx-table-data')].length===0){return false}
 
 		if(!noMist)
 		{
@@ -26,34 +29,46 @@ class rwxTables extends rwxCore {
 		{
 			if(vertical)
 			{
-				stick = new rwxVerticalStickyTableHeader(el, 30);
+				stick = new rwxVerticalStickyTableHeader(el, 30, noStick, mist);
 			}
 			else if(dual)
 			{
-				stick = new rwxDualStickyTableHeader(el, 30, verticalLine);
+				stick = new rwxDualStickyTableHeader(el, 30, verticalLine, noStick, mist);
 			}
 			else
 			{
-				stick = new rwxHorizontalStickyTableHeader(el, 30);
+				stick = new rwxHorizontalStickyTableHeader(el, 30, noStick, mist);
 			}
 		}
-
-		el.addEventListener('scroll', ()=>{
-			!noStick && stick.update();
-		});
-		return stick;
-
+		return stick || mist || false;
 	}
 }
 
-class rwxDualStickyTableHeader
+class rwxDualStickyTableHeader extends rwxComponent
 {
-	constructor(t, scrollBoundary, isVerticalLine)
+	constructor(el, scrollBoundary, isVerticalLine, noStick, mist)
 	{
-		this.table = t;
+		super({element: el})
+		this.mist = mist;
 		this.isVerticalLine = isVerticalLine;
-		this.stick = new rwxVerticalStickyTableHeader(t, scrollBoundary);
-		this.stick2 = new rwxHorizontalStickyTableHeader(t, scrollBoundary);
+		this.stick = new rwxVerticalStickyTableHeader(this.el, scrollBoundary);
+		this.stick2 = new rwxHorizontalStickyTableHeader(this.el, scrollBoundary);
+		this.update = this.update.bind(this);
+		this.noStick = noStick;
+		!this.noStick && this.el.addEventListener('scroll', this.update);
+	}
+
+	cleanUp() {
+		if(this.mist)
+		{
+			this.mist.removeElements();
+			this.mist.cleanUp();
+		}
+		this.stick.cleanUp();
+		this.stick.removeElements();
+		this.stick2.cleanUp();
+		this.stick2.removeElements();
+		!this.noStick && this.el.removeEventListener('scroll', this.update);
 	}
 
 	createMask()
@@ -65,13 +80,13 @@ class rwxDualStickyTableHeader
 		mask.style.width = this.stick.getWidth() + "px";
 		mask.style.minWidth = 0 + "px";
 		this.mask = mask;
-		this.table.appendChild(mask);
+		this.addElement(this.el, mask);
 		this.maskCreated = true;
 	}
 
 	destroyMask()
 	{
-		this.table.removeChild(this.mask);
+		this.removeElement(this.el, this.mask);
 		this.maskCreated = false;
 	}
 
@@ -87,11 +102,11 @@ class rwxDualStickyTableHeader
 			{
 				if(this.stick.headerStuck)
 				{
-					this.mask.style.left = this.table.scrollLeft + "px";
+					this.mask.style.left = this.el.scrollLeft + "px";
 				}
 				if(this.stick2.headerStuck)
 				{
-					this.mask.style.top = this.table.scrollTop + "px";
+					this.mask.style.top = this.el.scrollTop + "px";
 				}
 			}
 		}
@@ -102,17 +117,31 @@ class rwxDualStickyTableHeader
 	}
 }
 
-class rwxVerticalStickyTableHeader
+class rwxVerticalStickyTableHeader extends rwxComponent
 {
-	constructor(tableEl, scrollBoundary)
+	constructor(el, scrollBoundary, noStick, mist)
 	{
-		this.table = tableEl;
-		this.tableBoundaries = this.table.getBoundingClientRect();
+		super({element: el});
+		this.mist = mist;
+		this.tableBoundaries = this.el.getBoundingClientRect();
 		this.stuckElements = [];
 		this.headerStuck = false;
-		this.headerEls = [...tableEl.querySelectorAll('.rwx-table-data')];
+		this.headerEls = [...this.el.querySelectorAll('.rwx-table-data')];
 		this.leftMin = this.headerEls[0].getBoundingClientRect().left - this.tableBoundaries.left;
 		this.boundary = (scrollBoundary+this.leftMin);
+		this.update = this.update.bind(this);
+		this.noStick = noStick;
+		!this.noStick && this.el.addEventListener('scroll', this.update);
+	}
+
+	cleanUp()
+	{
+		if(this.mist)
+		{
+			this.mist.removeElements();
+			this.mist.cleanUp();
+		}
+		!this.noStick && this.el.removeEventListener('scroll', this.update);
 	}
 
 	getWidth()
@@ -133,10 +162,10 @@ class rwxVerticalStickyTableHeader
 
 	update()
 	{
-		if(this.table.scrollLeft > this.boundary)
+		if(this.el.scrollLeft > this.boundary)
 		{
 			!this.headerStuck && this.makeHeaderSticky();
-			if(this.stuckElements.length>0){this.stuckElements.map((se)=>{se.style.left = this.table.scrollLeft + "px"})}
+			if(this.stuckElements.length>0){this.stuckElements.map((se)=>{se.style.left = this.el.scrollLeft + "px"})}
 		}
 		else
 		{
@@ -157,7 +186,7 @@ class rwxVerticalStickyTableHeader
 			c.classList.add('scroll');
 			c.style.height = s.getBoundingClientRect().height + "px";
 			this.stuckElements.push(c);
-			h.appendChild(c);
+			this.addElement(h, c);
 			return;
 		});
 		this.headerStuck = true;
@@ -165,22 +194,36 @@ class rwxVerticalStickyTableHeader
 
 	makeHeaderNormal()
 	{
-		this.stuckElements.map((se,i)=>this.headerEls[i].removeChild(se));
+		this.stuckElements.map((se,i)=>this.removeElement(this.headerEls[i], se));
 		this.headerStuck = false;
 	}
 }
 
-class rwxHorizontalStickyTableHeader
+class rwxHorizontalStickyTableHeader extends rwxComponent
 {
-	constructor(tableEl, scrollBoundary)
+	constructor(el, scrollBoundary, noStick, mist)
 	{
-		this.table = tableEl;
-		this.tableBoundaries = this.table.getBoundingClientRect();
+		super({element: el});
+		this.mist = mist;
+		this.tableBoundaries = this.el.getBoundingClientRect();
 		this.stuckElement = false;
 		this.headerStuck = false;
-		this.headerEl = tableEl.querySelector('.rwx-table-data:first-child');
+		this.headerEl = this.el.querySelector('.rwx-table-data:first-child');
 		this.topMin = this.headerEl.getBoundingClientRect().top - this.tableBoundaries.top;
 		this.boundary = (scrollBoundary+this.topMin);
+		this.update = this.update.bind(this);
+		this.noStick = noStick;
+		!this.noStick && this.el.addEventListener('scroll', this.update);
+	}
+
+	cleanUp()
+	{
+		if(this.mist)
+		{
+			this.mist.removeElements();
+			this.mist.cleanUp();
+		}
+		!this.noStick && this.el.removeEventListener('scroll', this.update);
 	}
 
 	getHeight()
@@ -190,9 +233,9 @@ class rwxHorizontalStickyTableHeader
 
 	update()
 	{
-		if(this.table.scrollTop > this.boundary){
+		if(this.el.scrollTop > this.boundary){
 			!this.headerStuck && this.makeHeaderSticky();
-			if(this.stuckElement)this.stuckElement.style.top = this.table.scrollTop + "px"
+			if(this.stuckElement)this.stuckElement.style.top = this.el.scrollTop + "px"
 		}
 		else
 		{
@@ -203,15 +246,15 @@ class rwxHorizontalStickyTableHeader
 	makeHeaderSticky()
 	{
 		this.stuckElement = this.headerEl.cloneNode(true);
-		this.table.appendChild(this.stuckElement);
 		this.stuckElement.classList.add('scroll');
 		this.stuckElement.style.width = this.headerEl.scrollWidth + "px";
+		this.addElement(this.el, this.stuckElement);
 		this.headerStuck = true;
 	}
 
 	makeHeaderNormal()
 	{
-		this.table.removeChild(this.stuckElement);
+		this.removeElement(this.el, this.stuckElement);
 		this.headerStuck = false;
 	}
 }

@@ -1,4 +1,4 @@
-import { rwxCore } from '../rwxCore';
+import { rwxCore, rwxComponent } from '../rwxCore';
 
 class rwxForms extends rwxCore {
 	constructor()
@@ -19,15 +19,15 @@ class rwxForms extends rwxCore {
 	}
 }
 
-class rwxForm {
-	constructor(formEl)
+class rwxForm extends rwxComponent {
+	constructor(el)
 	{
-		const inputs = [...formEl.querySelectorAll("input"), ...formEl.querySelectorAll('textarea'), ...formEl.querySelectorAll('select')];
-		const submitButton = formEl.querySelector("button[type='submit']");
+		super({element: el})
+		const submitButton = this.el.querySelector("button[type='submit']");
 
 		this.validEls = {};
 
-		[...inputs].map((el)=>{
+		this.getInputs().map((el)=>{
 			this.determineValid(el);
 			this.touched(el);
 
@@ -45,7 +45,7 @@ class rwxForm {
 
 		if(submitButton)submitButton.disabled = !this.isFormValid();
 
-		formEl.addEventListener('submit', (ev)=>{
+		this.el.addEventListener('submit', (ev)=>{
 			if(!this.isFormValid())
 			{
 				ev.preventDefault();
@@ -54,7 +54,7 @@ class rwxForm {
 			if(this.customSubmit){
 				ev.preventDefault();
 				const finalObject = {};
-				inputs.map((i)=>{
+				this.getInputs().map((i)=>{
 					let name = i.getAttribute('name');
 					if(name){
 						finalObject[name] = i.type=="checkbox" ? i.checked : i.value;
@@ -64,6 +64,11 @@ class rwxForm {
 				this.customSubmit(finalObject);
 			}
 		})
+	}
+
+	getInputs()
+	{
+		return [...this.el.querySelectorAll("input"), ...this.el.querySelectorAll('textarea'), ...this.el.querySelectorAll('select')];
 	}
 
 	determineValid(el)

@@ -26,7 +26,6 @@ class rwxBitExplosion extends rwxComponent {
 	constructor(el, manualControl, bits, orientation, shape, color, bgcolor, sparecolor, nofill)
 	{
 		super({element: el, enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true})
-		this.el.style.backgroundColor = bgcolor;
 		this.shape = shape;
 		this.bits = bits;
 		this.nofill = nofill;
@@ -38,7 +37,7 @@ class rwxBitExplosion extends rwxComponent {
 		this.spareParticleSize = 1;
 		this.boundaryFromWordToSpareParticle = 10;
 		this.numberOfSpareParticles = 20;
-		this.elFullSizeAbsolute();
+		this.elFullSizeAbsolute(bgcolor);
 		this.createCanvas();
 		this.calculateLetterParticles();
 		if(!this.matrix)return;

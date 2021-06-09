@@ -45,7 +45,6 @@ class rwxBitSystem extends rwxComponent {
 	constructor(el, manualControl, bgColor, bitColor, shape, disableInit, nofill, joinShape)
 	{
 		super({element: el, enableAnimationLoop: true, enableResizeDebounce: true, enableScrollIntoView: !manualControl, enableMouseTracking:true})
-		this.background = bgColor;
 		this.bitColor = bitColor;
 		this.disableInit = disableInit;
 		this.shape = shape;
@@ -53,7 +52,7 @@ class rwxBitSystem extends rwxComponent {
 		this.joinShapes = joinShape;
 		this.el.style.backgroundColor = this.background;
 		this.mouseTrack.remove();
-		this.elFullSizeAbsolute();
+		this.elFullSizeAbsolute(bgColor);
 		this.createCanvas();
 		this.createConfig();
 		this.calculate();

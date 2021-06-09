@@ -91,13 +91,18 @@ class rwxTab extends rwxComponent {
 		})		
 	}
 
+	cleanUp()
+	{
+		this.el.removeChild(this.container);
+	}
+
 	createTabs()
 	{
 		this.container = document.createElement('div');
 		this.container.classList.add('rwx-tabs-container');
 		this.bullet = document.createElement('span');
 		this.bullet.classList.add('bullet');
-		this.container.appendChild(this.bullet);
+		this.addElement(this.container, this.bullet);
 		this.tabs.map((t, i)=>{
 			if(t.hasAttribute('data-rwx-tabs-title'))
 			{

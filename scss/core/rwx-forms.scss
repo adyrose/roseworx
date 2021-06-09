@@ -116,7 +116,7 @@ $inlineinputsize: 67%;
 		}
 		.invalid-message
 		{
-			color: $red;
+			color: $form-color-invalid;
 			order: 3;
 			margin-top:5px;
 			@extend .small;

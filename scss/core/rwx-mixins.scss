@@ -24,62 +24,59 @@
 }
 
 @mixin change-input-color($color, $color2) {
-	.rwx-form-item
+	input,select
 	{
-		input,select
+		border:1px solid $color;
+		color:$color;
+	}
+	label
+	{
+		color:$color;
+	}
+	&.rwx-select
+	{
+		select
 		{
-			border:1px solid $color;
-			color:$color;
-		}
-		label
-		{
-			color:$color;
-		}
-		&.rwx-select
-		{
-			select
-			{
-				background-image: icon('select-list', $color);
-			}
+			background-image: icon('select-list', $color);
 			option
 			{
-				color: $color2;
+				color: $dark-grey;
 			}
 		}
-		&.rwx-checkbox
+	}
+	&.rwx-checkbox
+	{
+		input[type="checkbox"]
 		{
-			input[type="checkbox"]
+			border: 1px solid $color;
+			&:checked
 			{
-				border: 1px solid $color;
-				&:checked
-				{
-					background-image: icon('tick', $color);
-				}
-			}
-			label:after
-			{
-				border-color:$color;
+				background-image: icon('tick', $color);
 			}
 		}
-		&.rwx-toggle
+		label:after
 		{
-			input[type="checkbox"]
+			border-color:$color;
+		}
+	}
+	&.rwx-toggle
+	{
+		input[type="checkbox"]
+		{
+			background-image: icon('circle', $color, $color);
+			&:checked
 			{
-  			background-image: icon('circle', $color, $color);
-				&:checked
-				{
-					background-position: right;
-					background-image: icon('circle', $color2, $color2);
-				}
+				background-position: right;
+				background-image: icon('circle', $color2, $color2);
 			}
 		}
-		&.rwx-radio
+	}
+	&.rwx-radio
+	{
+		input[type="radio"]
 		{
-			input[type="radio"]
-			{
-				background-image: icon('circle', $color, $color);			
-			}
-		}	
+			background-image: icon('circle', $color, $color);			
+		}
 	}
 }
 

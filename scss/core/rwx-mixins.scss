@@ -75,19 +75,16 @@
 	{
 		input[type="radio"]
 		{
-			background-image: icon('circle', $color, $color);			
+			background-image: icon('circle', $color2, $color2);			
 		}
 	}
 }
 
 @mixin change-link-color($color) {
-	a
+	color:$color !important;
+	&:after
 	{
-		color:$color !important;
-		&:after
-		{
-			background-color:$color !important;
-		}
+		background-color:$color !important;
 	}
 }
 

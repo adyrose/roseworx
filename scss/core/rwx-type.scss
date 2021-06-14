@@ -149,66 +149,7 @@ h6, .h6, button.no-decoration.h6
 }
 
 
-%subsection {
-  &:not(.no-bar)
-  {
-    @if $section-seperators
-    {
-      border-top: 2px solid $section-seperator-color;
-    }
-  }
-  &:not(.no-indent)
-  {
-    margin-left:$small-spacing;
-  }
-}
-
-%subsubsection {
-  &:not(.no-bar)
-  {
-    @if $section-seperators
-    {
-      border-top: 1px solid $section-seperator-color;
-    }
-  }
-  &:not(.no-indent)
-  {
-    margin-left:$small-spacing;
-  }
-}
-
-section, .section
-{
-  margin-top: $extra-large-spacing;
-  margin-bottom: $extra-large-spacing;
-  width:100%;
-  &:not(.no-bar)
-  {
-    padding-top:$small-spacing;
-    @if $section-seperators
-    {
-      border-top: 3px solid $section-seperator-color;
-    }
-  }
-  &.sub-section
-  {
-    @extend %subsection;
-  }
-  &.sub-sub-section
-  {
-    @extend %subsubsection;
-  }
-  section, .section, .sub-section
-  {
-    @extend %subsection;
-    section, .section, .sub-sub-section
-    {
-      @extend %subsubsection;
-    }
-  }
-}
-
-strong.asheading
+strong.impact
 {
   color:$silver;
   text-transform: uppercase;

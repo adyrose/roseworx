@@ -179,8 +179,6 @@ $font-link-color: $theme-color-tertiary !default;
 $list-item-counter-color: $theme-color-tertiary !default;
 $card-background-color: rgba($theme-color-secondary,0.4) !default;
 $card-border-color: $theme-color-base !default;
-$section-seperators: true !default;
-$section-seperator-color: $theme-color-tertiary !default;
 $efontsizes: (
 	"small": ("size": $font-size-small, "lh": $line-height-small),
 	"large": ("size": $font-size-large, "lh": $line-height-large)

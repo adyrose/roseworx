@@ -44,7 +44,7 @@ $inlineinputsize: 67%;
 					.invalid-message
 					{
 						width:$inlineinputsize;
-						padding-left:100 - $inlineinputsize;
+						margin-left:100 - $inlineinputsize;
 					}
 				}
 			}
@@ -80,7 +80,7 @@ $inlineinputsize: 67%;
 			{
 				@include focus-ring;
 			}
-			&[readonly]
+			&[readonly], &[disabled]
 			{
 				background-color: $form-color-secondary;
 			}
@@ -245,8 +245,8 @@ $inlineinputsize: 67%;
 	}
 	&-radio-group
 	{
-		padding-top:$large-spacing;
-		padding-bottom:$large-spacing;
+		padding-top:16px;
+		padding-bottom:16px;
 		&.\--inline
 		{
 			@include snap-up-from('sm')

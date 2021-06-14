@@ -7,6 +7,12 @@ $emphasis-line:	2px solid $table-color-base;
 	position:absolute;
 	background-color:$white !important;
 	box-shadow: 0px 3px 5px $table-color-secondary;	
+	cursor: default !important;
+	&:hover span
+	{
+		cursor: default !important;
+		background-color:$white !important;
+	}
 }
 
 // normal - .rwx-table .rwx-table-data:first-child
@@ -39,7 +45,7 @@ $emphasis-line:	2px solid $table-color-base;
 	&-data
 	{
 		display:flex;
-		span
+		>span
 		{
 			word-break:break-word;
 			margin-bottom:0px;
@@ -73,43 +79,43 @@ $emphasis-line:	2px solid $table-color-base;
 		}
 	}
 
-	&.\--vertical-line &-data span
+	&.\--vertical-line &-data >span
 	{
 		border-left: $normal-line;
 	}
 
-	&:not(.\--vertical-line) &-data span
+	&:not(.\--vertical-line) &-data >span
 	{
 		border-top: $normal-line;
 	}
 
-	&.\--vertical-line.\--vertical &-data span:first-child, &:not(.\--vertical).\--vertical-line &-data:first-child span, &.\--vertical-line.\--vertical &-data span.scroll, &:not(.\--vertical).\--vertical-line &-data.scroll span
+	&.\--vertical-line.\--vertical &-data >span:first-child, &:not(.\--vertical).\--vertical-line &-data:first-child >span, &.\--vertical-line.\--vertical &-data >span.scroll, &:not(.\--vertical).\--vertical-line &-data.scroll >span
 	{
 		border-top: none;
 		border-left: $emphasis-line;
 	}
 
-	&:not(.\--vertical-line) &-data:first-child span, &:not(.\--vertical-line) &-data.scroll span
+	&:not(.\--vertical-line) &-data:first-child >span, &:not(.\--vertical-line) &-data.scroll >span
 	{
 		border-top: $emphasis-line;
 	}
 
-	&.\--vertical &-data span:first-child, &:not(.\--vertical) &-data:first-child span, &.\--dual-headings &-data span:first-child, &.\--dual-headings &-data:first-child span
+	&.\--vertical &-data >span:first-child, &:not(.\--vertical) &-data:first-child >span, &.\--dual-headings &-data >span:first-child, &.\--dual-headings &-data:first-child >span
 	{
 		@extend .rwxt-bold;
 	}
 
-	&.\--dual-headings &-data span:first-child, &.\--dual-headings &-data span.scroll
+	&.\--dual-headings &-data >span:first-child, &.\--dual-headings &-data >span.scroll
 	{
 		border-left: $emphasis-line;
 	}
 
-	&.\--dual-headings.\--vertical-line &-data:first-child span:first-child, &.\--dual-headings.\--vertical-line &-data.scroll span:first-child
+	&.\--dual-headings.\--vertical-line &-data:first-child >span:first-child, &.\--dual-headings.\--vertical-line &-data.scroll >span:first-child
 	{
 		border:none;
 	}
 
-	&.\--slanted:not(.\--vertical) &-data:first-child span, &.\--slanted.\--vertical &-data span:first-child
+	&.\--slanted:not(.\--vertical) &-data:first-child >span, &.\--slanted.\--vertical &-data >span:first-child
 	{
 		display: flex;
 		flex-wrap: wrap;
@@ -128,12 +134,12 @@ $emphasis-line:	2px solid $table-color-base;
 		}
 	}
 
-	&.\--slanted:not(.\--vertical) &-data:first-child span
+	&.\--slanted:not(.\--vertical) &-data:first-child >span
 	{
 		transform: rotate(-133deg) translate(25px, -25px);
 	}
 
-	&.\--slanted.\--vertical &-data span:first-child
+	&.\--slanted.\--vertical &-data >span:first-child
 	{
 		transform: rotate(-113deg) translate(12px, 12px)
 	}
@@ -145,7 +151,7 @@ $emphasis-line:	2px solid $table-color-base;
 
 	&.\--full-grid &-data
 	{
-		span
+		>span
 		{
 			border-top: $normal-line !important;
 			border-left: $normal-line !important;
@@ -155,7 +161,7 @@ $emphasis-line:	2px solid $table-color-base;
 				border-right: $normal-line;
 			}
 		}
-		&:last-child span
+		&:last-child >span
 		{
 			border-bottom: $normal-line;
 		}
@@ -163,7 +169,7 @@ $emphasis-line:	2px solid $table-color-base;
 
 	&.\--highlightable.\--vertical &-data
 	{
-		&:hover span:not(:first-child)
+		&:hover >span:not(:first-child)
 		{
 			cursor:pointer;
 			background-color: rgba($table-color-highlight, 0.2);			
@@ -173,7 +179,7 @@ $emphasis-line:	2px solid $table-color-base;
 
 	&.\--highlightable:not(.\--vertical) &-data:not(:first-child)
 	{
-		&:hover span
+		&:hover >span
 		{
 			cursor:pointer;
 			background-color: rgba($table-color-highlight, 0.2);
@@ -184,7 +190,7 @@ $emphasis-line:	2px solid $table-color-base;
 	{
 		&.scroll, &:nth-child(odd)
 		{
-			span
+			>span
 			{
 				background-image: linear-gradient(rgba($table-color-highlight, 0.2), rgba($table-color-highlight, 0.2)), linear-gradient(white, white)	
 			}
@@ -193,7 +199,7 @@ $emphasis-line:	2px solid $table-color-base;
 
 	@include snap-down-from('md')
 	{
-		&-data span
+		&-data >span
 		{
 			word-break:break-word;
 			min-width:$table-cell-width-limit;

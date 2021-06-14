@@ -88,10 +88,7 @@ class rwxForm extends rwxComponent {
 	{
 		this.el.removeEventListener('submit', this.submitFn);
 		this.getInputs().map((inp, i)=>{
-			this.events[i].map((e)=>inp.removeEventListener(e.type, e.ev));
-			inp.parentNode.classList.remove('valid');
-			inp.parentNode.classList.remove('invalid');
-			inp.parentNode.classList.remove('touched');
+			this.events.map((e)=>inp.removeEventListener(e.type, e.ev));
 			this.submitButton.disabled = false;
 			return false;
 		})

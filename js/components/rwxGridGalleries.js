@@ -1,4 +1,4 @@
-require('../../scss/components/rwxGridGallery.scss');
+require('../../scss/components/rwxGridGalleries.scss');
 import { rwxCore, rwxComponent } from '../rwxCore';
 
 class rwxGridGalleries extends rwxCore {

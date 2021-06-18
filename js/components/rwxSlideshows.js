@@ -1,6 +1,6 @@
-require('../../scss/components/rwxSlideshow.scss');
+require('../../scss/components/rwxSlideshows.scss');
 
-import { rwxCore } from '../rwxCore';
+import { rwxCore, rwxComponent } from '../rwxCore';
 import rwxMisc from '../helpers/rwxMiscHelpers';
 
 class rwxSlideshows extends rwxCore {
@@ -15,20 +15,23 @@ class rwxSlideshows extends rwxCore {
 	}
 }
 
-class rwxSlideshow {
-  constructor(ss)
+class rwxSlideshow extends rwxComponent {
+  constructor(el)
   {
-    this.slideshow = ss;
-    this.slides = [...this.slideshow.querySelectorAll('.slide')];
+    super({element: el, enableMouseTracking: true});
+    this.slides = [...this.el.querySelectorAll('.slide')];
     if(this.slides.length == 0){return;}
-
+    this.elFullSizeAbsolute();
+    this.el.setAttribute("tabindex", 0);
     this.nextslide = this.nextslide.bind(this);
     this.prevslide = this.prevslide.bind(this);
-    this.addEventListeners = this.addEventListeners.bind(this);
-    this.generateHTML();
-    this.addEventListeners();
+    this.keyupevent = this.keyupevent.bind(this);
 
-    this.width = this.slideshow.getBoundingClientRect().width;
+    this.generateHTML();
+    
+    this.el.addEventListener('keyup', this.keyupevent);
+
+    this.width = this.el.getBoundingClientRect().width;
 
     this.backgroundColors = [
       "#84fab0", 
@@ -58,7 +61,6 @@ class rwxSlideshow {
      this.background = document.createElement('div');
      this.background.classList.add('rwx-slideshow-background');
 
-
      const ps = document.createElement('button');
      ps.classList.add('no-decoration')
      ps.classList.add('prev-slide');
@@ -76,30 +78,52 @@ class rwxSlideshow {
 
      this.slides.map((s)=>this.slidesContainer.appendChild(s));
 
-     this.slideshow.appendChild(this.background);
-     this.slideshow.appendChild(ps);
-     this.slideshow.appendChild(ns);
-     this.slideshow.appendChild(this.slidesContainer);
+     this.addElement(this.el, this.background);
+     this.addElement(this.el, ps);
+     this.addElement(this.el, ns);
 
+     this.el.appendChild(this.slidesContainer);
   }
 
-  addEventListeners()
-  {   
-    document.body.addEventListener('keyup', (ev) => {
-      switch(ev.keyCode)
+  moused(e)
+  {
+    let c = this.slideContents[this.counter];
+    let halfW = c.bounds.width/2;
+    let halfH = c.bounds.height/2;
+    let degY = e.x>=halfW ? Math.abs(halfW-e.x) : -(halfW-e.x);
+    let degX = e.y>=halfH ? halfH-e.y : Math.abs(halfH-e.y);
+    if(c.content)c.content.style.transform = `rotateY(${degY/100}deg) rotateX(${degX/30}deg) translate(${degY/40}px, ${degX/30}px)`;
+    if(c.title)c.title.style.transform = `rotateY(${degY/100}deg) rotateX(${degX/30}deg) translate(${degY/40}px, ${degX/30}px)`;
+  }
+
+  keyupevent(ev)
+  {
+    switch(ev.keyCode)
+    {
+      case 39:
       {
-        case 39:
-        {
-          this.nextslide();
-          break;
-        }
-        case 37:
-        {
-          this.prevslide();
-          break;
-        }
+        this.nextslide();
+        break;
       }
+      case 37:
+      {
+        this.prevslide();
+        break;
+      }
+    }   
+  }
+
+  cleanUp()
+  {
+    const cache = this.slides;
+    this.el.removeChild(this.slidesContainer);
+    cache.map((c)=>{
+      c.style.transform = "none";
+      this.el.appendChild(c);
+      return false
     });
+    this.el.removeEventListener('keyup', this.keyupevent);
+    this.el.removeAttribute("tabindex", 0);
   }
 
   init()
@@ -108,21 +132,12 @@ class rwxSlideshow {
     this.background.style.backgroundSize = `${this.backgroundColors.length*this.width}px 100%`;
     this.background.style.backgroundPosition = "0 0";
     this.slidesContainer.style.width = `${this.slides.length*100}%`;
+    this.slideContents = [];
     this.slides.map((slide)=>{
-      slide.style.width = `${this.width}px`;
-      let content = slide.querySelector('.slide-content');
-      let title = slide.querySelector('.slide-title');
-      slide.addEventListener('mousemove', function(e){
-        let rect = slide.getBoundingClientRect();
-        let width = rect.width;
-        let height = rect.height;
-        let halfW = width/2;
-        let halfH = height/2;
-        let degY = e.x>=halfW ? Math.abs(halfW-e.x) : -(halfW-e.x);
-        let degX = e.y>=halfH ? halfH-e.y : Math.abs(halfH-e.y);
-        content.style.transform = `rotateY(${degY/100}deg) rotateX(${degX/30}deg) translate(${degY/40}px, ${degX/30}px)`;
-        title.style.transform = `rotateY(${degY/100}deg) rotateX(${degX/30}deg) translate(${degY/40}px, ${degX/30}px)`;
-      });
+      this.addStyle(slide, 'width', `${this.width}px`);
+      const content = slide.querySelector('.slide-content');
+      const title = slide.querySelector('.slide-title');
+      this.slideContents.push({content,title, bounds:slide.getBoundingClientRect()});
     });
   }
 

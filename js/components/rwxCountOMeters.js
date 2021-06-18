@@ -8,14 +8,13 @@ class rwxCountOMeters extends rwxCore {
 	constructor()
 	{
 		super('[rwx-countometer]', true);
+    this.valueDefault = 100;
 	}
 
 	execute(el, mc)
 	{
-		let value = el.hasAttribute('data-rwx-countometer-value');
-		if(!value){this.error('There is no value (data-rwx-countometer-value) attribute detected on the rwx-countometer element.'); return;}
-		value = el.getAttribute('data-rwx-countometer-value');
-		return new rwxCountOMeter(el, value, mc);	
+		let value = this.checkAttributeOrDefault(el, 'data-rwx-countometer-value', this.valueDefault);
+		return new rwxCountOMeter(el, parseInt(value), mc);	
 	}
 }
 

@@ -148,6 +148,11 @@ h6, .h6, button.no-decoration.h6
   @include additionalheadingstyle;
 }
 
+section, .section
+{
+  margin-top: $extra-large-spacing;
+  margin-bottom: $extra-large-spacing;  
+}
 
 strong.impact
 {

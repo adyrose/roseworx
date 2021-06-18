@@ -201,7 +201,7 @@ class rwxComponent {
 
 		if(enableMouseTracking)
 		{
-			let fn = this.moused ? ()=>{this.moused()} : ()=>{};
+			let fn = this.moused ? (e)=>{this.moused(e)} : ()=>{};
 			this.mouseTrack = new rwxMouseTrack(this.el.hasAttribute('rwx-mouse-track-use-window') ? window : this.el, fn);
 		}
 	}
@@ -377,6 +377,7 @@ class rwxComponent {
 		this.addStyle(this.el, 'bottom', '0px');
 		this.addStyle(this.el, 'width', '100%');
 		this.addStyle(this.el, 'height', '100%');
+		this.addStyle(this.el, 'overflow', 'hidden');
 		if(color)this.addStyle(this.el, 'backgroundColor', color);
 	}
 

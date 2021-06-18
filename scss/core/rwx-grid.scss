@@ -28,6 +28,23 @@ $grid-classes:
 	display:flex;
 	flex-wrap:wrap;
 
+	&.explicit.no-wrap
+	{
+		@each $selector, $value in $grid-classes
+		{
+			padding-left: $grid-item-gutter/2;
+			padding-right: $grid-item-gutter/2;	
+			> .rwx-split-#{$selector}
+			{
+				@include snap-down-from('md')
+				{
+					padding-right:$grid-item-gutter/2;
+					padding-left:$grid-item-gutter/2;
+				}
+			}
+		}
+	}
+
 	&.no-wrap
 	{
 		flex-wrap:nowrap;

@@ -4,9 +4,6 @@
 
 .rwx-slideshow
 {
-	@include full-size;
-  overflow:hidden;
-  position:relative;
   .slide-container
   {
     height:100%;
@@ -48,10 +45,6 @@
     &-container
     {
       perspective:500px;
-    }
-    &:not(:first-child)
-    {
-      transform:translateX(0px) scale(0.2);
     }
   }
 

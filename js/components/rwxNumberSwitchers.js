@@ -1,4 +1,4 @@
-require('../../scss/components/rwxNumberSwitcher.scss');
+require('../../scss/components/rwxNumberSwitchers.scss');
 
 import { rwxCore, rwxComponent } from '../rwxCore';
 

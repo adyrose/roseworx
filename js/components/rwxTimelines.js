@@ -65,13 +65,18 @@ class rwxTimeline extends rwxComponent {
 	{
 		this.blob = document.createElement('span');
 		this.blob.classList.add('rwx-timeline-blob');
-		this.el.appendChild(this.blob);
+		this.addElement(this.el, this.blob);
 		for(let time of this.times)
 		{
 			let b = document.createElement('span');
 			b.classList.add('rwx-timeline-tracker-blob');
-			time.appendChild(b);
+			this.addElement(time, b);
 		}
+	}
+
+	cleanUp()
+	{
+		this.times.map((t)=>t.classList.remove('activated'));
 	}
 
 	scrolledIntoView()

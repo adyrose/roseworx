@@ -25,13 +25,19 @@ class rwxGridGallery extends rwxComponent {
 
 	scrolledIntoView()
 	{
-		this.el.classList.add('start');
+		this.el.classList.add('show');
 		this.stopScroll();
+	}
+
+	cleanUp()
+	{
+		this.el.classList.remove('show');
 	}
 
 	createStructure()
 	{
 		this.items.map((item)=>{
+			if(item.querySelector('.rwx-grid-gallery-perspective')){return}
 			const persp = document.createElement('div');
 			persp.classList.add('rwx-grid-gallery-perspective');
 			const trans = document.createElement('div');

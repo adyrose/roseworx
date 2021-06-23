@@ -1,8 +1,8 @@
-$things: ("margin": "m", "padding": "p");
+$spacingtypes: ("margin": "m", "padding": "p");
 $directions: ("left": "l", "right": "r", "top" :"t", "bottom": "b");
 
 @each $size, $unit in $spacings {
-	@each $property, $selector in $things
+	@each $property, $selector in $spacingtypes
 	{
 		.rwxs-#{$selector}
 		{
@@ -24,7 +24,7 @@ $directions: ("left": "l", "right": "r", "top" :"t", "bottom": "b");
 
 //ensure rsp classes precede in hierarchy
 @each $size, $unit in $spacings {
-	@each $property, $selector in $things
+	@each $property, $selector in $spacingtypes
 	{
 		.rwxs-#{$selector}
 		{

@@ -23,7 +23,7 @@ const rwxCanvas =
       canvas.style.height = '';
     }
     context.scale(ratio, ratio);
-    return ratio;		
+    return {pixelRatio:ratio, width:canvas.width/ratio, height:canvas.height/ratio};		
 	},
 
   drawSector: (ctx, center, radius, startAngle, endAngle) => {

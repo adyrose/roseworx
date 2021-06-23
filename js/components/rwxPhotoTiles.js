@@ -12,15 +12,16 @@ class rwxPhotoTiles extends rwxCore {
 	{
 		super('[rwx-phototile]');
     this.defaultEffect = 'random';
+    this.defaultTimeout = 5;
 	}
 
 	execute(el)
 	{
 		const effect = this.checkAttributeOrDefault(el, 'data-rwx-phototile-effect', this.defaultEffect);
 		const auto = this.checkAttributeForBool(el, 'data-rwx-phototile-auto');
-		const autoTimeout = this.checkAttributeOrDefault(el, 'data-rwx-phototile-auto', false);
+		const autoTimeout = this.checkAttributeOrDefault(el, 'data-rwx-phototile-auto-timeout', this.defaultTimeout);
 		const noThumbnails = this.checkAttributeForBool(el, 'data-rwx-phototile-no-thumbnails');
-		return new rwxPhotoTile(el, effect, auto, autoTimeout ? autoTimeout : 5, noThumbnails);
+		return new rwxPhotoTile(el, effect, auto, autoTimeout, noThumbnails);
 	}
 
 	goToTile(id, photoNumber, effect)
@@ -28,7 +29,7 @@ class rwxPhotoTiles extends rwxCore {
     if(!this.validateParameter(photoNumber, 'number', 'goToTile'))return;
 		const IME = this.getIME(id);
     if(IME && !IME.fx.includes(effect)){this.error(`${effect} is not a valid effect, picking random one.`)}
-		IME && IME.changeBackground(photoNumber, effect);
+		IME && IME.changeBackground(photoNumber, effect, false, false);
 	}
 }
 
@@ -36,15 +37,11 @@ class rwxPhotoTile extends rwxComponent {
   constructor(el, effect, auto, autoTimeout, noThumbnails)
   {
   	super({element: el, enableAnimationLoop: true, enableResizeDebounce: true});
-  	this.photos = [...el.children];//[...el.querySelectorAll('img')];
+  	this.photos = [...el.children];
   	if(this.photos.length == 0)return;
   	this.effectInit = effect;
-  	this.createCanvas();
-  	this.calculateSize(el);
-  	this.photoLoop(el, noThumbnails);
-
-		this.autoLoop = this.autoLoop.bind(this);
-		this.counter = 0;
+    this.autoLoop = this.autoLoop.bind(this);
+    this.counter = 0;
     this.firstblood = true;
     this.numberOfXTiles = 10;
     this.numberOfYTiles = 10;
@@ -63,13 +60,19 @@ class rwxPhotoTile extends rwxComponent {
       'slideDown'
     ];
 
-    this.changeBackground(1, this.effect);
+    this.deferImageLoad().then(()=>{
+      this.createCanvas();
+      this.calculateSize();
+      this.photoLoop(noThumbnails);
 
-    if(auto)
-    {
-    	this.autoLoopInterval = autoTimeout * 60;
-    	this.autoLoop();
-    }
+      this.changeBackground(1, this.effectInit);
+
+      if(auto)
+      {
+        this.autoLoopInterval = autoTimeout * 60;
+        this.autoLoop();
+      }
+    });
   }
 
   resize()
@@ -83,12 +86,22 @@ class rwxPhotoTile extends rwxComponent {
 		return (number > this.photos.length || number < 0) ? 1 : number;
 	}
 
+  cleanUp()
+  {
+    this.stopLoop = true;
+    this.cloned.map((img)=>{
+      this.el.appendChild(img);
+      return false;
+    });
+  }
+
 	autoLoop()
 	{
-		if(this.counter === this.autoLoopInterval)
+    if(this.stopLoop)return;
+		if(this.counter >= this.autoLoopInterval)
 		{
-    	this.changeBackground(this.currentPhotoNumber+1, this.effectInit);
-			this.counter = 0;
+    	let done = this.changeBackground(this.currentPhotoNumber+1, this.effectInit);
+      this.counter = 0;
 		}
 		else
 		{
@@ -97,12 +110,12 @@ class rwxPhotoTile extends rwxComponent {
 		window.requestAnimationFrame(this.autoLoop);
 	}
 
-  photoLoop(el, noThumbnails)
+  photoLoop(noThumbnails)
   {
-  	const c = document.createElement('div');
-  	c.classList.add('rwx-phototile-container');
+  	this.container = document.createElement('div');
+  	this.container.classList.add('rwx-phototile-container');
+    this.cloned = this.photos.map((img)=>img.cloneNode());
   	this.photos.map((img, i)=>{
-  		c.appendChild(img);
   		img.addEventListener('keyup', (ev)=>{
   			if(ev.keyCode == 13 || ev.keyCode == 32)
   			{
@@ -117,9 +130,31 @@ class rwxPhotoTile extends rwxComponent {
   		});
   		img.addEventListener('click', ()=>{this.changeBackground(i+1, this.effectInit)});
   		if(noThumbnails){img.style.display = "none"}
+      this.container.appendChild(img);
   		return;
   	});
-  	el.appendChild(c);
+    this.addElement(this.el, this.container);
+  }
+
+  deferImageLoad()
+  {
+    const images = this.photos.filter((p)=>p.nodeName==="IMG");
+    const complete = images.map((i)=>i.complete).every((e)=>e)
+    if(complete)
+    {
+      return new Promise((resolve, reject)=>{resolve()})
+    }
+    return new Promise((resolve, reject)=>{
+      let imageLoaded = [];
+      images.map((p,i)=>p.onload = ()=>{
+          imageLoaded.push(i);
+          if(imageLoaded.length===images.length)
+          {
+            resolve();
+          }
+        }
+      )
+    })
   }
 
   calculateSize()
@@ -127,10 +162,10 @@ class rwxPhotoTile extends rwxComponent {
   	let heights = []
   	let widths = [];
   	this.photos.map((img, i)=>{
-  		if(img.nodeName != "IMG") return
+  		if(img.nodeName != "IMG") return;
   		heights.push(img.naturalHeight);
   		widths.push(img.naturalWidth);
-  		return
+  		return false;
   	});
   	let maxWidth = Math.max(...widths);
   	let maxHeight = Math.max(...heights);
@@ -139,17 +174,21 @@ class rwxPhotoTile extends rwxComponent {
   	if(maxWidth > rect.width){maxWidth = rect.width;}
   	if(maxWidth < maxHeight){maxHeight = maxWidth;}
 
-  	this.pixelRatio = rwxCanvas.scale(this.canvas, this.c, maxWidth, maxHeight);
-  	this.width = this.canvas.width / this.pixelRatio;
-  	this.height = this.canvas.height / this.pixelRatio;
+    this.canvasWidth = maxWidth;
+    this.canvasHeight = maxHeight;
+    this.sizeCanvas();
   }
 
-  changeBackground(photoNumber, effect, force=false)
+  changeBackground(photoNumber, effect, force=false, allowReloop=true)
   {
   	if(!force)
   	{
-  		if(this.currentPhotoNumber == photoNumber || !this.stopAnimation)return;
+  		if(this.currentPhotoNumber === photoNumber || !this.stopAnimation)return;
   	}
+    if(!allowReloop)
+    {
+      if(photoNumber > this.photos.length || photoNumber < 0) return;
+    }
    	photoNumber = this.isPhotoNumberInRange(photoNumber)
     this.currentPhotoNumber = photoNumber;
     let node = this.photos[photoNumber-1];
@@ -275,6 +314,7 @@ class rwxPhotoTile extends rwxComponent {
   resetAnimation()
   {
     this.stopAnimation = true;
+    this.startedAnimation = false;
     this.animeCounter = [];
     this.tileMatrix.map((t)=>{t.reset();t.animation=this.effect;});    
   }
@@ -309,7 +349,7 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
   this.slideDirections = ['slideLeft', 'slideRight', 'slideUp', 'slideDown'];
   this.scaleFactor = 2;
 
-  Object.assign(this, {value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pixelRatio});
+  Object.assign(this, {c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pixelRatio});
 
   this.buildAnimations = function() {
     if(this.animation==="bubble")
@@ -478,9 +518,9 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
           this.dy = y;
         },
         (v)=>{
-          c.translate(this.initcenterX, this.initcenterY);
-          c.rotate((v*360) * Math.PI / 180);
-          c.translate(-this.initcenterX, -this.initcenterY);
+          this.c.translate(this.initcenterX, this.initcenterY);
+          this.c.rotate((v*360) * Math.PI / 180);
+          this.c.translate(-this.initcenterX, -this.initcenterY);
           if(v > 0.5)
           {
             this.switch(false);
@@ -495,7 +535,7 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
       ])
     } 
     this[this.changeType]();
-    c.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
+    this.c.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
     this.timeoutCounter++;      
   }
 

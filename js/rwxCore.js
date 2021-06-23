@@ -31,7 +31,7 @@ class rwxCore {
 
 	checkAttributeForBool(el, att)
 	{
-		return el.hasAttribute(att) ? el.getAttribute(att) === "true" : false;
+		return el.hasAttribute(att) ? el.getAttribute(att) === "false" ? false : true : false;
 	}
 
 	checkMap(el)
@@ -68,7 +68,7 @@ class rwxCore {
 			let el = document.getElementById(id);
 			if(!el){this.error(`Hook - Element #${id} not found on page.`); return;}
 			if(this.checkMap(el)){return;}
-			const mc = this.canHaveManualControl ? this.execute(el, el.hasAttribute('data-rwx-manual-control')) : this.execute(el);
+			const mc = this.canHaveManualControl ? this.execute(el, this.checkAttributeForBool(el, 'data-rwx-manual-control')) : this.execute(el);
 			mc && this.addIME(el.id, mc);			
 		}
 	}
@@ -86,7 +86,7 @@ class rwxCore {
   	{
   		if(IME.hasScrolled)
   		{
-  			IME.startAnimation();
+  			IME.animate && IME.startAnimation();
   		}
   		else
   		{
@@ -392,9 +392,10 @@ class rwxComponent {
 	sizeCanvas()
 	{
 		let meas = this.el.getBoundingClientRect();
-		let pixelRatio = rwxCanvas.scale(this.canvas, this.c, this.canvasWidth || meas.width, this.canvasHeight || meas.height);
-		this.width = (this.canvas.width / pixelRatio);
-		this.height = (this.canvas.height / pixelRatio);
+		const {pixelRatio, width, height} = rwxCanvas.scale(this.canvas, this.c, this.canvasWidth || meas.width, this.canvasHeight || meas.height);
+		this.pixelRatio = pixelRatio;
+		this.width = width;
+		this.height = height;
 	}
 
 	error(msg)

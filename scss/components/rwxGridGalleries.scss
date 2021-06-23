@@ -21,6 +21,7 @@
 
 .rwx-grid-gallery
 {
+	width:100%;
 	&-item
 	{
 		display: flex;
@@ -152,7 +153,7 @@
 					grid-row: #{map-get($props, 'row')};
 				}
 			}
-			&.start &-item:nth-child(#{$n})
+			&.show &-item:nth-child(#{$n})
 			{
 				$animation: 'spinGridItem';
 				@if $n % 2 == 0 {$animation: 'spinGridItem2'}

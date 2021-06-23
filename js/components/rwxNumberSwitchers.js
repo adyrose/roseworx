@@ -42,7 +42,7 @@ class rwxNumberSwitcher extends rwxComponent {
 	{
 		this.elValue = document.createElement('span');
 		this.elValue.classList.add('value');
-		this.el.appendChild(this.elValue);
+		this.addElement(this.el, this.elValue);
 	}
 
 	updateText(txt)
@@ -89,7 +89,7 @@ class rwxNumberSwitcher extends rwxComponent {
 		this.increment = (Math.abs(this.prevValue - this.newValue)/60)/this.duration;
 		this.el.classList.add('pulsate');
 		if(noAnimate){this.updateText(newValue); setTimeout(()=>{this.el.classList.remove('pulsate');}, 1000); return;};
-		this.startAnimation();
+		this.restartAnimation();
 	}
 }
 

@@ -339,6 +339,12 @@ class rwxComponent {
 		this.resize();		
 	}
 
+	restartAnimation()
+	{
+		this.startedAnimation = false;
+		this.startAnimation();
+	}
+
 	startAnimation()
 	{
 		this.stopAnimation = false;

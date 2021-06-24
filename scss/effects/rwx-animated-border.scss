@@ -21,7 +21,7 @@ $rwx-animated-border-size: 5px !default;
 			stroke: $rwx-animated-border-from-color;
 			transition: 1s all ease;
 		}
-		&.active, &:hover
+		&.active, &:hover, &:focus, &:active
 		{
 			rect
 			{
@@ -29,8 +29,10 @@ $rwx-animated-border-size: 5px !default;
 			}			
 		}
 	}
-	&.active, &:hover
+	&.active, &:hover, &:focus, &:active
 	{
+		outline:none;
+		border: none;
 		svg rect {
 			@include finish-styles;		
 		}

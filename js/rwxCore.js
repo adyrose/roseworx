@@ -339,6 +339,12 @@ class rwxComponent {
 		this.resize();		
 	}
 
+	restartScroll()
+	{
+		this.hasScrolled = false;
+		this.scrolledIntoView();
+	}
+
 	restartAnimation()
 	{
 		this.startedAnimation = false;

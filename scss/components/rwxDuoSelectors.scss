@@ -11,10 +11,8 @@ $animation-easing: cubic-bezier(.01,.89,.53,.98);
 
 .rwx-duo-selector
 {
-	@include full-size;
 	display:flex;
 	overflow:hidden;
-	z-index:-1;
 	@include snap-down-from('md')
 	{
 		flex-direction:column;
@@ -25,12 +23,18 @@ $animation-easing: cubic-bezier(.01,.89,.53,.98);
 	}
 	&-item
 	{
+		cursor: pointer;
+	}
+	&-item-container
+	{
 		padding-left: 60px;
 		padding-right: 60px;
-		z-index:9999;
 		flex: 1 1 50%;
 		@include flex-center;
-		animation: slideIn 1s $animation-easing forwards;
+		&.active
+		{
+			animation: slideIn 1s $animation-easing forwards;
+		}
 		&:nth-child(1)
 		{
 			transform:translateX(-100%);
@@ -47,20 +51,6 @@ $animation-easing: cubic-bezier(.01,.89,.53,.98);
 			&.remove
 			{
 				animation: slideOutRight 1s $animation-easing forwards;
-			}
-		}
-		&-button
-		{
-			position: relative;
-			cursor:pointer;
-			text-align:center;
-			.text
-			{
-				word-break:break-word;
-				font-size: 2.28rem;
-    		line-height: 2.83rem;
-    		font-weight:bold;
-				text-align:center;
 			}
 		}
 	}

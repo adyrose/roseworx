@@ -114,12 +114,5 @@ a.rwx-button
 
 button.no-decoration
 {
-	appearance:none;
-	background:none;
-	outline:none;
-	border:none;
-	font-size:inherit;
-	font:inherit;
-	padding:0;
-	color:inherit;
+	@include removeButtonStyles;
 }

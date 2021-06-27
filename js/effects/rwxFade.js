@@ -1,4 +1,4 @@
-require('../../scss/effects/rwx-fade.scss');
+require('../../scss/effects/rwxFade.scss');
 
 const rwxFade = {
 	fadeIn: (el) => {

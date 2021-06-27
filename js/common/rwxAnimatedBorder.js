@@ -31,6 +31,11 @@ class rwxAnimatedBorder {
 		this.measurements();
 	}
 
+	cleanUp()
+	{
+		this.target.removeChild(this.el);
+	}
+
 	measurements()
 	{
 		let rect = this.target.getBoundingClientRect();
@@ -39,6 +44,8 @@ class rwxAnimatedBorder {
 		let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 		svg.setAttributeNS(null, 'width', svgWidth);
 		svg.setAttributeNS(null, 'height', svgHeight);
+		svg.setAttributeNS(null, 'fill', 'transparent');
+		svg.style.position = "absolute";
 		svg.style.top = `-${this.paddingY/2}px`;
 		svg.style.left = `-${this.paddingX/2}px`;
 		let rectangle = document.createElementNS("http://www.w3.org/2000/svg", "rect");

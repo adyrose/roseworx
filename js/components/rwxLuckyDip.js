@@ -4,7 +4,7 @@ import { rwxCore } from '../rwxCore';
 import { rwxAnimation } from '../modules/rwxAnimation';
 import rwxAnimatedBorder from '../common/rwxAnimatedBorder';
 
-class rwxTombola extends rwxCore {
+class rwxLuckyDip extends rwxCore {
   constructor()
   {
   	super();
@@ -47,14 +47,14 @@ class rwxTombola extends rwxCore {
   htmlDefinition()
   {
   	this.tombola = document.createElement('div');
-  	this.tombola.classList.add('rwx-tombola');
-  	this.tombola.id = "rwx-tombola";
+  	this.tombola.classList.add('rwx-lucky-dip');
+  	this.tombola.id = "rwx-lucky-dip";
     this.el = document.createElement('div');
-    this.el.classList.add('rwx-tombola-background');
+    this.el.classList.add('rwx-lucky-dip-background');
     this.tombolaContainer = document.createElement('div');
-    this.tombolaContainer.classList.add('rwx-tombola-container');
+    this.tombolaContainer.classList.add('rwx-lucky-dip-container');
     this.stopNode = document.createElement('div');
-    this.stopNode.classList.add('rwx-tombola-stopper');
+    this.stopNode.classList.add('rwx-lucky-dip-stopper');
     this.stopText = document.createElement('button');
     this.stopText.classList.add('no-decoration');
     this.stopText.classList.add('text');
@@ -75,7 +75,7 @@ class rwxTombola extends rwxCore {
     for(let v of arr)
     {
       option = document.createElement('div');
-      option.classList.add('rwx-tombola-item');
+      option.classList.add('rwx-lucky-dip-item');
       option.setAttribute('data-value', v.value);
       optionTitle = document.createElement('span');
       optionTitle.appendChild(document.createTextNode(v.displayName));
@@ -181,7 +181,7 @@ class rwxTombola extends rwxCore {
         this.mask.innerHTML = this.items[this.winner].innerHTML;
       }
       this.winnerAnimation.animate((v)=>this.tombolaContainer.scrollTop=v)
-      // this.tombolaContainer.scrollTop = rwxAnimate.fromTo(this.currentScroll, this.scrollToWinner, 'rwxTombola', 'easeOutQuad', 3000, ()=>{this.stop = true;})
+      // this.tombolaContainer.scrollTop = rwxAnimate.fromTo(this.currentScroll, this.scrollToWinner, 'rwxLuckyDip', 'easeOutQuad', 3000, ()=>{this.stop = true;})
     }
     else
     {
@@ -196,4 +196,4 @@ class rwxTombola extends rwxCore {
   }
 }
 
-export default new rwxTombola();
+export default new rwxLuckyDip();

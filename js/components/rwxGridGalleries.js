@@ -23,6 +23,11 @@ class rwxGridGallery extends rwxComponent {
 		this.createStructure();
 	}
 
+	uncommenced()
+	{
+		this.el.classList.remove('show');
+	}
+
 	scrolledIntoView()
 	{
 		this.el.classList.add('show');
@@ -50,6 +55,7 @@ class rwxGridGallery extends rwxComponent {
 			transface.appendChild(teaser);
 			trans.appendChild(transface);
 			persp.appendChild(trans);
+			this.addElement(item, persp);
 			item.appendChild(persp);
 		});
 	}

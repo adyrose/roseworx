@@ -1,22 +1,20 @@
 @import '../core/rwx-variables';
 @import '../core/rwx-mixins';
-$rwx-animated-border-from-color: $black !default;
-$rwx-animated-border-to-color: $white !default;
-@import '../effects/rwx-animated-border';
 
-$rwx-tombola-background-color: $blue !default;
-$rwx-tombola-color: $orange !default;
-$rwx-tombola-item-color: $black !default;
+$rwx-lucky-dip-background-color: $blue !default;
+$rwx-lucky-dip-color: $orange !default;
+$rwx-lucky-dip-item-color: $black !default;
 
 $item-height: 160px;
 $slidedowntime: 0.5s;
 
-.rwx-tombola
+.rwx-lucky-dip
 {
 	&-stopper
 	{
 		margin-top:100px;
 		cursor:pointer;
+		@include change-animated-border-bolor($black, $white);
 		.text
 		{
 			font-size: 1.52rem;
@@ -31,7 +29,7 @@ $slidedowntime: 0.5s;
 		flex-direction:column;
 		z-index:$top-layer-z;
 		overflow:hidden;
-		background: rgba($rwx-tombola-background-color, 0.7);
+		background: rgba($rwx-lucky-dip-background-color, 0.7);
 		transform: translateY(-100%);
 		transition: all 1s $slidedowntime ease-in;
 		&.appear
@@ -43,7 +41,7 @@ $slidedowntime: 0.5s;
 	}
 	&-container
 	{
-		box-shadow: 4px 4px 0px 7px rgba($rwx-tombola-color, 0.7);
+		box-shadow: 4px 4px 0px 7px rgba($rwx-lucky-dip-color, 0.7);
 		border-radius:15px;
 		overflow:hidden;
 		height:$item-height;
@@ -65,7 +63,7 @@ $slidedowntime: 0.5s;
 			font-size: 2.28rem;
   		line-height: 2.83rem;
   		font-weight:bold;
-  		color:$rwx-tombola-item-color;
+  		color:$rwx-lucky-dip-item-color;
     }
   }
 }

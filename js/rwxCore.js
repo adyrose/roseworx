@@ -102,6 +102,8 @@ class rwxCore {
   	{
   		IME.stopAnimation = true;
   		IME.startedAnimation = false;
+  		IME.hasScrolled = false;
+  		IME.uncommenced && IME.uncommenced();
   	}  	
   }
 

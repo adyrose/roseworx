@@ -8,7 +8,23 @@
 	font:inherit;
 	padding:0;
 	color:inherit;
-	box-shadow:none;
+}
+
+@mixin change-animated-border-bolor($from, $to)
+{
+	svg
+	{
+		rect
+		{
+			stroke: $from !important;
+		}
+	}
+	&.active, &:hover, &:focus, &:active
+	{
+		svg rect {
+			stroke: $to !important;
+		}
+	}
 }
 
 @mixin focus-ring

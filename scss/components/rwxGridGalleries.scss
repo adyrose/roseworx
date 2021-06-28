@@ -22,7 +22,7 @@
 .rwx-grid-gallery
 {
 	width:100%;
-	&-item
+	& > &-item
 	{
 		display: flex;
   	align-items: stretch;
@@ -31,6 +31,39 @@
   	{
   		@include focus-ring;
   	}
+		.rwx-grid-gallery-heading
+		{
+			width:80%;
+		  z-index: 10;
+		  position: absolute;
+		  top: 50%;
+		  left: 50%;
+		  transform: translate(-50%, -50%);
+		  font-size: 20px;
+		  text-align: center;
+		  background: rgba(0, 0, 0, 0.75);
+		  padding: 10px;
+		  color: white;
+		  &.vertical
+		  {
+		  	writing-mode: vertical-rl;
+		  }
+		}
+
+		.rwx-grid-gallery-overlay
+		{
+			transition: all 1s;
+		  filter: blur(1.5px);
+		  padding: 10px;
+		  position: absolute;
+		  top: 0;
+		  right: 0;
+		  bottom: 0;
+		  left: 0;
+		  background-color:#f47740;
+		  background-size: cover;
+		  background-position:center;		
+		}
 	}
 
 	&-perspective, &-transform, &-transform-face, &-teaser {
@@ -69,40 +102,6 @@
 	  z-index: 5;
 	}
 
-	&-heading
-	{
-		width:80%;
-	  z-index: 10;
-	  position: absolute;
-	  top: 50%;
-	  left: 50%;
-	  transform: translate(-50%, -50%);
-	  font-size: 20px;
-	  text-align: center;
-	  background: rgba(0, 0, 0, 0.75);
-	  padding: 10px;
-	  color: white;
-	  &.vertical
-	  {
-	  	writing-mode: vertical-rl;
-	  }
-	}
-
-	&-overlay
-	{
-		transition: all 1s;
-	  filter: blur(1.5px);
-	  padding: 10px;
-	  position: absolute;
-	  top: 0;
-	  right: 0;
-	  bottom: 0;
-	  left: 0;
-	  background-color:#f47740;
-	  background-size: cover;
-	  background-position:center;		
-	}
-
 	@supports (display: grid) {
     display: grid;
     grid-gap: 30px;
@@ -111,7 +110,7 @@
 
 		@include snap-down-from('sm')
 		{
-			&-item
+			& > &-item
 			{
 				grid-column: 1/3;
 			}
@@ -121,7 +120,7 @@
 		{
 	     grid-template-columns: repeat(2, 1fr);
 	     grid-auto-rows: 300px;
-	    &-item:nth-child(3n) {
+	    & > &-item:nth-child(3n) {
 	      grid-column: 1/3;
 	    }
 		}
@@ -145,7 +144,7 @@
 
 		@each $n, $props in $items
 		{
-			&-item:nth-child(#{$n})
+			& > &-item:nth-child(#{$n})
 			{
 				@include snap-up-from('md')
 				{
@@ -153,7 +152,7 @@
 					grid-row: #{map-get($props, 'row')};
 				}
 			}
-			&.show &-item:nth-child(#{$n})
+			&.show > &-item:nth-child(#{$n})
 			{
 				$animation: 'spinGridItem';
 				@if $n % 2 == 0 {$animation: 'spinGridItem2'}

@@ -76,12 +76,12 @@ $numberofitems: (
 	{
 		z-index:$top-layer-z;
 	}
-	&-item
+	& > &-item > *
 	{
 		cursor: pointer;
 		@include change-animated-border-bolor($black, $white);
 	}
-	&-item-container
+	& > &-item
 	{
 		padding-left: 60px;
 		padding-right: 60px;
@@ -108,7 +108,7 @@ $numberofitems: (
 			@each $child in $submap
 			{
 				$i: index($submap, $child);
-				.rwx-option-selector-item-container:nth-child(#{$i})
+				> .rwx-option-selector-item:nth-child(#{$i})
 				{
 					transform: map-get($osdirections, $child);
 					&.remove
@@ -122,7 +122,7 @@ $numberofitems: (
 
 	&.three
 	{
-		.rwx-option-selector-item-container:nth-child(3)
+		> .rwx-option-selector-item:nth-child(3)
 		{
 			flex: 1 1 100%;
 		}	
@@ -130,14 +130,14 @@ $numberofitems: (
 
 	&.five
 	{
-		.rwx-option-selector-item-container:nth-child(5)
+		> .rwx-option-selector-item:nth-child(5)
 		{
 			flex: 1 1 100%;
 		}
 	}
 	&.six
 	{
-		.rwx-option-selector-item-container
+		> .rwx-option-selector-item
 		{
 			flex: 1 1 33%
 		}

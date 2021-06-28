@@ -65,7 +65,7 @@ class rwxSlider extends rwxComponent {
 	{
 		this.slides.map((s, i)=>{
 			s.style.transform = '';
-			s.style.display = i===0 ? '' : 'none';
+			s.style.display = '';
 		})
 	}
 

@@ -1,5 +1,6 @@
 import { rwxCore, rwxComponent } from '../rwxCore';
 import rwxAnimatedBorder from '../common/rwxAnimatedBorder';
+import rwxDOM from '../helpers/rwxDOMHelpers';
 
 class rwxOptionSelectors extends rwxCore {
 	constructor()
@@ -34,7 +35,6 @@ class rwxOptionSelector extends rwxComponent {
 		this.activeButton = 1;
 		this.clickListener = this.clickListener.bind(this);
 		this.buttons = [...this.el.querySelectorAll('.rwx-option-selector-item')];
-		this.cachedButtons = this.buttons;
 		if(this.buttons.length === 0)
 		{
 			this.error('No items with class .rwx-option-selector-item detected');
@@ -87,7 +87,7 @@ class rwxOptionSelector extends rwxComponent {
 
 	uncommenced()
 	{
-		this.containers.map((i)=>i.classList.remove('active'));
+		this.buttons.map((i)=>i.classList.remove('active'));
 	}
 
 	launch()
@@ -104,16 +104,17 @@ class rwxOptionSelector extends rwxComponent {
 	scrolledIntoView()
 	{
 		if(this.bail)return;
-		this.containers.map((i)=>i.classList.add('active'));
+		this.buttons.map((i)=>i.classList.add('active'));
 		this.stopScroll();
 	}
 
   cleanUp()
   {
-  	this.cachedButtons.map((b)=>{
+  	this.buttons.map((b)=>{
   		b.removeEventListener('keydown', this.clickListener);
   		b.removeEventListener('click', this.clickListener);
-  		this.el.appendChild(b);
+  		b.classList.remove('active');
+  		b.removeAttribute('tabIndex');
   		return false;
   	});
   	this.borders.map((bo)=>bo.cleanUp());
@@ -122,19 +123,13 @@ class rwxOptionSelector extends rwxComponent {
 
 	htmlDefinition()
 	{
-		this.containers = [];
 		this.borders = [];
 		for(let item of this.buttons)
 		{
-			let container = document.createElement('div');
-			container.classList.add('rwx-option-selector-item-container');
-			item.setAttribute('tabIndex', 0);
-			this.containers.push(container);
-			container.appendChild(item);
-			this.addElement(this.el, container);
+			item.children[0].setAttribute('tabIndex', 0);
 			item.addEventListener('click', this.clickListener);
 			item.addEventListener('keydown', this.clickListener);
-			this.borders.push(new rwxAnimatedBorder(item));
+			this.borders.push(new rwxAnimatedBorder(item.children[0]));
 		}
 	}
 
@@ -150,23 +145,28 @@ class rwxOptionSelector extends rwxComponent {
   		if(ev.keyCode == 32 || ev.keyCode == 13)
   		{
   			ev.preventDefault();
-  			this.selected(this.buttons.filter((f)=>f===ev.target)[0]);
+  			this.selected(this.buttons.find((f)=>f===rwxDOM.hasAncestor(ev.target, '.rwx-option-selector-item')));
   		}
 		}
 		else
 		{
 			ev.preventDefault();
-			this.selected(this.buttons.filter((f)=>f===ev.target.parentNode.parentNode)[0]);
+			this.selected(this.findElement(ev.target));
 		}
+	}
+
+	findElement(t)
+	{
+		return this.buttons.find((f)=>f===rwxDOM.hasAncestor(t, '.rwx-option-selector-item') || f===t);
 	}
 
 	selected(val)
 	{
-		let value = val.getAttribute('data-rwx-option-selector-value') || val.innerText;
-		this.containers.map(b=>b.classList.add('remove'));
+		let value = val.getAttribute('data-rwx-option-selector-value') || val.children[0].innerText;
+		this.buttons.map(b=>b.classList.add('remove'));
 		this.callback && this.callback(value);
 		setTimeout(()=>{
-			this.containers.map(b=>b.classList.remove('remove', 'active'));
+			this.buttons.map(b=>b.classList.remove('remove', 'active'));
 		}, 1000);
 	}
 }

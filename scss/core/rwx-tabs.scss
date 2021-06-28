@@ -17,8 +17,8 @@
 		align-items:flex-end;
 		border-bottom: 2px solid $tabs-seperator-color;
 		position:relative;
-		overflow-x:auto;
-		overflow-y:visible;
+		overflow:auto;
+		white-space: nowrap;
 		button
 		{
 			margin-bottom:0;

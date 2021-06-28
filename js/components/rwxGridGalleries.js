@@ -19,6 +19,7 @@ class rwxGridGallery extends rwxComponent {
 	{
 		super({element: el, enableScrollIntoView: !manualControl});
 		this.items = [...this.el.querySelectorAll('.rwx-grid-gallery-item')];
+		this.cachedChildren = this.items.map((i)=>[...i.children]);
 		if(this.items.length == 0)return;
 		this.createStructure();
 	}
@@ -37,6 +38,7 @@ class rwxGridGallery extends rwxComponent {
 	cleanUp()
 	{
 		this.el.classList.remove('show');
+		this.items.map((i, ind)=>this.cachedChildren[ind].map((ii)=>i.appendChild(ii)));
 	}
 
 	createStructure()
@@ -56,7 +58,6 @@ class rwxGridGallery extends rwxComponent {
 			trans.appendChild(transface);
 			persp.appendChild(trans);
 			this.addElement(item, persp);
-			item.appendChild(persp);
 		});
 	}
 }

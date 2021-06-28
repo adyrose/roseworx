@@ -7,6 +7,7 @@ import rwxMouseTrack from './common/rwxMouseTracking';
 class rwxCore {
 	constructor(selector, canHaveManualControl=false)
 	{
+		this.componentsThatWorkWithoutJS = ['rwx-form', 'rwx-table'];
 		if(selector)this.internalMap = {};
 		this.resourceName = this.constructor.name;
 		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
@@ -14,14 +15,17 @@ class rwxCore {
 		window.addEventListener('load', ()=>{
 			if(!selector){this.execute();return;}
 			this.selector = selector;
+			this.className = this.getClassName();
 			this.canHaveManualControl = canHaveManualControl;
 			[...document.querySelectorAll(this.selector)].map((el) => {
-				if(this.checkMap(el)){return;}
-				const ismc = this.checkAttributeForBool(el, 'data-rwx-manual-control');
-				const mc = this.canHaveManualControl ? this.execute(el, ismc) : this.execute(el);
-				mc && this.addIME(el.id, mc);
+				this.hook(el.id || rwxMisc.uniqueId(), el);
 			});
 		});
+	}
+
+	getClassName()
+	{
+		return this.selector.replace('[', '').replace(']', '');
 	}
 
 	checkAttributeOrDefault(el, att, def)
@@ -56,16 +60,24 @@ class rwxCore {
 				ime.removeElements && ime.removeElements();
 				ime.removeStyles && ime.removeStyles();
 				ime.cleanUp && ime.cleanUp();
+				if(!this.componentsThatWorkWithoutJS.includes(this.className))
+				{
+					ime.el && ime.el.classList.remove(this.className);
+				}
 				this.deleteIME(id);
 			}
 		}
 	}
 
-	hook(id)
+	hook(id, element=false)
 	{
 		if(id)
 		{
-			let el = document.getElementById(id);
+			let el = element || document.getElementById(id);
+			if(!element)
+			{
+				el.classList.add(this.className);
+			}
 			if(!el){this.error(`Hook - Element #${id} not found on page.`); return;}
 			if(this.checkMap(el)){return;}
 			const mc = this.canHaveManualControl ? this.execute(el, this.checkAttributeForBool(el, 'data-rwx-manual-control')) : this.execute(el);

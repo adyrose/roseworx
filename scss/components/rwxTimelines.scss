@@ -16,7 +16,7 @@ $rwx-timeline-fill-color: $grey !default;
 {
 	position: relative;
 	padding-left: 44px;
-	&-tracker
+	& > &-tracker
 	{
 		position: relative;
 		padding-top:18px;
@@ -24,7 +24,7 @@ $rwx-timeline-fill-color: $grey !default;
 		padding-left:16px;
 		opacity: 0;
 		text-indent:30px;
-		&-blob
+		.rwx-timeline-tracker-blob
 		{
 			top:14px;
 			left:-34px;

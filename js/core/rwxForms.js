@@ -55,7 +55,7 @@ class rwxForm extends rwxComponent {
 					type: validEvent,
 					ev: validEventEvent
 				}
-			])
+			]);
 			return;
 		});
 
@@ -88,7 +88,7 @@ class rwxForm extends rwxComponent {
 	{
 		this.el.removeEventListener('submit', this.submitFn);
 		this.getInputs().map((inp, i)=>{
-			this.events.map((e)=>inp.removeEventListener(e.type, e.ev));
+			this.events[i].map((e)=>inp.removeEventListener(e.type, e.ev));
 			this.submitButton.disabled = false;
 			return false;
 		})

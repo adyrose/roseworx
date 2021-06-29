@@ -19,10 +19,10 @@ class rwxOptionSelectors extends rwxCore {
 		IME && IME.onSelected(cb);		
 	}
 
-	launch(id)
+	relaunch(id)
 	{
 		const IME = this.getIME(id);
-		IME && IME.launch();		
+		IME && IME.relaunch();		
 	}
 }
 
@@ -90,7 +90,7 @@ class rwxOptionSelector extends rwxComponent {
 		this.buttons.map((i)=>i.classList.remove('active'));
 	}
 
-	launch()
+	relaunch()
 	{
 		if(this.bail)return;
 		this.restartScroll();

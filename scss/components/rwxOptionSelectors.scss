@@ -22,49 +22,49 @@ $top: translate(0%, -101%);
 $bottom: translate(0%, 101%);
 
 $osdirections: (
-	'slideOutTopLeft': $top-left,
-	'slideOutTopRight': $top-right,
-	'slideOutBottomLeft': $bottom-left,
-	'slideOutBottomRight': $bottom-right,
-	'slideOutLeft': $left,
-	'slideOutRight': $right,
-	'slideOutBottom': $bottom,
-	'slideOutTop': $top
+	'optionSelectorSlideOutTopLeft': $top-left,
+	'optionSelectorSlideOutTopRight': $top-right,
+	'optionSelectorSlideOutBottomLeft': $bottom-left,
+	'optionSelectorSlideOutBottomRight': $bottom-right,
+	'optionSelectorSlideOutLeft': $left,
+	'optionSelectorSlideOutRight': $right,
+	'optionSelectorSlideOutBottom': $bottom,
+	'optionSelectorSlideOutTop': $top
 );
 
 $numberofitems: (
 	'one': (
-		'slideOutTop'
+		'optionSelectorSlideOutTop'
 	),
 	'two': (
-		'slideOutLeft',
-		'slideOutRight'
+		'optionSelectorSlideOutLeft',
+		'optionSelectorSlideOutRight'
 	),
 	'three': (
-		'slideOutLeft',
-		'slideOutRight',
-		'slideOutBottom'
+		'optionSelectorSlideOutLeft',
+		'optionSelectorSlideOutRight',
+		'optionSelectorSlideOutBottom'
 	),
 	'four': (
-		'slideOutTopLeft',
-		'slideOutTopRight',
-		'slideOutBottomLeft',
-		'slideOutBottomRight'
+		'optionSelectorSlideOutTopLeft',
+		'optionSelectorSlideOutTopRight',
+		'optionSelectorSlideOutBottomLeft',
+		'optionSelectorSlideOutBottomRight'
 	),
 	'five': (
-		'slideOutTopLeft',
-		'slideOutTopRight',
-		'slideOutLeft',
-		'slideOutRight',
-		'slideOutBottom'	
+		'optionSelectorSlideOutTopLeft',
+		'optionSelectorSlideOutTopRight',
+		'optionSelectorSlideOutLeft',
+		'optionSelectorSlideOutRight',
+		'optionSelectorSlideOutBottom'	
 	),
 	'six': (
-		'slideOutTopLeft',
-		'slideOutTop',
-		'slideOutTopRight',
-		'slideOutBottomLeft',
-		'slideOutBottom',
-		'slideOutBottomRight'
+		'optionSelectorSlideOutTopLeft',
+		'optionSelectorSlideOutTop',
+		'optionSelectorSlideOutTopRight',
+		'optionSelectorSlideOutBottomLeft',
+		'optionSelectorSlideOutBottom',
+		'optionSelectorSlideOutBottomRight'
 	)
 );
 
@@ -72,10 +72,6 @@ $numberofitems: (
 {
 	display:flex;
 	flex-wrap:wrap;
-	&.active
-	{
-		z-index:$top-layer-z;
-	}
 	& > &-item > *
 	{
 		cursor: pointer;
@@ -90,7 +86,7 @@ $numberofitems: (
 		@include flex-center;
 		&.active
 		{
-			animation: final 1s $animation-easing forwards;
+			animation: optionSelectorFinal 1s $animation-easing forwards;
 		}
 
 		@for $i from 1 through 6 {
@@ -144,7 +140,7 @@ $numberofitems: (
 	}
 }
 
-@keyframes final {
+@keyframes optionSelectorFinal {
 	100% {
 		transform: translate(0%, 0%);
 	}

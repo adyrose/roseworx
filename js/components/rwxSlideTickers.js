@@ -1,36 +1,42 @@
-import { rwxCore } from '../rwxCore';
+import { rwxCore, rwxComponent } from '../rwxCore';
 import rwxFade from '../effects/rwxFade';
 
-class rwxSlideTicker extends rwxCore {
+class rwxSlideTickers extends rwxCore {
 	constructor()
 	{
-		super();
+		super('[rwx-slide-ticker]');
+	}
+
+	execute(el)
+	{
+		return new rwxSlideTicker(el);
+	}
+
+  tick(id)
+  {
+    const IME = this.getIME(id);
+    IME && IME.tick();
+  }
+}
+
+class rwxSlideTicker extends rwxComponent {
+	constructor(el)
+	{
+		super({element: el});
   	this.timeoutPerLetter = 200;
   	this.timeout = 2000;
-  	this.counter = 0;
-  	this.letters = [];
-		this.go = this.go.bind(this);
+  	this.word = this.el.querySelector('.rwx-slide-ticker-value');
 		this.closeEarly = this.closeEarly.bind(this);
+		this.createKeyframe();
 	}
 
-	execute()
+	cleanUp()
 	{
-		this.htmlDefinition();
-  	this.createKeyframe();
-  	this.el.addEventListener('click', this.closeEarly);
-	}
-
-	htmlDefinition()
-	{
-		this.el = document.createElement('div');
-		this.el.id = "rwx-slide-ticker";
-		this.el.classList.add('rwx-slide-ticker');
-		document.body.appendChild(this.el);
+		rwxFade.cleanUp(this.el);
 	}
 
 	reset()
 	{
-		this.el.innerHTML = "";
 		this.counter = 0;
 		this.letters = [];
 	}
@@ -40,13 +46,12 @@ class rwxSlideTicker extends rwxCore {
 		rwxFade.fadeOut(this.el);
 	}
 
-	setValue(value)
+	tick()
 	{
-		if(!this.validateParameter(value, 'string', 'setValue'))return;
-		this.el.setAttribute('tabIndex', 1);
-		this.el.focus();
+		this.el.addEventListener('click', this.closeEarly);
 		this.reset();
-		let letterArray = [...value];
+		this.addStyle(this.word, 'display', 'none');
+		let letterArray = [...this.word.innerText];
 		let container, span, text;
 		for(let letter of letterArray)
 		{
@@ -57,7 +62,7 @@ class rwxSlideTicker extends rwxCore {
 			span.appendChild(text);
 			container.appendChild(span);
 			container.style.transform = `translateX(${window.innerWidth}px)`;
-			this.el.appendChild(container);
+			this.addElement(this.el, container);
 			this.letters.push(container);
 		}
 		this.go();
@@ -74,6 +79,7 @@ class rwxSlideTicker extends rwxCore {
 				clearInterval(interval);
 				setTimeout(()=>{
 					rwxFade.fadeOut(this.el);
+					this.el.removeEventListener('click', this.closeEarly);
 				}, this.timeout);
 				return;
 			}
@@ -100,8 +106,9 @@ class rwxSlideTicker extends rwxCore {
 			}
 		`;
 		style.innerHTML = keyframe;
-		document.getElementsByTagName('head')[0].appendChild(style);
+		// document.getElementsByTagName('head')[0].appendChild(style);
+		this.addElement(document.getElementsByTagName('head')[0], style)
 	}
 }
 
-export default new rwxSlideTicker();
+export default new rwxSlideTickers();

@@ -2,7 +2,6 @@
 @import '../core/rwx-mixins';
 
 $rwx-slide-ticker-background-color: $orange !default;
-$rwx-slide-ticker-text-color: $white !default;
 
 .rwx-slide-ticker
 {
@@ -13,14 +12,13 @@ $rwx-slide-ticker-text-color: $white !default;
 	overflow:hidden;
 	background: rgba($rwx-slide-ticker-background-color, 0.7);
 	cursor:pointer;
-	&-item
+	& > &-item
 	{
 		font-size:6rem;
 		&.go
 		{
 			span
 			{
-				color:$rwx-slide-ticker-text-color;
   			display: inline-block;
   			animation: wiggle 0.5s ease-in-out infinite;
 			}

@@ -8,6 +8,10 @@ const rwxFade = {
 
 	fadeOut: (el) => {
  		el.classList.add('rwx-fade-out');
+	},
+
+	cleanUp: (el) => {
+		el.classList.remove('rwx-fade-in', 'rwx-fade-out');
 	}
 }
 

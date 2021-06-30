@@ -1,0 +1,75 @@
+@import '../core/rwx-variables';
+
+$rwx-notice-box-background-color: $orange !default;
+$bouncemeasure:50px;
+$bouncepadding: 20px;
+$bounce-in-timing: cubic-bezier(.71,-0.63,.19,.88);
+$bounce-out-timing: cubic-bezier(.72,-0.07,.43,1.72);
+
+@mixin change-notice-box-color($color)
+{
+	background-color: $color;
+	box-shadow: 0px 1px 3px $color;
+}
+
+.rwx-notice-box
+{
+	&.\--bottom
+	{
+		top:auto;
+		bottom:0px;
+		transform: translate(0%, 120%);
+  	border-bottom-right-radius:0px;
+  	border-bottom-left-radius:0px;
+   	border-top-right-radius:24px;
+  	border-top-left-radius: 24px;
+  	&.hide
+  	{
+  		animation: NoticeBoxesSlideOutBottom 1s $bounce-in-timing forwards;
+  	}
+	}
+	top: 0px;
+	left: 0px;
+	width: 100%;
+  padding: 24px 16px;
+  transform: translate(0%, -120%);
+  border-bottom-right-radius:24px;
+  border-bottom-left-radius: 24px;
+  box-shadow: 0px 1px 3px $rwx-notice-box-background-color;
+  z-index:$top-layer-z;
+  background-color: $rwx-notice-box-background-color;
+  position:absolute;
+  text-align:center;
+  &.show
+  {
+    animation: NoticeBoxesSlideIn 1s $bounce-out-timing forwards;
+  }
+  &.hide
+  {
+  	animation: NoticeBoxesSlideOut 1s $bounce-in-timing forwards;
+  }
+}
+
+@keyframes NoticeBoxesSlideIn {
+	100% {
+		transform: translate(0%, 0%);
+	}
+}
+
+@keyframes NoticeBoxesSlideOut {
+	0% {
+		transform: translate(0%, 0%);
+	}
+	100% {
+		transform: translate(0%, -120%);
+	}
+}
+
+@keyframes NoticeBoxesSlideOutBottom {
+	0% {
+		transform: translate(0%, 0%);
+	}
+	100% {
+		transform: translate(0%, 120%);
+	}
+}

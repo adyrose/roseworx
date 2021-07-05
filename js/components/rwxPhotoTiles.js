@@ -10,7 +10,7 @@ import { rwxAnimation, rwxAnimationChain, rwxAnimate } from '../modules/rwxAnima
 class rwxPhotoTiles extends rwxCore {
 	constructor()
 	{
-		super('[rwx-phototile]');
+		super({selector:'[rwx-phototile]', canHaveManualControl:false});
     this.defaultEffect = 'random';
     this.defaultTimeout = 5;
 	}

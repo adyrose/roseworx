@@ -4,7 +4,7 @@ import { rwxCore, rwxComponent } from '../rwxCore';
 class rwxSkrollX extends rwxCore {
 	constructor()
 	{
-		super('[rwxsx],[rwxpx]');
+		super({selector:'[rwxsx],[rwxpx]', canHaveManualControl:false, autoClass:false});
 		this.directionDefault = "up";
 		this.parallaxSpeedDefault = 10;
 	}

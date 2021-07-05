@@ -4,7 +4,7 @@ import rwxMist from '../common/rwxMist';
 class rwxMists extends rwxCore {
 	constructor()
 	{
-		super('[rwx-mist]');
+		super({selector:'[rwx-mist]'});
 	}
 	execute(el)
 	{

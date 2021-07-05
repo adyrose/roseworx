@@ -3,7 +3,7 @@ import { rwxCore, rwxComponent } from '../rwxCore';
 class rwxSliders extends rwxCore {
 	constructor()
 	{
-		super('[rwx-slider]');
+		super({selector:'[rwx-slider]', canHaveManualControl:false});
 		this.defaultAutoSlideTimeout = 5;
 		this.defaultCounters = true;
 	}

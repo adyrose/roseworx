@@ -5,11 +5,11 @@ import rwxScrollTrack from './common/rwxScrollTracking';
 import rwxMouseTrack from './common/rwxMouseTracking';
 
 class rwxCore {
-	constructor(selector, canHaveManualControl=false)
+	constructor({selector, canHaveManualControl=false, autoClass=true})
 	{
-		this.componentsThatWorkWithoutJS = ['rwx-form', 'rwx-table'];
 		if(selector)this.internalMap = {};
 		this.resourceName = this.constructor.name;
+		this.autoClass = autoClass;
 		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
 		this.execute = this.execute.bind(this);
 		window.addEventListener('load', ()=>{
@@ -60,7 +60,7 @@ class rwxCore {
 				ime.removeElements && ime.removeElements();
 				ime.removeStyles && ime.removeStyles();
 				ime.cleanUp && ime.cleanUp();
-				if(!this.componentsThatWorkWithoutJS.includes(this.className))
+				if(this.autoClass)
 				{
 					ime.el && ime.el.classList.remove(this.className);
 				}
@@ -74,7 +74,7 @@ class rwxCore {
 		if(id)
 		{
 			let el = element || document.getElementById(id);
-			if(!element)
+			if(!element && this.autoClass)
 			{
 				el.classList.add(this.className);
 			}

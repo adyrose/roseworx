@@ -51,7 +51,7 @@ const rwxAnimate = {
     let c = (easing==="easeInElastic" || easing==="easeInOutElastic" || easing==="easeOutBack") ? val===1 : val>=1;
     if(c)
     {
-      cb();
+      cb && cb();
       rwxAnimateHelpers.deleteVars(id);
       return 1;
     }
@@ -84,6 +84,7 @@ class rwxAnimation {
     this.defaultEasing = 'linear';
     this.complete = complete;
     this.progressCounter = 0;
+    this.progressid = `progress${rwxMisc.uniqueId()}`
     this.duration = this.sanitizeDuration(duration);
     this.parse(from, to , easing, control);
   }
@@ -138,12 +139,12 @@ class rwxAnimation {
 
   getProgress()
   {
-    return (this.progressCounter/60)*100;
+    return parseFloat(this.progressCounter*100).toFixed(2);
   }
 
   getEasingValue()
   {
-    return this.easingValue;
+    return parseFloat(this.easingValue);
   }
 
   animate(fn)
@@ -175,8 +176,9 @@ class rwxAnimation {
       vals.push(toPush);
     });
 
-    if(this.progressCounter<(this.duration/1000*60)){this.progressCounter+=1;}
+    // if(this.progressCounter<(this.duration/1000*60)){this.progressCounter+=1;}
     if(!this.isComplete){
+      this.progressCounter = rwxAnimate.getEasingValue(this.progressid, 'linear', this.duration);
       if(fn) fn(...vals);
       if(this.animations.every((anime)=>anime.isComplete)){
         this.isComplete=true;

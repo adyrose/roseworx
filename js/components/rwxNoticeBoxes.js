@@ -3,7 +3,7 @@ import { rwxCore, rwxComponent } from '../rwxCore';
 class rwxNoticeBoxes extends rwxCore {
 	constructor()
 	{
-		super('[rwx-notice-box]', false);
+		super({selector:'[rwx-notice-box]', canHaveManualControl:false});
 		this.autoCloseDelayDefault = 5;
 	}
 

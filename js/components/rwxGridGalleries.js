@@ -4,7 +4,7 @@ import { rwxCore, rwxComponent } from '../rwxCore';
 class rwxGridGalleries extends rwxCore {
 	constructor()
 	{
-		super('[rwx-grid-gallery]', true);
+		super({selector:'[rwx-grid-gallery]', canHaveManualControl:true});
     window.navigator.userAgent.indexOf("MSIE ") > 0 && document.body.classList.add('ie');
 	}
 

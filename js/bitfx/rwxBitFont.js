@@ -8,7 +8,7 @@ const rwxBitFontOrientations = ['horizontal', 'vertical', 'slanted', 'wrap'];
 class rwxBitFont extends rwxCore {
 	constructor(selector, noFont=false, allowNoValue=false)
 	{
-		super(`[${selector}]`, true);
+		super({selector:`[${selector}]`, canHaveManualControl:true});
 		this.component = selector;
 		this.shapeDefault = 'circle';
 		this.colorDefault = '#FFFFFF';

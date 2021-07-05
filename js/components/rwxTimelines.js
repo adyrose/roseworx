@@ -4,7 +4,7 @@ import {rwxAnimationChain} from '../modules/rwxAnimation';
 class rwxTimelines extends rwxCore {
 	constructor()
 	{
-		super('[rwx-timeline]', true);
+		super({selector:'[rwx-timeline]', canHaveManualControl:true});
 	}
 
 	execute(el, mc)

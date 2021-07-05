@@ -7,7 +7,7 @@ import {rwxAnimationChain} from '../modules/rwxAnimation';
 class rwxTabs extends rwxCore {
 	constructor()
 	{
-		super('[rwx-tabs]');
+		super({selector:'[rwx-tabs]', canHaveManualControl:false});
 	}
 
 	execute(el)
@@ -27,11 +27,12 @@ class rwxTab extends rwxComponent {
 	constructor(el)
 	{
 		super({element: el, enableCustomEvents: true});
-		this.tabs = [...el.children].filter((c)=>c.classList.contains('rwx-tabs-tab'));
+		this.tabs = [...el.querySelectorAll('.rwx-tabs-tab')];
 		if(this.tabs.length == 0){return;}
 		this.change = this.change.bind(this);
 		this.tabHeaders = [];
-		this.activeTab = 1;
+		let initTab = this.tabs.findIndex((t)=>t.hasAttribute('data-rwx-tabs-initial'));
+		this.activeTab = initTab === -1 ? 1 : initTab+1;
 
 		this.declareEvent('tabShow');
 		this.declareEvent('tabHide');

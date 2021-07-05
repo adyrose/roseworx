@@ -4,7 +4,7 @@ import rwxMist from '../common/rwxMist';
 class rwxTables extends rwxCore {
 	constructor()
 	{
-		super('[rwx-table]');
+		super({selector:'[rwx-table]', canHaveManualControl:false, autoClass:false});
 	}
 	
 	execute(el)

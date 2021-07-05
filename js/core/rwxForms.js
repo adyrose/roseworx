@@ -3,7 +3,7 @@ import { rwxCore, rwxComponent } from '../rwxCore';
 class rwxForms extends rwxCore {
 	constructor()
 	{
-		super('[rwx-form]');
+		super({selector:'[rwx-form]', canHaveManualControl:false, autoClass:false});
 	}
 
 	execute(el)

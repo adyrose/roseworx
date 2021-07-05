@@ -6,7 +6,7 @@ import rwxMisc from '../helpers/rwxMiscHelpers';
 class rwxSlideshows extends rwxCore {
 	constructor()
 	{
-		super('[rwx-slideshow]');
+		super({selector:'[rwx-slideshow]', canHaveManualControl:false});
 	}
 
 	execute(el)

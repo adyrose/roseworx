@@ -1,5 +1,5 @@
 class rwxScrollTracking {
-	constructor(smooth=false){
+	constructor(){
 		this.scrollEvent = this.scrollEvent.bind(this);
 		this.events = [];
 		this.running = false;

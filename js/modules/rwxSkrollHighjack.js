@@ -1,65 +1,119 @@
 import {rwxAnimation} from './rwxAnimation';
 import rwxScrollTrack from '../common/rwxScrollTracking';
+import rwxDOM from '../helpers/rwxDOMHelpers';
+
 require('../../scss/modules/rwx-skroll-highjack.scss');
 class rwxSkrollHighjack {
-	constructor(fn, m, i)
+	constructor(navigation=true, ignore, scrollCallback)
 	{
-		this.m = m;
+		this.fn = scrollCallback;
+		this.ignore = ignore;
+		this.hasNavigation = navigation;
 		this.index = 0;
-		this.fn = fn;
+		this.counters = [];
 		this.highjacked = false;
 		this.stopAnimation = false;
+		this.m = [...document.querySelectorAll('[data-rwx-skroll-highjack-section]')];
+		if(this.m.length===0)return;
+		this.unloadEvent();
 		this.createAnimation();
 		document.body.style.overflow = "hidden";
 		this.clonedEvents = [...window.rwx.scrollTracking.events];
 		window.rwx.scrollTracking.events = [];
 		this.animate = this.animate.bind(this);
-		this.ignore = i;
-		this.htmlDefinition();
+		this.hasNavigation && this.htmlDefinition();
 		this.immediate();
 		rwxScrollTrack.add((e)=>this.scrolling(e), 'rwxScrollHighjacking');
-		window.addEventListener('beforeunload', ()=>{window.scrollTo(0,0)});
+		window.addEventListener('beforeunload', this.unloadEvent);
+		this.closeNavEvent = this.closeNavEvent.bind(this);
+		this.hasNavigation && document.addEventListener('click', this.closeNavEvent);
+		// window.addEventListener('keyup', this.catchTabs);
 	}
 
-	hideAppropriate()
+	// catchTabs(e)
+	// {
+	// 	if(e.keyCode===9)
+	// 	{
+	// 		// document.dispatchEvent(new Event('scroll'));
+	// 		// document.
+	// 	}
+	// }
+
+	closeNavEvent()
 	{
-		if(this.index === 0)this.up.style.setProperty('display', 'none', 'important')
-		else this.up.style.removeProperty('display')
-		if(this.index === this.m.length)this.down.style.setProperty('display', 'none', 'important')
-		else this.down.style.removeProperty('display')
+		this.navigation.classList.remove('active');
+	}
+
+	unloadEvent()
+	{
+		window.pageYOffset = 0;
+		window.scrollTo(0,0);
+	}
+
+	unhook(replaceEvents=true)
+	{
+		window.removeEventListener('beforeunload', this.unloadEvent);
+		if(replaceEvents)window.rwx.scrollTracking.events = this.clonedEvents;
+		document.body.style.overflow = "";
+		rwxScrollTrack.remove('rwxScrollHighjacking');
+		if(this.hasNavigation)
+		{
+			document.body.removeChild(this.navigation);
+			document.removeEventListener('click', this.closeNavEvent);
+		}
 	}
 
 	htmlDefinition()
 	{
-		let down = document.createElement('span');
-		down.classList.add('scroll-highjack-manual-control-down');
-		let t = document.createElement('span');
-		down.appendChild(t);
-		this.down = down;
-		document.body.append(down);
-		this.down.addEventListener('click', ()=>{
-			this.animation.reset();
-			this.index +=1;
-			this.highjacked = true;
-			this.hideAppropriate();
-			this.animate();
+		this.navigation = document.createElement('div');
+		this.navigation.setAttribute('tabIndex', 0);
+		this.navigation.classList.add('skroll-highjack-navigation');
+		this.m.map((m, i)=>{
+			let title = m.hasAttribute('data-rwx-skroll-highjack-section-title') ? m.getAttribute('data-rwx-skroll-highjack-section-title') : "";
+			let container = document.createElement('div');
+			container.classList.add('skroll-highjack-navigation-counter-container');
+			container.addEventListener('click', ()=>this.goTo(i+1));
+			let counter = document.createElement('div');
+			counter.classList.add('skroll-highjack-navigation-counter');
+			this.addCounterAttributes(counter, title);
+			this.addCounterEvents(counter, i, this.m.length);
+			let text = document.createElement('span');
+			text.innerText = title;
+			container.appendChild(counter);
+			container.appendChild(text);
+			this.navigation.appendChild(container);
+			this.counters.push(counter);
 		});
+		document.body.insertBefore(this.navigation, document.body.children[0]);
+		this.navigation.focus();
+	}
 
-		let up = document.createElement('span');
-		up.classList.add('scroll-highjack-manual-control-up');
-		let t2 = document.createElement('span');
-		up.appendChild(t2);
-		this.up = up;
-		document.body.append(up);
-		this.up.addEventListener('click', ()=>{
-			this.animation.reset();
-			this.index -=1;
-			this.highjacked = true;
-			this.hideAppropriate();
-			this.animate();
+	addCounterAttributes(counter, text)
+	{
+		counter.setAttribute('tabIndex', 0);
+		counter.setAttribute('role', 'button');
+		counter.setAttribute('aria-label', text);
+		counter.setAttribute('title', text);
+	}
+
+	addCounterEvents(counter, i, length)
+	{
+		counter.addEventListener('keydown', (ev)=>{
+			if(ev.keyCode == 13 || ev.keyCode == 32)
+			{
+				ev.preventDefault();
+				this.goTo(i+1)
+			}
 		});
-
-		this.hideAppropriate();
+		counter.addEventListener('focus', ()=>{
+			this.nextFocus = i;
+			this.navigation.classList.add('active');
+		});
+		counter.addEventListener('blur', ()=>{
+			setTimeout(()=>{
+				if((i===0 && this.nextFocus !==1) || (i===length-1 && this.nextFocus !== length-2))this.navigation.classList.remove('active');
+			}, 100);
+		});
 	}
 
 	animate()
@@ -67,20 +121,39 @@ class rwxSkrollHighjack {
 		if(!this.highjacked)return;
 		this.animation.animate((y)=>{
 			window.scrollTo(0, y);
-			window.scrollY = y;
+			window.pageYOffset = y;
 			this.fn && this.fn(y);
 			this.clonedEvents.map((ev)=>ev.ev());
 		})
 		window.requestAnimationFrame(this.animate);
 	}
 
-	goto(t)
+	goTo(t)
 	{
+		let newIndex = false;
+		if(typeof t === "number" && t<=this.m.length && t>0)
+		{
+			newIndex = t;
+		}
+		else if(typeof t === "string")
+		{
+			let found = this.m.findIndex((m)=>m.id===t);
+			if(found!==-1)newIndex=found+1;
+		}
+		if(newIndex===false || newIndex===this.index)return;
 		this.animation.reset();
-		const newIndex = this.m.findIndex((m)=>m.scrollto.id===t.replace('#',''));
-		this.index = newIndex+1;
+		this.index = newIndex;
 		this.highjacked = true;
+		this.activeCounter();
 		this.animate();
+	}
+
+	activeCounter()
+	{
+		if(this.hasNavigation)
+		{
+			this.counters.map((c, i)=> i===this.index-1 ? c.classList.add('active') : c.classList.remove('active'));
+		}
 	}
 
 	immediate()
@@ -88,18 +161,18 @@ class rwxSkrollHighjack {
 		if(window.location.hash)
 		{
 			const touse = window.location.hash.replace('#', '');
-			const filtered = this.m.filter((m)=>m.scrollto.id===touse);
+			const filtered = this.m.filter((m)=>m.id===touse);
 			if(filtered.length > 0)
 			{
-				const newIndex = this.m.findIndex((m)=>m.scrollto.id===touse);
-				const newTop = filtered[0].scrollto.getBoundingClientRect().top;
+				const newIndex = this.m.findIndex((m)=>m.id===touse);
+				const newTop = filtered[0].getBoundingClientRect().top;
 				this.index = newIndex+1;
+				this.activeCounter();
 				window.requestAnimationFrame(()=>{
 					window.scrollTo(0, newTop);
-					window.scrollY = newTop;
+					window.pageYOffset = newTop;
 					this.fn && this.fn(newTop);
-					this.clonedEvents.map((ev)=>ev.ev());	
-					this.hideAppropriate();
+					this.clonedEvents.map((ev)=>ev.ev());
 				})		
 			}
 		}
@@ -108,32 +181,40 @@ class rwxSkrollHighjack {
 	getTop()
 	{
 		if(this.index===0)return 0;
-		return typeof this.m[this.index-1].scrollto === "function" ? this.m[this.index-1].scrollto() : (window.scrollY + this.m[this.index-1].scrollto.getBoundingClientRect().top)
+		let val = (this.m[this.index-1].getBoundingClientRect().top + window.pageYOffset)
+		if(val > (document.body.scrollHeight-window.innerHeight))
+		{
+			val = (document.body.scrollHeight-window.innerHeight);
+		}
+		return val;
 	}
 
 	createAnimation()
 	{
 		this.animation = new rwxAnimation({
-			from:()=>window.scrollY,
+			from:()=>window.pageYOffset,
 			to: ()=>this.getTop(),
 			easing: 'easeOutQuad',
 			duration: 1000,
 			complete: ()=>{this.highjacked=false;}
-		})
+		});
 	}
 
 	scrolling(e)
 	{
 		if(this.highjacked || (e.type!=="wheel" && e.type !=="touchmove")){return}
-		let toreturn = false;
-		this.ignore.filter((sc)=>sc.scrollHeight > sc.offsetHeight).map((i)=>{
-			if(e.target === i || i.contains(e.target))
-			{
-				toreturn=true;
-			}
-			return false;
-		})
-		if(toreturn)return;
+		if(this.ignore)
+		{
+			let toreturn = false;
+			this.ignore.filter((sc)=>(sc.scrollHeight > sc.offsetHeight || sc.scrollWidth > sc.offsetWidth)).map((i)=>{
+				if(e.target === i || i.contains(e.target))
+				{
+					toreturn=true;
+				}
+				return false;
+			})
+			if(toreturn)return;
+		}
 
 		this.animation.reset();
 		if(e.type === "wheel")
@@ -170,6 +251,7 @@ class rwxSkrollHighjack {
 	     this.lastY = currentY;
 		}
 		this.highjacked = true;
+		this.activeCounter();
 		this.animate();
 	}
 }

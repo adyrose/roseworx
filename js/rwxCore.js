@@ -428,6 +428,27 @@ class rwxComponent {
 	{
 		rwxError(msg, `{Component} (${this.resourceName})`)
 	}
+
+	convertToButton(el, event)
+	{
+		el.setAttribute("role", "button");
+		el.setAttribute("tabindex", 0);
+		if(event)
+		{
+			el.addEventListener('keydown', (ev)=>{
+				if(this.isKeyboardClick(ev))
+				{
+					ev.preventDefault();
+					event(ev);
+				}
+			});
+		}
+	}
+
+	isKeyboardClick(ev)
+	{
+		return (ev.keyCode == 13 || ev.keyCode == 32)
+	}
 }
 
 const rwxError = (err, resource) =>{

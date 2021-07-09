@@ -1,15 +1,3 @@
-@mixin removeButtonStyles
-{
-	appearance:none;
-	background:none;
-	outline:none;
-	border:none;
-	font-size:inherit;
-	font:inherit;
-	padding:0;
-	color:inherit;
-}
-
 @mixin change-animated-border-bolor($from, $to)
 {
 	svg
@@ -31,25 +19,6 @@
 {
 	outline:none;
 	box-shadow: $focus-ring-shadow;
-}
-
-@mixin component-spacing($component: null)
-{
-	@if $component
-	{
-		h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6
-		{
-			+ .#{$component}
-			{
-				margin-top: 0px;
-			}
-		}
-		.#{$component}
-		{
-			margin-top: $medium-spacing;
-			margin-bottom: $medium-spacing;
-		}
-	}
 }
 
 @mixin change-input-color($color, $color2) {
@@ -162,5 +131,57 @@
 	}
 	@else {
 		@warn "`#{$breakpoint} is not a valid breakpoint. Available breakpoints are: #{map-keys($breakpoints)}`"
+	}
+}
+
+// NOT DOCUMENTED
+
+@mixin impactful
+{
+  color:$silver;
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+@mixin onAccessible($hover, $extraClass:false)
+{
+	&:focus, &:active, &:focus-visible
+	{
+		@content;
+	}
+	@if $hover
+	{
+		&:hover
+		{
+			@content;
+		}
+	}
+	@if $extraClass
+	{
+		&.#{$extraClass}
+		{
+			@content;
+		}
+	}
+}
+
+@mixin component-spacing($component: null)
+{
+	@if $component
+	{
+		h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6
+		{
+			+ .#{$component}
+			{
+				margin-top: 0px;
+			}
+		}
+		.#{$component}
+		{
+			margin-top: $medium-spacing;
+			margin-bottom: $medium-spacing;
+		}
 	}
 }

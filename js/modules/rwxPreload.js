@@ -5,7 +5,7 @@ import { rwxCore } from '../rwxCore';
 class rwxPreload extends rwxCore {
 	constructor()
 	{
-		super();
+		super({});
 	}
 
 	execute()

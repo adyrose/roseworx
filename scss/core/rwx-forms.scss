@@ -74,7 +74,7 @@
 			transition: 0.5s border $transition-base;
 			font: inherit;
 			background-color: transparent;
-			&:focus
+			@include onAccessible(false)
 			{
 				@include focus-ring;
 			}

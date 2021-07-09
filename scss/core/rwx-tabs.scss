@@ -31,11 +31,11 @@
 			font-size: $tabs-title-size;
 			font-family: $font-heading;
 			transition: all 0.7s $transition-base;
-			&.active, &:hover, &:focus
+			@include onAccessible(true, 'active')
 			{
 				color: $tabs-active-color;
 				border-color: $tabs-active-color;
-				transition: all 0.7s $transition-base;
+				transition: all 0.7s $transition-base;			
 			}
 			&.active
 			{

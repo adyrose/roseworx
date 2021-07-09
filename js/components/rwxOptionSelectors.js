@@ -115,6 +115,7 @@ class rwxOptionSelector extends rwxComponent {
   		b.removeEventListener('click', this.clickListener);
   		b.classList.remove('active');
   		b.removeAttribute('tabIndex');
+  		b.removeAttribute('role');
   		return false;
   	});
   	this.borders.map((bo)=>bo.cleanUp());
@@ -126,7 +127,7 @@ class rwxOptionSelector extends rwxComponent {
 		this.borders = [];
 		for(let item of this.buttons)
 		{
-			item.children[0].setAttribute('tabIndex', 0);
+			this.convertToButton(item.children[0]);
 			item.addEventListener('click', this.clickListener);
 			item.addEventListener('keydown', this.clickListener);
 			this.borders.push(new rwxAnimatedBorder(item.children[0]));
@@ -142,7 +143,7 @@ class rwxOptionSelector extends rwxComponent {
   			this.activeButton = this.activeButton == 0 ? 1 : 0;
   			this.buttons[this.activeButton].focus();
   		}
-  		if(ev.keyCode == 32 || ev.keyCode == 13)
+  		if(this.isKeyboardClick(ev))
   		{
   			ev.preventDefault();
   			this.selected(this.buttons.find((f)=>f===rwxDOM.hasAncestor(ev.target, '.rwx-option-selector-item')));

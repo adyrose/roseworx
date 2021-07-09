@@ -116,9 +116,11 @@ class rwxPhotoTile extends rwxComponent {
   	this.container.classList.add('rwx-phototile-container');
     this.cloned = this.photos.map((img)=>img.cloneNode());
   	this.photos.map((img, i)=>{
-  		img.addEventListener('keyup', (ev)=>{
-  			if(ev.keyCode == 13 || ev.keyCode == 32)
+      this.convertToButton(img);
+  		img.addEventListener('keydown', (ev)=>{
+  			if(this.isKeyboardClick(ev))
   			{
+          ev.preventDefault();
   				this.changeBackground(i+1, this.effectInit);
   			}
   			else if(ev.keyCode == 37){

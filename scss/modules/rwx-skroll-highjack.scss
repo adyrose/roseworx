@@ -1,46 +1,69 @@
 @import '../core/rwx-variables';
 @import '../core/rwx-mixins';
-$size: 10px;
-.scroll-highjack-manual-control-down, .scroll-highjack-manual-control-up
+$size: 16px;
+.skroll-highjack-navigation
 {
 	position: fixed;
+	top:50%;
 	right:0px;
-	width: 60px;
-	height: 60px;
-	background: rgba($black, 0.8);
-	z-index: 9999;
-	cursor: pointer;
-	@include snap-up-from('md')
+	transform:translateY(-50%);
+	background: $white;
+	z-index: $top-layer-z;
+	border-top-left-radius: 16px;
+	border-bottom-left-radius: 16px;
+	box-shadow: 0px 0px 3px 0px $silver;
+	transition: width 0.5s $transition-base;
+	width:$size + 16;
+	&-counter
 	{
-		display: none;
+		width: $size;
+		height: $size;
+		background: $blue;
+		margin-right:16px;
+		flex-shrink:0;
+		&.active
+		{
+			background: $orange;
+		}
+		@include onAccessible(true)
+		{
+			@include focus-ring;
+		}
+		&-container
+		{
+			cursor:pointer;
+			display:flex;
+			flex-wrap:nowrap;
+			align-items:center;
+			margin-top:16px;
+			margin-left:8px;
+			margin-right:8px;
+			&:last-child
+			{
+				margin-bottom:16px;
+			}
+			span
+			{
+				@include impactful;
+				margin-bottom:0px;
+				height: 0;
+				opacity: 0;
+			}
+		}
 	}
-	>span
+	&:focus, &:focus-within
 	{
-		width:0px;
-		height:0px;
-		border-left: $size solid transparent;
-		border-right: $size solid transparent;
-		position: absolute;
-		top:50%;
-		left:50%;
-		transform: translate(-50%, -50%);
+		outline:none;
 	}
-}
-
-.scroll-highjack-manual-control-down
-{
-	bottom:0px;
-	>span
+	&:hover, &.active
 	{
-		border-top: $size solid $white;
-	}
-}
-
-.scroll-highjack-manual-control-up
-{
-	top:0px;
-	>span
-	{
-		border-bottom: $size solid $white;
+		width:300px;
+		transition: width 0.5s $transition-base;
+		.skroll-highjack-navigation-counter-container span
+		{
+			height: 100%;
+			opacity: 1;
+			transition: opacity 0.5s $transition-base;
+		}
 	}
 }

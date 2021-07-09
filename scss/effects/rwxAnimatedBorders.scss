@@ -1,4 +1,5 @@
 @import '../core/rwx-variables';
+@import '../core/rwx-mixins';
 $rwx-animated-border-from-color: $blue !default;
 $rwx-animated-border-to-color: $orange !default;
 $rwx-animated-border-size: 5px !default;
@@ -20,15 +21,15 @@ $rwx-animated-border-size: 5px !default;
 			stroke: $rwx-animated-border-from-color;
 			transition: 1s all ease;
 		}
-		&.active, &:hover, &:focus, &:active
+		@include onAccessible(true, 'active')
 		{
 			rect
 			{
 				@include finish-styles;
-			}			
+			}	
 		}
 	}
-	&.active, &:hover, &:focus, &:active
+	@include onAccessible(true, 'active')
 	{
 		outline:none;
 		border: none;

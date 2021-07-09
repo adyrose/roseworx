@@ -12,7 +12,7 @@
 
 	&:not(:disabled)
 	{
-		&:hover, &:focus, &:active
+		@include onAccessible(true)
 		{
 			background-color:$color;
 			box-shadow:none;
@@ -38,7 +38,7 @@
 	box-shadow:none;
 	&:not(:disabled)
 	{
-		&:hover, &:focus, &:active
+		@include onAccessible(true)
 		{
 			@if $color == white
 			{
@@ -71,7 +71,7 @@ button, .rwx-button
 	transition: all 0.7s $transition-base;
 	border-radius:4px;
 	@include h6;
-	&:hover, &:focus
+	@include onAccessible(true)
 	{
 		outline:none;
 		transition: all 1s $transition-base;
@@ -114,5 +114,12 @@ a.rwx-button
 
 button.no-decoration
 {
-	@include removeButtonStyles;
+	appearance:none;
+	background:none;
+	outline:none;
+	border:none;
+	font-size:inherit;
+	font:inherit;
+	padding:0;
+	color:inherit;
 }

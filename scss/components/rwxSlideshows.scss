@@ -55,10 +55,11 @@
     cursor:pointer;
     background:rgba(255,255,255,0.5);
     transition: box-shadow 0.5s $transition-base;
-    &:hover, &:focus, &:active
+    @include onAccessible(true)
     {
     	transition: box-shadow 0.5s $transition-base;
 			box-shadow: 0 0 1rem 0.1rem $black;
+      outline: none;
     }
   }
 

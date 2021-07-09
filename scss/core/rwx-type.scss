@@ -156,11 +156,7 @@ section, .section
 
 strong.impact
 {
-  color:$silver;
-  text-transform: uppercase;
-  letter-spacing: 0.3rem;
-  display: block;
-  margin-bottom: 0.3rem;
+  @include impactful;
 }
 
 p, strong

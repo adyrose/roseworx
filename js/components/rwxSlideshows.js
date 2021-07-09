@@ -58,31 +58,31 @@ class rwxSlideshow extends rwxComponent {
 
   generateHTML()
   {
-     this.background = document.createElement('div');
-     this.background.classList.add('rwx-slideshow-background');
+    this.background = document.createElement('div');
+    this.background.classList.add('rwx-slideshow-background');
 
-     const ps = document.createElement('button');
-     ps.classList.add('no-decoration')
-     ps.classList.add('prev-slide');
-     ps.addEventListener('click', this.prevslide);
-     this.prevslidebutton = ps;
+    const ps = document.createElement('span');
+    this.convertToButton(ps, this.prevslide);
+    ps.classList.add('prev-slide');
+    ps.addEventListener('click', this.prevslide);
+    this.prevslidebutton = ps;
 
-     const ns = document.createElement('button');
-     ns.classList.add('next-slide');
-     ns.classList.add('no-decoration');
-     ns.addEventListener('click', this.nextslide);
-     this.nextslidebutton = ns;
+    const ns = document.createElement('span');
+    this.convertToButton(ns, this.nextslide);
+    ns.classList.add('next-slide');
+    ns.addEventListener('click', this.nextslide);
+    this.nextslidebutton = ns;
 
-     this.slidesContainer = document.createElement('div');
-     this.slidesContainer.classList.add('slide-container');
+    this.slidesContainer = document.createElement('div');
+    this.slidesContainer.classList.add('slide-container');
 
-     this.slides.map((s)=>this.slidesContainer.appendChild(s));
+    this.slides.map((s)=>this.slidesContainer.appendChild(s));
 
-     this.addElement(this.el, this.background);
-     this.addElement(this.el, ps);
-     this.addElement(this.el, ns);
+    this.addElement(this.el, this.background);
+    this.addElement(this.el, ps);
+    this.addElement(this.el, ns);
 
-     this.el.appendChild(this.slidesContainer);
+    this.el.appendChild(this.slidesContainer);
   }
 
   moused(e)

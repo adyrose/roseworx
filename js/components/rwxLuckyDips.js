@@ -95,24 +95,21 @@ class rwxLuckyDip extends rwxComponent {
     this.addElement(this.el, this.stopNode);
     this.stopNode.addEventListener('click', this.stopSpin);
     this.button = new rwxAnimatedBorder(this.stopNode);
-    this.stopNode.setAttribute('tabIndex', 0);
-    this.stopNode.addEventListener('keydown', this.stopSpin);
+    this.convertToButton(this.stopNode, this.stopSpin);
     this.mask = this.items[0].cloneNode(true);
     this.container.appendChild(this.mask);
     this.height = this.container.getBoundingClientRect().height;
     this.maxHeight = (this.items.length+1)*this.height;
   }
 
-  stopSpin(ev)
+  stopSpin()
   {
-    if(ev.type === "keydown" && ev.keyCode !== 32 && ev.keyCode !== 13){return;}
     if(this.pickingWinner)
     {
       return;
     }
     else
     {
-    	ev.preventDefault();
       this.pickWinner();
     }
   }

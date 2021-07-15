@@ -27,7 +27,7 @@ class rwxTab extends rwxComponent {
 	constructor(el)
 	{
 		super({element: el, enableCustomEvents: true});
-		this.tabs = [...el.querySelectorAll('.rwx-tabs-tab')];
+		this.tabs = [...el.children].filter((c)=>c.classList.contains('rwx-tabs-tab'));
 		if(this.tabs.length == 0){return;}
 		this.change = this.change.bind(this);
 		this.tabHeaders = [];

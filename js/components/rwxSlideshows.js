@@ -22,7 +22,7 @@ class rwxSlideshow extends rwxComponent {
     this.slides = [...this.el.querySelectorAll('.slide')];
     if(this.slides.length == 0){return;}
     this.elFullSizeAbsolute();
-    this.el.setAttribute("tabindex", 0);
+    this.addAttribute(this.el, 'tabindex', 0);
     this.nextslide = this.nextslide.bind(this);
     this.prevslide = this.prevslide.bind(this);
     this.keyupevent = this.keyupevent.bind(this);
@@ -118,12 +118,12 @@ class rwxSlideshow extends rwxComponent {
     const cache = this.slides;
     this.el.removeChild(this.slidesContainer);
     cache.map((c)=>{
-      c.style.transform = "none";
+      c.style.transform = "";
+      this.slideContents.map((sc)=>{sc.content.style.transform="";sc.title.style.transform="";return false;})
       this.el.appendChild(c);
       return false
     });
     this.el.removeEventListener('keyup', this.keyupevent);
-    this.el.removeAttribute("tabindex", 0);
   }
 
   init()

@@ -95,6 +95,7 @@ class rwxTab extends rwxComponent {
 	cleanUp()
 	{
 		this.el.removeChild(this.container);
+		this.tabs.map((t)=>t.classList.remove('initial-hide'));
 	}
 
 	createTabs()

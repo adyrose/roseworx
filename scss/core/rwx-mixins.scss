@@ -15,6 +15,34 @@
 	}
 }
 
+@mixin change-list-color($color) {
+  &:not(.no-decoration)
+  {
+    &:not(.\--numbered)
+    {
+      li:before {
+        background: $color;
+      }
+    }
+  }
+  &.\--numbered
+  {
+    li:before {
+      color: $color;
+    }
+  }
+  &.\--inline
+  {
+    li
+    {
+      &:before
+      {
+        background: $color;
+      }
+    }
+  }
+}
+
 @mixin focus-ring
 {
 	outline:none;

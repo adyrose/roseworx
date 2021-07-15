@@ -27,17 +27,23 @@ class rwxSkrollHighjack {
 		window.addEventListener('beforeunload', this.unloadEvent);
 		this.closeNavEvent = this.closeNavEvent.bind(this);
 		this.hasNavigation && document.addEventListener('click', this.closeNavEvent);
-		// window.addEventListener('keyup', this.catchTabs);
+		this.catchTabs = this.catchTabs.bind(this);
+		window.addEventListener('keyup', this.catchTabs);
 	}
 
-	// catchTabs(e)
-	// {
-	// 	if(e.keyCode===9)
-	// 	{
-	// 		// document.dispatchEvent(new Event('scroll'));
-	// 		// document.
-	// 	}
-	// }
+	catchTabs(e)
+	{
+		if(e.keyCode===9)
+		{
+			const anc = rwxDOM.hasAncestor(e.target, '[data-rwx-skroll-highjack-section]')
+			if(anc)
+			{
+				const newIndex = this.m.findIndex((m)=>m===anc);
+				this.index = newIndex+1;
+				this.activeCounter();
+			}
+		}
+	}
 
 	closeNavEvent()
 	{
@@ -46,7 +52,6 @@ class rwxSkrollHighjack {
 
 	unloadEvent()
 	{
-		window.pageYOffset = 0;
 		window.scrollTo(0,0);
 	}
 
@@ -121,7 +126,6 @@ class rwxSkrollHighjack {
 		if(!this.highjacked)return;
 		this.animation.animate((y)=>{
 			window.scrollTo(0, y);
-			window.pageYOffset = y;
 			this.fn && this.fn(y);
 			this.clonedEvents.map((ev)=>ev.ev());
 		})
@@ -170,7 +174,6 @@ class rwxSkrollHighjack {
 				this.activeCounter();
 				window.requestAnimationFrame(()=>{
 					window.scrollTo(0, newTop);
-					window.pageYOffset = newTop;
 					this.fn && this.fn(newTop);
 					this.clonedEvents.map((ev)=>ev.ev());
 				})		

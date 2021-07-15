@@ -54,6 +54,9 @@ class rwxLuckyDip extends rwxComponent {
   relaunch()
   {
     if(this.spinning)return;
+    this.addAttribute(this.el, 'aria-hidden', false);
+    this.addAttribute(this.stopNode, 'tabindex', 0);
+    this.el.style.zIndex = "";
     this.restartScroll();
   }
 
@@ -145,6 +148,9 @@ class rwxLuckyDip extends rwxComponent {
         this.stopAnimation=true;
         setTimeout(()=>{
           this.el.classList.remove('remove', 'active');
+          this.addAttribute(this.el, 'aria-hidden', true);
+          this.addAttribute(this.stopNode, 'tabindex', -1);
+          this.addStyle(this.el, 'z-index', -1);
         }, 1000);
       }
     })

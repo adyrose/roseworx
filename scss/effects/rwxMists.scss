@@ -16,6 +16,7 @@ $rwx-mist-color: #f5f5f5 !default;
 		{
 			opacity: 0;
 			transition: opacity 0.5s linear;
+			z-index:-1;
 		}
 	}
 

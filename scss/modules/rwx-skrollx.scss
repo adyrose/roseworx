@@ -18,7 +18,7 @@ $rwxsx-distance: 30%;
 									'top-right': #{$rwxsx-distance}#{','} -#{$rwxsx-distance},
 									'bottom-left': -#{$rwxsx-distance}#{','} #{$rwxsx-distance},
 									'bottom-right': #{$rwxsx-distance}#{','} #{$rwxsx-distance},
-									'initial': 0 0);
+									'initial': 0#{','} 0);
 		@each $selector, $transform in $direction
 		{
 			&-#{$selector}

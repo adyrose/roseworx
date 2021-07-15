@@ -34,6 +34,8 @@ class rwxAnimatedBorder {
 	cleanUp()
 	{
 		this.target.removeChild(this.el);
+		this.target.style.position = "";
+		this.target.classList.remove('rwx-animated-border');
 	}
 
 	measurements()

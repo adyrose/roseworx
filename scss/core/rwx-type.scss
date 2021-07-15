@@ -169,8 +169,9 @@ sup, p.small, strong.small, span.small, li.small
   @extend .rwxt-small;
 }
 
-a
+a, .rwx-link
 {
+  cursor: pointer;
   &:not(.rwx-button):not(.no-decoration)
   {
     text-decoration:none;

@@ -61,7 +61,7 @@ button, .rwx-button
 	cursor:pointer;
 }
 
-.rwx-button:not(.no-decoration), button:not(.no-decoration)
+.rwx-button:not(.no-decoration):not(.rwx-link), button:not(.no-decoration):not(.rwx-link)
 {
 	@include flex-center;
 	display:inline-flex;
@@ -112,7 +112,7 @@ a.rwx-button
 	text-decoration: none;
 }
 
-button.no-decoration
+button.no-decoration, button.rwx-link
 {
 	appearance:none;
 	background:none;

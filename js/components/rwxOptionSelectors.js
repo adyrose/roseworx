@@ -93,6 +93,10 @@ class rwxOptionSelector extends rwxComponent {
 	relaunch()
 	{
 		if(this.bail)return;
+		this.buttons.map((b)=>{
+			this.addAttribute(b, 'aria-hidden', false);
+			b.children[0].setAttribute('tabindex', 0);
+		});
 		this.restartScroll();
 	}
 
@@ -114,8 +118,6 @@ class rwxOptionSelector extends rwxComponent {
   		b.removeEventListener('keydown', this.clickListener);
   		b.removeEventListener('click', this.clickListener);
   		b.classList.remove('active');
-  		b.removeAttribute('tabIndex');
-  		b.removeAttribute('role');
   		return false;
   	});
   	this.borders.map((bo)=>bo.cleanUp());
@@ -167,7 +169,12 @@ class rwxOptionSelector extends rwxComponent {
 		this.buttons.map(b=>b.classList.add('remove'));
 		this.callback && this.callback(value);
 		setTimeout(()=>{
-			this.buttons.map(b=>b.classList.remove('remove', 'active'));
+			this.buttons.map((b,i)=>{
+				b.classList.remove('remove', 'active');
+				this.addAttribute(b, 'aria-hidden', true);
+				b.children[0].setAttribute('tabindex', -1);
+				return false;
+			});
 		}, 1000);
 	}
 }

@@ -59,6 +59,7 @@ class rwxCore {
 				ime.removeListeners && ime.removeListeners();
 				ime.removeElements && ime.removeElements();
 				ime.removeStyles && ime.removeStyles();
+				ime.removeAttributes && ime.removeAttributes();
 				ime.cleanUp && ime.cleanUp();
 				if(this.autoClass)
 				{
@@ -179,6 +180,7 @@ class rwxComponent {
 		this.uniqueID = rwxMisc.uniqueId();
 		this.addedElements = [];
 		this.addedStyles = [];
+		this.addedAttributes = [];
 		if(enableCustomEvents)
 		{
 			this.customEventsEnabled = true;
@@ -236,6 +238,17 @@ class rwxComponent {
 	{
 		parent.appendChild(child);
 		this.addedElements.push({parent, child});
+	}
+
+	addAttribute(parent, attribute, value)
+	{
+		parent.setAttribute(attribute, value);
+		this.addedAttributes.push({parent, attribute});
+	}
+
+	removeAttributes(parent)
+	{
+		this.addedAttributes.map((a)=>a.parent.removeAttribute(a.attribute));
 	}
 
 	addStyle(parent, style, val)
@@ -431,8 +444,8 @@ class rwxComponent {
 
 	convertToButton(el, event)
 	{
-		el.setAttribute("role", "button");
-		el.setAttribute("tabindex", 0);
+		this.addAttribute(el, 'role', 'button');
+		this.addAttribute(el, 'tabindex', 0);
 		if(event)
 		{
 			el.addEventListener('keydown', (ev)=>{

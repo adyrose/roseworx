@@ -9,7 +9,21 @@
 		transform:translateY(-100%);
 		visibility:hidden;
 	}
-	&-container
+	&.\--center
+	{
+		.rwx-tabs-button-container
+		{
+			margin:auto;
+		}
+	}
+	&.\--right
+	{
+		.rwx-tabs-button-container
+		{
+			margin-left:auto;
+		}
+	}
+	& > &-container
 	{
 		padding: 10px;
 		margin-bottom: 40px;

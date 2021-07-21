@@ -75,7 +75,7 @@ class rwxCore {
 		if(id)
 		{
 			let el = element || document.getElementById(id);
-			if(!element && this.autoClass)
+			if(!element && this.autoClass && el)
 			{
 				el.classList.add(this.className);
 			}

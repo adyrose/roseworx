@@ -95,7 +95,12 @@ class rwxTab extends rwxComponent {
 	cleanUp()
 	{
 		this.el.removeChild(this.container);
-		this.tabs.map((t)=>t.classList.remove('initial-hide'));
+		this.tabs.map((t)=>{
+			t.classList.remove('initial-hide');
+			t.style.transform = "";
+			t.style.opacity = "";
+			return false;
+		});
 	}
 
 	createTabs()
@@ -105,6 +110,8 @@ class rwxTab extends rwxComponent {
 		this.bullet = document.createElement('span');
 		this.bullet.classList.add('bullet');
 		this.addElement(this.container, this.bullet);
+		let buttonContainer = document.createElement('div');
+		buttonContainer.classList.add('rwx-tabs-button-container');
 		this.tabs.map((t, i)=>{
 			if(t.hasAttribute('data-rwx-tabs-title'))
 			{
@@ -124,7 +131,7 @@ class rwxTab extends rwxComponent {
 					}
 				});
 				this.tabHeaders.push(button);
-				this.container.appendChild(button);
+				buttonContainer.appendChild(button);
 			}
 			if(i+1 == this.activeTab){
 				this.tabHeaders[i].setAttribute('aria-selected', true); 
@@ -134,6 +141,7 @@ class rwxTab extends rwxComponent {
 			else{t.classList.add('initial-hide')}
 			return;
 		});
+		this.container.appendChild(buttonContainer);
 		this.el.insertBefore(this.container, this.tabs[0]);
 		new rwxMist(this.container);
 		if(this.hash)

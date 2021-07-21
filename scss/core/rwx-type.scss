@@ -263,39 +263,39 @@ ul
         top:9px;
       }
     }
-  }
-  &.\--numbered
-  {
-    counter-reset: ulnumbered;
-    li {
-      min-height:30px;
-      padding-left: 50px;
-      padding-top:3px;
-    }
-    li:before {
-      counter-increment: ulnumbered;
-      content: counter(ulnumbered)".";
-      color: $list-item-counter-color;
-      @include h3;
-      top:0px;
-    }
-  }
-  &.\--inline
-  {
-    display:flex;
-    flex-wrap:wrap;
-    li
+    &.\--numbered
     {
-      margin-right: 50px;
-      &:before
-      {
-        height:8px !important;
-        width:8px !important;
-        top:9px;
-        background: $list-item-counter-color;
-        border-radius:100%;
+      counter-reset: ulnumbered;
+      li {
+        min-height:30px;
+        padding-left: 50px;
+        padding-top:3px;
+      }
+      li:before {
+        counter-increment: ulnumbered;
+        content: counter(ulnumbered)".";
+        color: $list-item-counter-color;
+        @include h3;
+        top:0px;
       }
     }
+    &.\--inline
+    {
+      display:flex;
+      flex-wrap:wrap;
+      li
+      {
+        margin-right: 50px;
+        &:before
+        {
+          height:8px !important;
+          width:8px !important;
+          top:9px;
+          background: $list-item-counter-color;
+          border-radius:100%;
+        }
+      }
+    }  
   }
 }
 

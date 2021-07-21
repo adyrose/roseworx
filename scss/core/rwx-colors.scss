@@ -24,12 +24,12 @@ $sizes: (
 	{
 		&-#{$selector}
 		{
-			border: 1px solid $color;
+			border: 1px solid $color !important;
 			@each $size, $px in $sizes
 			{
 				&-#{$size}
 				{
-					border: #{$px} solid $color;
+					border: #{$px} solid $color !important;
 				}
 			}
 		}
@@ -37,12 +37,12 @@ $sizes: (
 		{
 			&-#{$s}-#{$selector}
 			{
-				border-#{$c}: 1px solid $color;
+				border-#{$c}: 1px solid $color !important;
 				@each $size, $px in $sizes
 				{
 					&-#{$size}
 					{
-						border-#{$c}: #{$px} solid $color;
+						border-#{$c}: #{$px} solid $color !important;
 					}
 				}
 			}

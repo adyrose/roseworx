@@ -1,10 +1,6 @@
 $rwx-mist-size: 50px !default;
 $rwx-mist-color: #f5f5f5 !default;
-[rwx-mist]
-{
-	overflow:auto;
-	position:relative;
-}
+
 .rwx-mist
 {
 	&-right, &-bottom

@@ -224,13 +224,13 @@ class rwxComponent {
 
 	removeElements()
 	{
-		this.addedElements.map((a)=>a.parent.removeChild(a.child));
+		this.addedElements.map((a)=>a.parent.contains(a.child) && a.parent.removeChild(a.child));
 		this.addedElements = [];
 	}
 
 	removeElement(parent, child)
 	{
-		parent.removeChild(child);
+		parent.contains(child) && parent.removeChild(child);
 		this.addedElements = this.addedElements.filter((ae)=>ae.parent!==parent && ae.child!==child);
 	}
 

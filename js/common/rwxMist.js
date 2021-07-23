@@ -7,6 +7,8 @@ class rwxMist extends rwxComponent {
 		this.el = el;
 		this.update = this.update.bind(this);
 		this.calculate();
+		this.addStyle(this.el, 'overflow', 'auto');
+		this.addStyle(this.el, 'position', 'relative');
 		this.el.addEventListener('scroll', this.update);
 	}
 

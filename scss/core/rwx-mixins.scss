@@ -22,19 +22,37 @@
 	}
 }
 
-@mixin change-animated-border-bolor($from, $to)
+@mixin change-animated-border-bolor($from, $to, $size:false)
 {
 	svg
 	{
 		rect
 		{
+			@if $size
+			{
+				stroke-width: $size;
+			}
 			stroke: $from !important;
 		}
+		@if size
+		{
+			@include onAccessible(true, 'active')
+			{
+				rect
+				{
+					stroke-width: $size;
+				}	
+			}
+		}
 	}
-	&.active, &:hover, &:focus, &:active
+	@include onAccessible(true, 'active')
 	{
 		svg rect {
 			stroke: $to !important;
+			@if $size
+			{
+				stroke-width: $size;
+			}
 		}
 	}
 }

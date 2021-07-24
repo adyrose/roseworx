@@ -1,6 +1,7 @@
 require('../../scss/effects/rwxFade.scss');
 
 const rwxFade = {
+	resourceName: 'rwxFade',
 	fadeIn: (el) => {
     el.classList.contains('rwx-fade-out') && el.classList.remove('rwx-fade-out');
     el.classList.add('rwx-fade-in');

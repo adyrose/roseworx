@@ -14,6 +14,7 @@ class rwxCountOMeters extends rwxCore {
 	execute(el, mc)
 	{
 		let value = this.checkAttributeOrDefault(el, 'data-rwx-countometer-value', this.valueDefault);
+    value = (value>100 || value<0) ? this.valueDefault : value;
 		return new rwxCountOMeter(el, parseInt(value), mc);	
 	}
 }

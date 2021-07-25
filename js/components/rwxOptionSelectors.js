@@ -18,12 +18,6 @@ class rwxOptionSelectors extends rwxCore {
 		const IME = this.getIME(id);
 		IME && IME.onSelected(cb);		
 	}
-
-	relaunch(id)
-	{
-		const IME = this.getIME(id);
-		IME && IME.relaunch();		
-	}
 }
 
 class rwxOptionSelector extends rwxComponent {
@@ -83,21 +77,6 @@ class rwxOptionSelector extends rwxComponent {
 			default:
 				break;
 		}
-	}
-
-	uncommenced()
-	{
-		this.buttons.map((i)=>i.classList.remove('active'));
-	}
-
-	relaunch()
-	{
-		if(this.bail)return;
-		this.buttons.map((b)=>{
-			this.addAttribute(b, 'aria-hidden', false);
-			b.children[0].setAttribute('tabindex', 0);
-		});
-		this.restartScroll();
 	}
 
 	onSelected(cb)

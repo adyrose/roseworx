@@ -49,6 +49,14 @@ class rwxCore {
 		}
 	}
 
+	renew(id)
+	{
+		this.unhook(id);
+		window.requestAnimationFrame(()=>{
+			this.hook(id);
+		})
+	}
+
 	unhook(id)
 	{
 		if(id)
@@ -95,29 +103,35 @@ class rwxCore {
   commence(id)
   {
     const IME = this.getIME(id);
-  	if(IME)
+  	if(IME && !IME.hasScrolled)
   	{
-  		if(IME.hasScrolled)
-  		{
-  			IME.animate && IME.startAnimation();
-  		}
-  		else
-  		{
-  			IME.scrolledIntoView(); 
-  		}
+  		IME.scrolledIntoView();
   	}   
   }
 
-  uncommence(id)
+  pause(id)
   {
-    const IME = this.getIME(id);
+  	const IME = this.getIME(id);
   	if(IME)
   	{
   		IME.stopAnimation = true;
-  		IME.startedAnimation = false;
-  		IME.hasScrolled = false;
-  		IME.uncommenced && IME.uncommenced();
-  	}  	
+  	}
+  }
+
+  play(id)
+  {
+  	const IME = this.getIME(id)
+  	if(IME)
+  	{
+  		if(!IME.hasScrolled)
+  		{
+  			IME.scrolledIntoView();
+  		}
+  		else
+  		{
+  			IME.startAnimation();
+  		}
+  	}
   }
 
 	getIMES()
@@ -366,26 +380,11 @@ class rwxComponent {
 		this.resize();		
 	}
 
-	restartScroll()
-	{
-		this.hasScrolled = false;
-		this.scrolledIntoView();
-	}
-
-	restartAnimation()
-	{
-		this.startedAnimation = false;
-		this.startAnimation();
-	}
-
 	startAnimation()
 	{
+		if(!this.stopAnimation)return;
 		this.stopAnimation = false;
-		if(!this.startedAnimation)
-		{
-			this.startedAnimation = true;
-			this.animateLoop();
-		}
+		this.animateLoop();
 	}
 
 	animateLoop()

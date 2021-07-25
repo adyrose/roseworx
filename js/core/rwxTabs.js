@@ -99,6 +99,7 @@ class rwxTab extends rwxComponent {
 			t.classList.remove('initial-hide');
 			t.style.transform = "";
 			t.style.opacity = "";
+			t.style.display = "";
 			return false;
 		});
 	}

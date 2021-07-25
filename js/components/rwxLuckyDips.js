@@ -25,12 +25,6 @@ class rwxLuckyDips extends rwxCore {
     const IME = this.getIME(id);
     IME && IME.onSelected(cb);
   }
-
-  relaunch(id)
-  {
-    const IME = this.getIME(id);
-    IME && IME.relaunch();
-  }
 }
 
 class rwxLuckyDip extends rwxComponent {
@@ -46,26 +40,12 @@ class rwxLuckyDip extends rwxComponent {
     this.htmlDefinition();
   }
 
-  uncommenced()
-  {
-    this.el.classList.remove('active');
-  }
-
-  relaunch()
-  {
-    if(this.spinning)return;
-    this.addAttribute(this.el, 'aria-hidden', false);
-    this.addAttribute(this.stopNode, 'tabindex', 0);
-    this.el.style.zIndex = "";
-    this.restartScroll();
-  }
-
   scrolledIntoView()
   {
     this.el.classList.add('active');
     this.spinning=true;
     this.reset();
-    this.restartAnimation();
+    this.startAnimation();
     if(this.autoStop)
     {
       setTimeout(()=>{

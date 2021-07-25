@@ -41,6 +41,11 @@ class rwxParallaxItem extends rwxComponent {
 		this.isReverse = this.isItReverse();
 	}
 
+	cleanUp()
+	{
+		this.el.style.transform = "";
+	}
+
 	isItX()
 	{
 		return (this.direction === "left" || this.direction === "right");
@@ -68,6 +73,11 @@ class rwxSkrollXItem extends rwxComponent {
 		trigger && this.setScrollTrigger(trigger);
 		this.delay = delay;
 		this.doneFlag = 'rwxsx-end';
+	}
+
+	cleanUp()
+	{
+		this.el.classList.remove(this.doneFlag);
 	}
 
 	scrolledIntoView()

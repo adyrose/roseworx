@@ -23,10 +23,17 @@ class rwxSkrollHighjack {
 		this.animate = this.animate.bind(this);
 		this.hasNavigation && this.htmlDefinition();
 		this.immediate();
-		rwxScrollTrack.add((e)=>this.scrolling(e), 'rwxScrollHighjacking');
+
+		this.scrolling = this.scrolling.bind(this);
+		document.addEventListener('wheel', this.scrolling);
+		document.addEventListener('touchmove', this.scrolling);
+		// rwxScrollTrack.add((e)=>this.scrolling(e), 'rwxScrollHighjacking');
+		
 		window.addEventListener('beforeunload', this.unloadEvent);
+		
 		this.closeNavEvent = this.closeNavEvent.bind(this);
 		this.hasNavigation && document.addEventListener('click', this.closeNavEvent);
+		
 		this.catchTabs = this.catchTabs.bind(this);
 		window.addEventListener('keyup', this.catchTabs);
 	}
@@ -60,7 +67,9 @@ class rwxSkrollHighjack {
 		window.removeEventListener('beforeunload', this.unloadEvent);
 		if(replaceEvents)window.rwx.scrollTracking.events = this.clonedEvents;
 		document.body.style.overflow = "";
-		rwxScrollTrack.remove('rwxScrollHighjacking');
+		document.removeEventListener('wheel', this.scrolling);
+		document.removeEventListener('touchmove', this.scrolling);
+		// rwxScrollTrack.remove('rwxScrollHighjacking');
 		if(this.hasNavigation)
 		{
 			document.body.removeChild(this.navigation);

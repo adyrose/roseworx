@@ -24,11 +24,6 @@ class rwxGridGallery extends rwxComponent {
 		this.createStructure();
 	}
 
-	uncommenced()
-	{
-		this.el.classList.remove('show');
-	}
-
 	scrolledIntoView()
 	{
 		this.el.classList.add('show');

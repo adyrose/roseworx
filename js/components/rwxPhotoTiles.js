@@ -242,7 +242,7 @@ class rwxPhotoTile extends rwxComponent {
         if(index == matrix.length-1)
         {
           this.resetAnimation();
-          this.restartAnimation();
+          this.startAnimation();
         }
       }        
     }

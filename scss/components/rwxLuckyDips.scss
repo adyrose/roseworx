@@ -31,7 +31,7 @@ $slidedowntime: 0.5s;
 	{
 		margin-top:100px;
 		cursor:pointer;
-		@include change-animated-border-bolor($black, $white);
+		@include change-animated-border($black, $white);
 		.text
 		{
 			font-size: 1.52rem;

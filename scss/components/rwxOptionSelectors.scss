@@ -75,7 +75,7 @@ $numberofitems: (
 	& > &-item > *
 	{
 		cursor: pointer;
-		@include change-animated-border-bolor($black, $white);
+		@include change-animated-border($black, $white);
 	}
 	& > &-item
 	{

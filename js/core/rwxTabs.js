@@ -71,7 +71,17 @@ class rwxTab extends rwxComponent {
 	{
 		if(window.location.hash)
 		{
-			let el = this.el.querySelector(`#${window.location.hash.replace('#', '')}`);
+
+			const validSelector = selector => {
+			  try { document.createDocumentFragment().querySelector(selector) } catch(e) { return false }
+			  return true
+			}
+			const selector = `#${window.location.hash.replace('#', '')}`;
+			
+			if(!validSelector(selector))return;
+
+			let el = this.el.querySelector(selector);
+			
 			if(el)
 			{
 				let tab = rwxDOM.hasAncestor(el, '.rwx-tabs-tab');

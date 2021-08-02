@@ -32,14 +32,28 @@ module.exports = {
         use : [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          {loader:'postcss-loader',  options: { config: { path: './postcss.config.js' } }},
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  require('autoprefixer')({grid:true})
+                ]
+              }
+            }
+          },
           'sass-loader'
         ]
       },
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: '/node-modules/'
+        test: /\.m?js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
       }
     ]
   }

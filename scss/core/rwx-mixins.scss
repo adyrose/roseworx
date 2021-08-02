@@ -22,7 +22,7 @@
 	}
 }
 
-@mixin change-animated-border-bolor($from, $to, $size:false)
+@mixin change-animated-border($from, $to, $size:false)
 {
 	svg
 	{
@@ -85,12 +85,6 @@
   }
 }
 
-@mixin focus-ring
-{
-	outline:none;
-	box-shadow: $focus-ring-shadow;
-}
-
 @mixin change-input-color($color, $color2) {
 	input,select
 	{
@@ -146,6 +140,12 @@
 			background-image: icon('circle', $color2, $color2);			
 		}
 	}
+}
+
+@mixin focus-ring
+{
+	outline:none;
+	box-shadow: $focus-ring-shadow;
 }
 
 @mixin change-link-color($color) {

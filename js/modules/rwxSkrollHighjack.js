@@ -6,6 +6,7 @@ require('../../scss/modules/rwx-skroll-highjack.scss');
 class rwxSkrollHighjack {
 	constructor(navigation=true, ignore, scrollCallback)
 	{
+		this.resourceName = "rwxSkrollHighjack";
 		this.fn = scrollCallback;
 		this.ignore = ignore;
 		this.hasNavigation = navigation;

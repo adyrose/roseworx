@@ -1,20 +1,23 @@
 class rwxScrollTracking {
 	constructor(){
 		this.scrollEvent = this.scrollEvent.bind(this);
+		this.throttle = this.throttle.bind(this);
 		this.events = [];
 		this.running = false;
 	}
 
 	removeEvent()
 	{
-		document.removeEventListener('scroll', this.scrollEvent);
-		document.removeEventListener('touchmove', this.scrollEvent);
+		document.removeEventListener('scroll', this.throttle);
+		document.removeEventListener('touchmove', this.throttle);
 		document.removeEventListener('scrollTrackThrottle', this.scrollEvent);
 	}
 
 	addEvent()
 	{
 		document.addEventListener('scrollTrackThrottle', this.scrollEvent);
+		document.addEventListener('scroll', this.throttle);
+		document.addEventListener('touchmove', this.throttle);
 		this.throttle();
 	}
 
@@ -43,8 +46,6 @@ class rwxScrollTracking {
 			document.dispatchEvent(new CustomEvent('scrollTrackThrottle'));
 			this.running=false;
 		});
-		document.addEventListener('scroll', this.scrollEvent);
-		document.addEventListener('touchmove', this.scrollEvent);
 	}
 
 	scrollEvent(e)

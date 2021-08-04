@@ -1,8 +1,6 @@
 @import '../core/rwx-variables';
 @import '../core/rwx-mixins';
 
-@include component-spacing('rwx-grid-gallery');
-
 .ie.rwx-grid-gallery {
   display: flex;
   flex-wrap: wrap;

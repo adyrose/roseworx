@@ -215,6 +215,15 @@
   margin-bottom: 0.3rem;
 }
 
+@mixin hideScrollbar()
+{
+	&::-webkit-scrollbar {
+	  display: none;
+	}
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @mixin onAccessible($hover, $extraClass:false)
 {
 	&:focus, &:active, &:focus-visible
@@ -233,25 +242,6 @@
 		&.#{$extraClass}
 		{
 			@content;
-		}
-	}
-}
-
-@mixin component-spacing($component: null)
-{
-	@if $component
-	{
-		h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6
-		{
-			+ .#{$component}
-			{
-				margin-top: 0px;
-			}
-		}
-		.#{$component}
-		{
-			margin-top: $medium-spacing;
-			margin-bottom: $medium-spacing;
 		}
 	}
 }

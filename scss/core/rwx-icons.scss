@@ -51,7 +51,7 @@ $iconsizes: ('xs': 1rem, 'sm': 2rem, 'lg': 4rem, 'xl': 5rem);
 						{
 							@if $fillneedsstroke
 							{
-								background: icon($iconname, $theme-color-base, $color) no-repeat;
+								background: icon($iconname, $icon-color-base, $color) no-repeat;
 							}
 							@else
 							{

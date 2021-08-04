@@ -46,6 +46,12 @@ $colors: null !default;
 	$colors: $ecolors;
 }
 
+//theme
+$theme-color-base: $dark-grey !default;
+$theme-color-secondary: $grey !default;
+$theme-color-tertiary: $light-blue !default;
+
+
 $icons: (
 	'tick': (
 		'viewbox': "40 40", 
@@ -115,11 +121,7 @@ $icons: (
 $allowIcons: true !default;
 $allowColoredIcons: true !default;
 $allowSizedIcons: true !default;
-
-//theme
-$theme-color-base: $dark-grey !default;
-$theme-color-secondary: $grey !default;
-$theme-color-tertiary: $light-blue !default;
+$icon-color-base: $theme-color-base;
 
 //grid
 $grid-item-gutter:30px !default;
@@ -129,6 +131,7 @@ $breakpoint-sm: 576px !default;
 $breakpoint-md: 768px !default;
 $breakpoint-lg: 992px !default;
 $breakpoint-xl: 1200px !default;
+
 
 //breakpoints
 $breakpoints: (

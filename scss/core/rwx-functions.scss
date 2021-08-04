@@ -13,7 +13,7 @@
   @return '%23' + str-slice('#{$color}', 2, -1)
 }
 
-@function icon($type, $color:$theme-color-base, $fill:'none') {
+@function icon($type, $color:$icon-color-base, $fill:'none') {
 	$icon:null;
 	@if map-has-key($icons, $type) {
 		$icon: map-get($icons, $type);

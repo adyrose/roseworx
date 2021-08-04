@@ -191,7 +191,7 @@ $emphasis-line:	2px solid $table-color-base;
 		{
 			>span
 			{
-				background-image: linear-gradient(rgba($table-color-highlight, 0.2), rgba($table-color-highlight, 0.2)), linear-gradient(white, white)	
+				background-color: rgba($table-color-highlight, 0.2);
 			}
 		}
 	}

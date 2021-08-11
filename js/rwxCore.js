@@ -123,7 +123,7 @@ class rwxCore {
   	const IME = this.getIME(id)
   	if(IME)
   	{
-  		if(!IME.hasScrolled)
+  		if(!IME.hasScrolled && IME.scrolledIntoView)
   		{
   			IME.scrolledIntoView();
   		}

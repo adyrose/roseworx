@@ -1,0 +1,23 @@
+@import '../core/rwx-variables';
+@import '../core/rwx-mixins';
+
+.rwx-lava-lamp
+{
+  position: relative;
+  z-index:-1;
+  overflow:hidden;
+  path
+  {
+    fill: $orange;
+    filter: blur(2px);
+  }
+  & > &-container
+  {
+    @include full-size;
+  }
+  .bubble-container
+  {
+    width:100%;
+    height:100%;
+  }
+}

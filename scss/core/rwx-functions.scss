@@ -10,11 +10,13 @@
 	@if $color == 'none' {
 		@return 'none';
 	}
-  @return '%23' + str-slice('#{$color}', 2, -1)
+  @return '%23' + str-slice('#{$color}', 2, -1);
 }
 
-@function icon($type, $color:$icon-color-base, $fill:'none') {
+@function icon($type, $color:$icon-color-base, $width:$icon-line-width, $forcefill:false) {
 	$icon:null;
+	$toReturn:null;
+	$vb: "500 500";
 	@if map-has-key($icons, $type) {
 		$icon: map-get($icons, $type);
 	}
@@ -22,7 +24,19 @@
 		@warn "`#{$type} is not a valid icon. Available icons are: #{map-keys($icons)}`";
 		@return none;
 	}
-  
-	$toReturn: url("data:image/svg+xml, <svg viewBox='0 0 #{map-get($icon, 'viewbox')}' stroke='#{safeHexForSvg($color)}' fill='#{safeHexForSvg($fill)}' xmlns='http://www.w3.org/2000/svg'>#{map-get($icon, 'svg')}</svg>");
+
+	@if map-get($icon, 'viewbox') {
+		$vb: map-get($icon, 'viewbox');
+	}
+
+  @if (str-index($type, '-fill') or $forcefill) {
+    $toReturn: url("data:image/svg+xml, <svg viewBox='0 0 #{$vb}' stroke='#{safeHexForSvg($color)}' fill='#{safeHexForSvg($color)}' stroke-width='#{$width}' xmlns='http://www.w3.org/2000/svg'>#{map-get($icon, 'svg')}</svg>");
+  }
+  @else
+  {
+  	$toReturn: url("data:image/svg+xml, <svg viewBox='0 0 #{$vb}' stroke='#{safeHexForSvg($color)}' fill='none' stroke-width='#{$width}' xmlns='http://www.w3.org/2000/svg'>#{map-get($icon, 'svg')}</svg>");
+  }
+
+	
 	@return $toReturn;
 }

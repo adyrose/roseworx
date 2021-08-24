@@ -99,7 +99,7 @@
 	{
 		select
 		{
-			background-image: icon('select-list', $color);
+			background-image: icon('select-list', $color, '10px', true);
 			option
 			{
 				color: $dark-grey;
@@ -113,7 +113,7 @@
 			border: 1px solid $color;
 			&:checked
 			{
-				background-image: icon('tick', $color);
+				background-image: icon('tick', $color, '30px');
 			}
 		}
 		label:after
@@ -125,11 +125,11 @@
 	{
 		input[type="checkbox"]
 		{
-			background-image: icon('circle', $color, $color);
+			background-image: icon('circle', $color);
 			&:checked
 			{
 				background-position: right;
-				background-image: icon('circle', $color2, $color2);
+				background-image: icon('circle-fill', $color2);
 			}
 		}
 	}
@@ -137,7 +137,7 @@
 	{
 		input[type="radio"]
 		{
-			background-image: icon('circle', $color2, $color2);			
+			background-image: icon('circle-fill', $color2);	
 		}
 	}
 }

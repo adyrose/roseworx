@@ -348,9 +348,15 @@ $weights: ("light": 200, "normal": 400, "semi-bold":500, "bold": 700, "extra-bol
   text-align:right !important;
 }
 
-$cards: ("help": $orange, "note": $light-blue, "warning": $red, "hint": $yellow, "feature": $light-green);
+$cards: ( 
+  "help": ("color": $orange, "icon": 'help-fill', "sw":"1px"),
+  "feature": ("color": $light-green, "icon": 'star', "sw":"33px"),
+  "note": ("color": $light-blue, "icon": 'note-fill', "sw":"1px"),
+  "warning": ("color": $red, "icon": 'warning', "sw":"20px", "fill": "true"),
+  "hint": ("color": $yellow, "icon": 'hint', "sw":"25px"),
+);
 
-@each $card, $color in $cards
+@each $card, $deets in $cards
 {
   p.#{$card}
   {
@@ -371,7 +377,7 @@ $cards: ("help": $orange, "note": $light-blue, "warning": $red, "hint": $yellow,
       position:absolute;
       top:20px;
       left:10px;
-      background: icon(#{$card}, $white); 
+      background: icon(#{map-get($deets,"icon")}, $white, map-get($deets,"sw"), map-get($deets,"fill")); 
       z-index:2;    
     }
     &:after
@@ -383,7 +389,7 @@ $cards: ("help": $orange, "note": $light-blue, "warning": $red, "hint": $yellow,
       height:100%;
       width:50px;
       z-index:1;
-      background-color: rgba($color, 0.8);
+      background-color: rgba(map-get($deets,"color"), 0.8);
     }
   }
 }

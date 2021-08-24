@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 220 480 L 90 480 L 90 225 L 20 225 L 120 125 L 120 40 L 171 40 L 171 85 L 250 20 L 480 225 L 410 225 L 410 480 L 280 480 L 280 380 L 220 380 L 220 480 Z" style="stroke: rgb(0, 0, 0); fill: none;"/>
+  <rect x="134.322" y="235" width="65" height="65" style="stroke: rgb(186, 218, 85); fill: none;"/>
+  <rect x="300" y="235" width="65.048" height="65" style="stroke: rgb(186, 218, 85); fill: none;"/>
+</svg>

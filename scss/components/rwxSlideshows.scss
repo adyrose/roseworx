@@ -84,7 +84,7 @@
     right:0px;
 		&:before {
 			content: "";
-			background: icon('rchev');
+			background: icon('chev', $black, '30px');
 			width:30px;
 			height:30px;
 			display: block;
@@ -98,7 +98,8 @@
     border-bottom-right-radius: 50px;
 		&:before {
 			content: "";
-			background: icon('lchev');
+			background: icon('chev', $black, '30px');
+      transform: rotate(180deg);
 			width:30px;
 			height:30px;
 			display: block;

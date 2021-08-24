@@ -4,9 +4,9 @@
   "description": "Front end css and js framework",
   "main": "js/roseworx.js",
   "scripts": {
-    "test": "echo \"No tests specified\"",
     "compile": "webpack --config compile-config.js",
-    "release": "npm run compile && np"
+    "icons": "node icons/script.js",
+    "release": "npm run compile && npm run icons && np"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,7 @@
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "css-loader": "^5.2.4",
+    "jsdom": "^17.0.0",
     "mini-css-extract-plugin": "^1.6.0",
     "node-sass": "^6.0.0",
     "path": "^0.12.7",

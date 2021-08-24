@@ -111,7 +111,7 @@ class Bubble {
     this.screenBoundLow = -20;
 
     //rotation
-    this.rotationAspect = rwxMath.randomInt(0, 1) === 1 ? -rwxMath.randomFloat(0.25, 0.35) : rwxMath.randomFloat(0.25, 0.35);
+    this.rotationAspect = rwxMath.randomInt(0, 1) === 1 ? -rwxMath.randomFloat(0.35, 0.45) : rwxMath.randomFloat(0.35, 0.45);
 
     //skew
     this.skewHigh = 10;
@@ -149,14 +149,14 @@ class Bubble {
             return s;
           },
           duration: rwxMath.randomInt(3000, 4000),
-          easing: 'easeOutQuad',
+          easing: 'easeInOutQuad',
           delay: rwxMath.randomInt(1000, 3000)
         },
         {
           from: ()=>this.scaleXHold,
           to: this.scaleStart,
           duration: rwxMath.randomInt(3000, 4000),
-          easing: 'easeInQuad'
+          easing: 'easeInOutQuad'
         }
       ],
       loop:true
@@ -172,14 +172,14 @@ class Bubble {
             return s;
           },
           duration: rwxMath.randomInt(3000, 4000),
-          easing: 'easeOutQuad',
+          easing: 'easeInOutQuad',
           delay: rwxMath.randomInt(1000, 3000)
         },
         {
           from: ()=>this.scaleYHold,
           to: this.scaleStart,
           duration: rwxMath.randomInt(3000, 4000),
-          easing: 'easeInQuad'
+          easing: 'easeInOutQuad'
         }
       ],
       loop:true
@@ -195,14 +195,14 @@ class Bubble {
             return s;
           },
           duration: rwxMath.randomInt(3000, 4000),
-          easing: 'easeOutQuad',
+          easing: 'easeInOutQuad',
           delay: rwxMath.randomInt(1000, 3000)
         },
         {
           from: ()=>this.skewHold,
           to: 0,
           duration: rwxMath.randomInt(3000, 4000),
-          easing: 'easeInQuad'
+          easing: 'easeInOutQuad'
         }
       ],
       loop:true

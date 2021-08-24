@@ -170,7 +170,7 @@
   			background-position: center;
 				&:checked
 				{
-					background-image: icon('tick', $form-color-base);
+					background-image: icon('tick', $form-color-base, '30px');
 				}
 			}
 		}
@@ -192,11 +192,11 @@
 				width:$form-item-size*2;
 				border-radius: $form-item-size/2;
   			background-position: left;
-  			background-image: icon('circle', $form-color-secondary, $form-color-secondary);
+  			background-image: icon('circle', $form-color-secondary);
 				&:checked
 				{
 					background-position: right;
-					background-image: icon('circle', $form-color-base, $form-color-base);
+					background-image: icon('circle-fill', $form-color-base);
 				}
 			}
 		}
@@ -216,7 +216,7 @@
 			input[type="radio"]
 			{
 				width: $form-item-size;
-				background-image: icon('circle', $form-color-base, $form-color-base);
+				background-image: icon('circle-fill', $form-color-base);
 				background-size: 0;
   			background-position: center;
   			border-radius:$form-item-size/2;
@@ -233,7 +233,7 @@
 			{
 				padding-right:$form-item-size;
 				cursor:pointer;
-				background-image: icon('select-list', $form-color-base);
+				background-image: icon('select-list', $form-color-base, '10px', true);
 				background-size: $form-item-size/2;
 				background-repeat: no-repeat;
   			background-position: right 16px center;

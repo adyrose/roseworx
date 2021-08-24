@@ -1,31 +1,35 @@
 $iconsizes: ('xs': 1rem, 'sm': 2rem, 'lg': 4rem, 'xl': 5rem);
 
-@if $allowIcons
+@if $allow-icons
 {
 	@each $iconname, $stuff in $icons
 	{
 		$icon:null;
-		$canhavefill: false;
-		$fillneedsstroke: false;
+		$fill: false;
+		$sw: false;
 		@if map-has-key($icons, $iconname) {
 			$icon: map-get($icons, $iconname);
-			@if map-get($icon, 'canhavefill')
+			@if map-get($icon, 'fill')
 			{
-				$canhavefill: true;
+				$fill: true;
 			}
-			@if map-get($icon, 'fillneedsstroke')
+			@if map-get($icon, 'strokewidth')
 			{
-				$fillneedsstroke: true;
+				$sw: map-get($icon, 'strokewidth');
+			}
+			@else
+			{
+				$sw: $icon-line-width;
 			}
 		}
 
 		.rwxi-#{$iconname}
 		{
-			background: icon($iconname) no-repeat;
+			background: icon($iconname, $icon-color-base, $sw, $fill) no-repeat;
 			width:3rem;
 			height:3rem;
 			display:inline-block;
-			@if $allowSizedIcons
+			@if $allow-sized-icons
 			{
 				@each $size, $measurement in $iconsizes
 				{
@@ -36,37 +40,37 @@ $iconsizes: ('xs': 1rem, 'sm': 2rem, 'lg': 4rem, 'xl': 5rem);
 					}
 				}
 			}
-			@if $allowColoredIcons
+			@if $allow-colored-icons
 			{
 				@each $modifier, $color in $colors
 				{
 					&.\--#{$modifier}
 					{
-						background: icon($iconname, $color) no-repeat;
-					}
-
-					@if $canhavefill
-					{
-						&.\--#{$modifier}-fill
-						{
-							@if $fillneedsstroke
-							{
-								background: icon($iconname, $icon-color-base, $color) no-repeat;
-							}
-							@else
-							{
-								background: icon($iconname, $color, $color) no-repeat;
-							}
-						}
-					}
-					@else {
-						&.\--#{$modifier}-fill
-						{
-							background: icon($iconname, $color) no-repeat;
-						}						
+						background: icon($iconname, $color, $sw, $fill) no-repeat;
 					}
 				}
 			}
 		}
+	}
+}
+
+
+.rwxi
+{
+	&-uchev, &-dchev, &-rchev, &-lchev
+	{
+		@extend .rwxi-chev;
+	}
+	&-uchev
+	{
+		transform: rotate(270deg);
+	}
+	&-dchev
+	{
+		transform: rotate(90deg);
+	}
+	&-lchev
+	{
+		transform: rotate(180deg);
 	}
 }

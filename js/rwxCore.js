@@ -12,13 +12,15 @@ class rwxCore {
 		this.autoClass = autoClass;
 		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
 		this.execute = this.execute.bind(this);
-		window.addEventListener('load', ()=>{
+		window.addEventListener('DOMContentLoaded', ()=>{
 			if(!selector){this.execute();return;}
 			this.selector = selector;
 			this.className = this.getClassName();
 			this.canHaveManualControl = canHaveManualControl;
 			[...document.querySelectorAll(this.selector)].map((el) => {
-				this.hook(el.id || rwxMisc.uniqueId(), el);
+				window.requestAnimationFrame(()=>{
+					this.hook(el.id || rwxMisc.uniqueId(), el);
+				})
 			});
 		});
 	}

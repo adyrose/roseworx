@@ -241,6 +241,10 @@ class rwxBitSystem extends rwxComponent {
   {
 		this.sizeCanvas();
 		this.calculate(false);
+		if(this.joinShapes)
+		{
+			this.calculateShapeJoin();
+		}
   }
 
   animate()

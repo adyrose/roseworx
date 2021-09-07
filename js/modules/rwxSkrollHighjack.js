@@ -1,5 +1,4 @@
 import {rwxAnimation} from './rwxAnimation';
-import rwxScrollTrack from '../common/rwxScrollTracking';
 import rwxDOM from '../helpers/rwxDOMHelpers';
 
 require('../../scss/modules/rwx-skroll-highjack.scss');
@@ -27,8 +26,6 @@ class rwxSkrollHighjack {
 
 		this.scrolling = this.scrolling.bind(this);
 		document.addEventListener('wheel', this.scrolling);
-		document.addEventListener('touchmove', this.scrolling);
-		// rwxScrollTrack.add((e)=>this.scrolling(e), 'rwxScrollHighjacking');
 		
 		window.addEventListener('beforeunload', this.unloadEvent);
 		
@@ -69,8 +66,6 @@ class rwxSkrollHighjack {
 		if(replaceEvents)window.rwx.scrollTracking.events = this.clonedEvents;
 		document.body.style.overflow = "";
 		document.removeEventListener('wheel', this.scrolling);
-		document.removeEventListener('touchmove', this.scrolling);
-		// rwxScrollTrack.remove('rwxScrollHighjacking');
 		if(this.hasNavigation)
 		{
 			document.body.removeChild(this.navigation);
@@ -87,7 +82,9 @@ class rwxSkrollHighjack {
 			let title = m.hasAttribute('data-rwx-skroll-highjack-section-title') ? m.getAttribute('data-rwx-skroll-highjack-section-title') : "";
 			let container = document.createElement('div');
 			container.classList.add('skroll-highjack-navigation-counter-container');
-			container.addEventListener('click', ()=>this.goTo(i+1));
+			container.addEventListener('click', ()=>{
+				this.navigation.offsetWidth > 32 && this.goTo(i+1);
+			});
 			let counter = document.createElement('div');
 			counter.classList.add('skroll-highjack-navigation-counter');
 			this.addCounterAttributes(counter, title);
@@ -215,7 +212,7 @@ class rwxSkrollHighjack {
 
 	scrolling(e)
 	{
-		if(this.highjacked || (e.type!=="wheel" && e.type !=="touchmove")){return}
+		if(this.highjacked || e.type!=="wheel"){return}
 		if(this.ignore)
 		{
 			let toreturn = false;
@@ -230,38 +227,15 @@ class rwxSkrollHighjack {
 		}
 
 		this.animation.reset();
-		if(e.type === "wheel")
+		if(event.deltaY < 0)
 		{
-			if(event.deltaY < 0)
-			{
-				if(this.index===0){return;}
-				this.index -=1;
-			}
-			else if(event.deltaY > 0)
-			{
-				if(this.index===this.m.length){return;}
-				this.index +=1;
-			}
+			if(this.index===0){return;}
+			this.index -=1;
 		}
-		else if(e.type === "touchmove")
+		else if(event.deltaY > 0)
 		{
-     	let currentY = e.touches[0].clientY;
-	     if(currentY > this.lastY)
-	     {
-					if(this.index===0){return;}
-					this.index -=1;
-	     }
-	     else if(currentY < this.lastY)
-	     {
-					if(this.index===this.m.length){return;}
-					this.index +=1;
-	     }
-	     if(this.lastY === undefined)
-	     {
-	     	  this.lastY = currentY;
-	     	  return;
-	     }
-	     this.lastY = currentY;
+			if(this.index===this.m.length){return;}
+			this.index +=1;
 		}
 		this.highjacked = true;
 		this.activeCounter();

@@ -99,7 +99,7 @@ class rwxAnimation {
     f.map((from, i)=>{
       this.animations.push({
         from,
-        to: Array.isArray(t) ? t[i] || t[0] : t,
+        to: Array.isArray(t) ? t[i] === 'undefined' ? t[0] : t[i] : t,
         easing: this.sanitizeEasing(Array.isArray(e) ? e[i] || e[0] : e),
         control: c ? (Array.isArray(c) ? c[i] || c[0] : c) : null,
         id: rwxMisc.uniqueId(),

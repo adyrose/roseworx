@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <ellipse style="fill: none; stroke: rgb(186, 218, 85);" cx="250" cy="250" rx="230.177" ry="161.354"/>
+  <circle style="fill: none; stroke: rgb(186, 218, 85);" cx="250" cy="250" r="59.189"/>
+  <line style="stroke: rgb(0, 0, 0);" x1="50" y1="50" x2="450" y2="450"/>
+</svg>

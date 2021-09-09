@@ -52,25 +52,23 @@ $iconsizes: ('xs': 1rem, 'sm': 2rem, 'lg': 4rem, 'xl': 5rem);
 			}
 		}
 	}
-}
-
-
-.rwxi
-{
-	&-uchev, &-dchev, &-rchev, &-lchev
+	.rwxi
 	{
-		@extend .rwxi-chev;
-	}
-	&-uchev
-	{
-		transform: rotate(270deg);
-	}
-	&-dchev
-	{
-		transform: rotate(90deg);
-	}
-	&-lchev
-	{
-		transform: rotate(180deg);
+		&-uchev, &-dchev, &-rchev, &-lchev
+		{
+			@extend .rwxi-chev;
+		}
+		&-uchev
+		{
+			transform: rotate(270deg);
+		}
+		&-dchev
+		{
+			transform: rotate(90deg);
+		}
+		&-lchev
+		{
+			transform: rotate(180deg);
+		}
 	}
 }

@@ -8,7 +8,7 @@
 	color: $color;
 	border: 1px solid $color;
 	box-shadow: 2px 2px $color;
-	background-color:white;
+	background-color:transparent;
 
 	&:not(:disabled)
 	{
@@ -51,7 +51,7 @@
 				box-shadow: 2px 2px $color;
 				border: 1px solid $color;
 			}
-			background-color: $white;
+			background-color: transparent;
 		}
 	}
 }

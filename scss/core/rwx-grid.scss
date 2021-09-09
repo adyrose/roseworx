@@ -30,10 +30,10 @@ $grid-classes:
 
 	&.explicit.no-wrap
 	{
+		padding-left: $grid-item-gutter/2;
+		padding-right: $grid-item-gutter/2;	
 		@each $selector, $value in $grid-classes
 		{
-			padding-left: $grid-item-gutter/2;
-			padding-right: $grid-item-gutter/2;	
 			> .rwx-split-#{$selector}
 			{
 				@include snap-down-from('md')

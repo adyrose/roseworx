@@ -162,7 +162,7 @@
 				
 				.rwx-grid-gallery-transform-face
 				{
-					animation: #{$animation} 2s ease #{$n/2}s forwards;
+					animation: #{$animation} 2s ease #{$n*0.5}s forwards;
 				}
 			}
 		}

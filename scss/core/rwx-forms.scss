@@ -166,7 +166,7 @@
 			{
 				width:$form-item-size;
 				background-image: icon('tick', 'transparent');
-				background-size: $form-item-size/2;
+				background-size: $form-item-size*0.5;
   			background-position: center;
 				&:checked
 				{
@@ -190,7 +190,7 @@
 			input[type="checkbox"]
 			{
 				width:$form-item-size*2;
-				border-radius: $form-item-size/2;
+				border-radius: $form-item-size*0.5;
   			background-position: left;
   			background-image: icon('circle', $form-color-secondary);
 				&:checked
@@ -219,7 +219,7 @@
 				background-image: icon('circle-fill', $form-color-base);
 				background-size: 0;
   			background-position: center;
-  			border-radius:$form-item-size/2;
+  			border-radius:$form-item-size*0.5;
 				&:checked
 				{
 					background-size: $form-item-size;
@@ -234,7 +234,7 @@
 				padding-right:$form-item-size;
 				cursor:pointer;
 				background-image: icon('select-list', $form-color-base, '10px', true);
-				background-size: $form-item-size/2;
+				background-size: $form-item-size*0.5;
 				background-repeat: no-repeat;
   			background-position: right 16px center;
 			}

@@ -134,7 +134,7 @@ class rwxBitSystem extends rwxComponent {
     		yCounter2 = yCounter*(window.innerHeight/grid);
     	}
 
-   		let radius = rwxMath.randomInt(3,5);
+   		let radius = rwxMath.randomInt(1,8);
    		let et = ((radius*2) + rwxMath.randomInt(20,30));
   		let p = new rwxParticle(finalx, finaly, radius*2, this.shape, (firstBlood && !this.disableInit) ? this.convertToColor(this.bitColor, 0) : this.convertToColor(this.bitColor, 1), this.c);
 		  p.parallaxMoveValue = 2;

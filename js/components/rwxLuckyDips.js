@@ -7,7 +7,7 @@ import rwxAnimatedBorder from '../common/rwxAnimatedBorder';
 class rwxLuckyDips extends rwxCore {
   constructor()
   {
-    super({selector:'[rwx-lucky-dip]', canHaveManualControl:true});
+    super({selector:'[rwx-lucky-dip]', canHaveManualControl:true, resource: 'rwxLuckyDips'});
     this.stopTextDefault = "Stop";
     this.timeBeforeAutoStopDefault = 10;
   }

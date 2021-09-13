@@ -11,7 +11,7 @@ import { rwxAnimation } from '../modules/rwxAnimation';
 class rwxBitBlackHoles extends rwxBitFont {
   constructor()
   {
-    super('rwx-bit-black-hole', false, true);
+    super('rwx-bit-black-hole', false, true, 'rwxBitBlackHoles');
     this.spareColorDefault = "#FFFFFF";
   }
 

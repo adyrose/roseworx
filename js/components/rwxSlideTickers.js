@@ -4,7 +4,7 @@ import rwxFade from '../effects/rwxFade';
 class rwxSlideTickers extends rwxCore {
 	constructor()
 	{
-		super({selector:'[rwx-slide-ticker]', canHaveManualControl: false});
+		super({selector:'[rwx-slide-ticker]', canHaveManualControl: false, resource: 'rwxSlideTickers'});
 	}
 
 	execute(el)

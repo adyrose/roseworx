@@ -10,7 +10,7 @@ import { rwxAnimation, rwxAnimationChain } from '../modules/rwxAnimation';
 class rwxBitSwarms extends rwxBitFont {
 	constructor()
 	{
-		super('rwx-bit-swarm');
+		super('rwx-bit-swarm', false, false, 'rwxBitSwarms');
 	}
 
 	execute2(el, mc, bits, orientation, shape, color, bgcolor, nofill)

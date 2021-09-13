@@ -5,7 +5,7 @@ import { rwxCore, rwxComponent } from '../rwxCore';
 class rwxNumberSwitchers extends rwxCore {
 	constructor()
 	{
-		super({selector:'[rwx-number-switcher]', canHaveManualControl:false});
+		super({selector:'[rwx-number-switcher]', canHaveManualControl:false, resource: 'rwxNumberSwitchers'});
 		this.defaultValue = 0;
 	}
 

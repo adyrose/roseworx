@@ -8,7 +8,7 @@ import rwxMath from '../helpers/rwxMathHelpers';
 // color can be overwrite by assigning fill on .lava-lamp path selector
 class rwxLavaLamps extends rwxCore {
   constructor() {
-    super({selector:'[rwx-lava-lamp]'});
+    super({selector:'[rwx-lava-lamp]', resource: 'rwxLavaLamps'});
     this.defaultNob = 33;
   }
 

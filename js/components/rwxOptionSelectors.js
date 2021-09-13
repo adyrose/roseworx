@@ -5,7 +5,7 @@ import rwxDOM from '../helpers/rwxDOMHelpers';
 class rwxOptionSelectors extends rwxCore {
 	constructor()
 	{
-		super({selector:'[rwx-option-selector]', canHaveManualControl:true});
+		super({selector:'[rwx-option-selector]', canHaveManualControl:true, resource: 'rwxOptionSelectors'});
 	}
 
 	execute(el, mc)

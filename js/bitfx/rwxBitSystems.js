@@ -12,7 +12,7 @@ import { rwxAnimationChain, rwxAnimation } from '../modules/rwxAnimation';
 class rwxBitSystems extends rwxBitFont {
 	constructor()
 	{
-		super('rwx-bit-system', true);
+		super('rwx-bit-system', true, false, 'rwxBitSystems');
 		this.allowedJoins = ['molecule', 'nucleus', 'atom'];
 	}
 

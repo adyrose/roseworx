@@ -4,7 +4,7 @@ import rwxAnimatedBorder from '../common/rwxAnimatedBorder';
 class rwxAnimatedBorders extends rwxCore {
 	constructor()
 	{
-		super({selector:'[rwx-animated-border]'});
+		super({selector:'[rwx-animated-border]', resource: 'rwxAnimatedBorders'});
 	}
 	execute(el)
 	{

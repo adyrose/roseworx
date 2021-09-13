@@ -5,10 +5,10 @@ import rwxScrollTrack from './common/rwxScrollTracking';
 import rwxMouseTrack from './common/rwxMouseTracking';
 
 class rwxCore {
-	constructor({selector, canHaveManualControl=false, autoClass=true})
+	constructor({selector, canHaveManualControl=false, autoClass=true, resource})
 	{
 		if(selector)this.internalMap = {};
-		this.resourceName = this.constructor.name;
+		this.resourceName = resource;
 		this.autoClass = autoClass;
 		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
 		this.execute = this.execute.bind(this);

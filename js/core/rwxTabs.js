@@ -7,7 +7,7 @@ import {rwxAnimationChain} from '../modules/rwxAnimation';
 class rwxTabs extends rwxCore {
 	constructor()
 	{
-		super({selector:'[rwx-tabs]', canHaveManualControl:false});
+		super({selector:'[rwx-tabs]', canHaveManualControl:false, resource: 'rwxTabs'});
 	}
 
 	execute(el)

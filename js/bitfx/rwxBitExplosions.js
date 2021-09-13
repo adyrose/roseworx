@@ -11,7 +11,7 @@ import { rwxAnimation, rwxAnimationChain } from '../modules/rwxAnimation';
 class rwxBitExplosions extends rwxBitFont {
 	constructor()
 	{
-		super('rwx-bit-explosion');
+		super('rwx-bit-explosion', false, false, 'rwxBitExplosions');
 		this.spareColorDefault = "#FFFFFF";
 	}
 

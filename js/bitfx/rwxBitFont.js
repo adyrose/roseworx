@@ -6,9 +6,9 @@ import { rwxMisc } from '../helpers/rwxHelpers';
 const rwxBitFontOrientations = ['horizontal', 'vertical', 'slanted', 'wrap'];
 
 class rwxBitFont extends rwxCore {
-	constructor(selector, noFont=false, allowNoValue=false)
+	constructor(selector, noFont=false, allowNoValue=false, resource)
 	{
-		super({selector:`[${selector}]`, canHaveManualControl:true});
+		super({selector:`[${selector}]`, canHaveManualControl:true, resource: resource});
 		this.component = selector;
 		this.shapeDefault = 'circle';
 		this.colorDefault = '#FFFFFF';

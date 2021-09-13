@@ -7,7 +7,7 @@ import {rwxParticle} from '../bitfx/rwxParticle';
 class rwxCountOMeters extends rwxCore {
 	constructor()
 	{
-		super({selector:'[rwx-countometer]', canHaveManualControl:true});
+		super({selector:'[rwx-countometer]', canHaveManualControl:true, resource: 'rwxCountOMeters'});
     this.valueDefault = 100;
 	}
 

@@ -1,5 +1,3 @@
-require('../../scss/components/rwxPhotoTiles.scss');
-
 import { rwxCore, rwxComponent } from '../rwxCore';
 import rwxMath from '../helpers/rwxMathHelpers';
 import rwxMisc from '../helpers/rwxMiscHelpers';
@@ -57,16 +55,23 @@ class rwxPhotoTile extends rwxComponent {
       'slideLeft',
       'slideRight',
       'slideUp',
-      'slideDown'
+      'slideDown',
+      //'puzzle'
     ];
 
+    if(!this.fx.includes(effect) && effect !== "random")
+    {
+      this.error(`${effect} isn't a valid effect, possible effects are ${this.fx.join(', ')}.`)
+    }
+
     this.deferImageLoad().then(()=>{
+      this.el.classList.add('loaded');
       this.createCanvas();
       this.calculateSize();
       this.photoLoop(noThumbnails);
 
       this.changeBackground(1, this.effectInit);
-
+      this.calculateRandomTilePairing();
       if(auto)
       {
         this.autoLoopInterval = autoTimeout * 60;
@@ -249,6 +254,19 @@ class rwxPhotoTile extends rwxComponent {
     this.firstblood = false;    
   }
 
+  calculateRandomTilePairing()
+  {
+    //create random pairings for each
+    //find a point to animate to before this last point, where it switches
+
+    //loop through, picks random from
+    let matched = [];
+    this.tileMatrix.map((t)=>{
+      console.log(rwxMisc.randomValueFromArray(this.tileMatrix).uniqueID, t.uniqueID);
+      // console.log(t);
+    });
+  }
+
   calculateColorMatrix()
   {
     let colorMatrix = [];
@@ -353,6 +371,26 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
   Object.assign(this, {c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pixelRatio});
 
   this.buildAnimations = function() {
+    // if(this.animation==="puzzle")
+    // {
+    //   this.puzzleAnimation = new rwxAnimationChain({
+    //     sequence: [
+    //       {
+    //         from: 1,
+    //         to: 0,
+    //         duration: this.duration,
+    //         easing: 'easeInOutQuint',
+    //         complete: ()=>this.switch()
+    //       },
+    //       {
+    //         to:1,
+    //         duration: this.duration,
+    //         easing: 'easeInOutQuint'
+    //       }
+    //     ],
+    //     complete: ()=>this.animeDone=true 
+    //   })
+    // }
     if(this.animation==="bubble")
     {
       this.bubbleAnimation = new rwxAnimationChain({
@@ -506,6 +544,19 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
       this.switched = true;
     }
   }
+
+  // this.puzzle = function() {
+  //   this.initialise();
+  //   if(this.timeoutCounter >= this.timeout && !this.animeDone) 
+  //   {
+  //     this.puzzleAnimation.animate([
+  //       (o)=>c.globalAlpha=o,
+  //       (o)=>c.globalAlpha=o
+  //     ])
+  //   } 
+  //   this[this.changeType]();
+  //   this.timeoutCounter++; 
+  // }
 
   this.spin = function() {
     this.initialise();

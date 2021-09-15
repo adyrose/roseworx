@@ -11,7 +11,7 @@ To keep Roseworx as customisable as possible, the core files are provided in SCS
 
 
 
-Simply add the following SCSS import to your main SCSS file. To override customisable SCSS variables from the framework, declare your own variables **before** this import. For a list of SCSS variables to overide visit <a target="_blank" href="https://roseworx.adyrose.co.uk/toolbox">Utilities</a>.
+Simply add the following SCSS import to your main SCSS file. To override customisable SCSS variables from the framework, declare your own variables **before** this import.
 
 
 `@import "~roseworx/scss/roseworx";`

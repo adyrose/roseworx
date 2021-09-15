@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "webpack --config compile-config.js",
     "icons": "node icons/script.js",
-    "release": "npm run compile && npm run icons && np"
+    "release": "npm run compile && git add . && git commit -m 'compiled' && git push && npm run icons && np"
   },
   "repository": {
     "type": "git",

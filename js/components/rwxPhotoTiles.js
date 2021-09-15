@@ -41,10 +41,10 @@ class rwxPhotoTile extends rwxComponent {
     this.autoLoop = this.autoLoop.bind(this);
     this.counter = 0;
     this.firstblood = true;
-    this.numberOfXTiles = 10;
-    this.numberOfYTiles = 10;
+    this.numberOfTiles = 100;
+    this.numberOfXTiles = Math.sqrt(this.numberOfTiles);
+    this.numberOfYTiles = Math.sqrt(this.numberOfTiles);
     this.tileMatrix = [];
-    this.nextTileMatrix = [];
     this.animeCounter = [];
     this.maxTimeout = 15;
     this.fx = [
@@ -56,7 +56,7 @@ class rwxPhotoTile extends rwxComponent {
       'slideRight',
       'slideUp',
       'slideDown',
-      //'puzzle'
+      'puzzle'
     ];
 
     if(!this.fx.includes(effect) && effect !== "random")
@@ -71,7 +71,7 @@ class rwxPhotoTile extends rwxComponent {
       this.photoLoop(noThumbnails);
 
       this.changeBackground(1, this.effectInit);
-      // this.calculateRandomTilePairing();
+      this.calculateRandomTilePairing();
       if(auto)
       {
         this.autoLoopInterval = autoTimeout * 60;
@@ -217,7 +217,6 @@ class rwxPhotoTile extends rwxComponent {
     this.effect = this.fx.includes(effect) ? effect : this.fx[rwxMath.randomInt(0, this.fx.length-1)];
     if(effect == 'none'){this.effect = 'none';}
 
-    this.nextTileMatrix = [];
     for(let [index, t] of matrix.entries())
     {
       let timeout = rwxMath.randomInt(0, this.maxTimeout);
@@ -243,7 +242,7 @@ class rwxPhotoTile extends rwxComponent {
       }
       else
       {
-        this.nextTileMatrix.push(obj);
+        this.tileMatrix[index].nextMatrix = obj;
         if(index == matrix.length-1)
         {
           this.resetAnimation();
@@ -256,14 +255,17 @@ class rwxPhotoTile extends rwxComponent {
 
   calculateRandomTilePairing()
   {
-    //create random pairings for each
-    //find a point to animate to before this last point, where it switches
-
-    //loop through, picks random from
-    let matched = [];
-    this.tileMatrix.map((t)=>{
-      // console.log(rwxMisc.randomValueFromArray(this.tileMatrix).uniqueID, t.uniqueID);
-      // console.log(t);
+    const cloned = rwxMisc.safeCloneArray(this.tileMatrix);
+    const firsthalf = cloned.slice(0, this.numberOfTiles/2);
+    const secondhalf = cloned.slice(this.numberOfTiles/2);
+    rwxMisc.shuffleArray(firsthalf);
+    rwxMisc.shuffleArray(secondhalf);
+    firsthalf.map((t, i)=>{
+      t.tileLink = secondhalf[i];
+      secondhalf[i].tileLink = t;
+      t.randomTileLink = rwxMisc.randomValueFromArray(this.tileMatrix);
+      secondhalf[i].randomTileLink = rwxMisc.randomValueFromArray(this.tileMatrix);
+      return false;
     });
   }
 
@@ -278,13 +280,13 @@ class rwxPhotoTile extends rwxComponent {
       {
         colorMatrix.push({
           sx: (x*xincrement),
-          sy: (y*yincrement), 
-          sw: xincrement, 
+          sy: (y*yincrement),
+          sw: xincrement,
           sh: yincrement,
           dx: (x*xincrement),
-          dy: (y*yincrement), 
-          dw: xincrement, 
-          dh: yincrement,  
+          dy: (y*yincrement),
+          dw: xincrement,
+          dh: yincrement,
         });
       }
     }
@@ -342,10 +344,6 @@ class rwxPhotoTile extends rwxComponent {
   {
     for(let [index,tile] of this.tileMatrix.entries())
     {
-      if(!tile.nextMatrix)
-      {
-        tile.nextMatrix = this.nextTileMatrix[index];
-      }
       if(tile.animeDone && !this.animeCounter.includes(tile.uniqueID))
       {
         this.animeCounter.push(tile.uniqueID);
@@ -371,26 +369,41 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
   Object.assign(this, {c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pixelRatio});
 
   this.buildAnimations = function() {
-    // if(this.animation==="puzzle")
-    // {
-    //   this.puzzleAnimation = new rwxAnimationChain({
-    //     sequence: [
-    //       {
-    //         from: 1,
-    //         to: 0,
-    //         duration: this.duration,
-    //         easing: 'easeInOutQuint',
-    //         complete: ()=>this.switch()
-    //       },
-    //       {
-    //         to:1,
-    //         duration: this.duration,
-    //         easing: 'easeInOutQuint'
-    //       }
-    //     ],
-    //     complete: ()=>this.animeDone=true 
-    //   })
-    // }
+    if(this.animation==="puzzle")
+    {
+      this.direction = rwxMath.randomInt(0,1);
+      this.puzzleAnimation = new rwxAnimationChain({
+        sequence: [
+          {
+            from: 0,
+            to: 1,
+            duration: this.duration,
+            easing: 'linear',
+            complete: ()=>{
+              this.initdx = this.dx;
+              this.initdy = this.dy;
+              this.initdw = this.dw;
+              this.initdh = this.dh;
+              window.requestAnimationFrame(()=>{
+                this.value = this.tileLink.nextMatrix.value;
+                this.changeType = this.tileLink.nextMatrix.changeType;
+                this.sw = this.tileLink.nextMatrix.sw;
+                this.sx = this.tileLink.nextMatrix.sx;
+                this.sh = this.tileLink.nextMatrix.sh;
+                this.sy = this.tileLink.nextMatrix.sy;
+              })
+            }
+          },
+          {
+            from: 0,
+            to: 1,
+            duration: this.duration,
+            easing: 'linear',
+          }
+        ],
+        complete: ()=>this.animeDone=true 
+      })
+    }
     if(this.animation==="bubble")
     {
       this.bubbleAnimation = new rwxAnimationChain({
@@ -495,13 +508,13 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
   this.reset = function() {
     this.timeoutCounter = 0;
     this.animeDone = false;
-    this.nextMatrix = false;
     this.switched = false;
     this.initialised = false;
     delete this.bubbleAnimation;
     delete this.spinAnimation;
     delete this.slideAnimation;
     delete this.pixelatedAnimation;
+    delete this.puzzleAnimation;
   }
 
   this.initialise = function() {
@@ -545,18 +558,34 @@ function Tile(c, value, changeType, sx, sy, sw, sh, dx, dy, dw, dh, timeout, pix
     }
   }
 
-  // this.puzzle = function() {
-  //   this.initialise();
-  //   if(this.timeoutCounter >= this.timeout && !this.animeDone) 
-  //   {
-  //     this.puzzleAnimation.animate([
-  //       (o)=>c.globalAlpha=o,
-  //       (o)=>c.globalAlpha=o
-  //     ])
-  //   } 
-  //   this[this.changeType]();
-  //   this.timeoutCounter++; 
-  // }
+  this.puzzle = function() {
+    this.initialise();
+    if(this.timeoutCounter >= this.timeout && !this.animeDone) 
+    {
+      this.puzzleAnimation.animate([
+        (val)=>{
+          if(this.direction === 1)
+          {
+            this.dx = rwxAnimate.fromToCalc(this.initdx, this.randomTileLink.nextMatrix.dx, val);
+          }
+          else
+          {
+            this.dy = rwxAnimate.fromToCalc(this.initdy, this.randomTileLink.nextMatrix.dy, val);
+          }
+          this.dw = rwxAnimate.fromToCalc(this.initdw, this.randomTileLink.nextMatrix.dw, val);
+          this.dh = rwxAnimate.fromToCalc(this.initdh, this.randomTileLink.nextMatrix.dh, val);
+        },
+        (val)=>{
+          this.dx = rwxAnimate.fromToCalc(this.initdx, this.tileLink.nextMatrix.dx, val);
+          this.dy = rwxAnimate.fromToCalc(this.initdy, this.tileLink.nextMatrix.dy, val);
+          this.dw = rwxAnimate.fromToCalc(this.initdw, this.tileLink.nextMatrix.dw, val);
+          this.dh = rwxAnimate.fromToCalc(this.initdh, this.tileLink.nextMatrix.dh, val);
+        }
+      ])
+    } 
+    this[this.changeType]();
+    this.timeoutCounter++; 
+  }
 
   this.spin = function() {
     this.initialise();

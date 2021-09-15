@@ -12,11 +12,11 @@ class rwxCore {
 		this.autoClass = autoClass;
 		if(!this.execute){this.error('No execute method (this.execute) defined on instance.'); return;}
 		this.execute = this.execute.bind(this);
-		window.addEventListener('DOMContentLoaded', ()=>{
+		this.selector = selector;
+		this.className = this.getClassName();
+		this.canHaveManualControl = canHaveManualControl;
+		window.addEventListener('load', ()=>{
 			if(!selector){this.execute();return;}
-			this.selector = selector;
-			this.className = this.getClassName();
-			this.canHaveManualControl = canHaveManualControl;
 			[...document.querySelectorAll(this.selector)].map((el) => {
 				window.requestAnimationFrame(()=>{
 					this.hook(el.id || rwxMisc.uniqueId(), el);

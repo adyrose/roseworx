@@ -71,7 +71,7 @@ class rwxPhotoTile extends rwxComponent {
       this.photoLoop(noThumbnails);
 
       this.changeBackground(1, this.effectInit);
-      this.calculateRandomTilePairing();
+      // this.calculateRandomTilePairing();
       if(auto)
       {
         this.autoLoopInterval = autoTimeout * 60;
@@ -252,7 +252,7 @@ class rwxPhotoTile extends rwxComponent {
       }        
     }
     this.firstblood = false;    
-  }
+  // }
 
   calculateRandomTilePairing()
   {
@@ -262,7 +262,7 @@ class rwxPhotoTile extends rwxComponent {
     //loop through, picks random from
     let matched = [];
     this.tileMatrix.map((t)=>{
-      console.log(rwxMisc.randomValueFromArray(this.tileMatrix).uniqueID, t.uniqueID);
+      // console.log(rwxMisc.randomValueFromArray(this.tileMatrix).uniqueID, t.uniqueID);
       // console.log(t);
     });
   }

@@ -1,9 +1,7 @@
-import * as THREE from 'three';
-
 import rwxResizeTrack from '../common/rwxResizeTracking';
 
 class rwxMatrix {
-	constructor(parent=false, lights, fov=70, nv=0.1, fv=1000)
+	constructor(parent=false, lights, fov=70, nv=0.1, fv=1000, THREE)
 	{
 		this.resize = this.resize.bind(this);
 		this.renderScene = this.renderScene.bind(this);
@@ -24,8 +22,8 @@ class rwxMatrix {
 		this.createScene();
 		lights && this.createLights();
 		this.meshes = [];
-		this.standardGeo = new THREE.BoxGeometry( 2, 2, 2 );
-		this.standardMat = lights ? new THREE.MeshStandardMaterial() : new THREE.MeshNormalMaterial({flatShading:true});
+		this.standardGeo = new this.THREE.BoxGeometry( 2, 2, 2 );
+		this.standardMat = lights ? new this.THREE.MeshStandardMaterial() : new this.THREE.MeshNormalMaterial({flatShading:true});
 		this.addShape(this.standardGeo, this.standardMat);
 		this.createRenderer();
 		rwxResizeTrack.add(()=>this.resize(), 'bracketsAnimation');
@@ -55,12 +53,12 @@ class rwxMatrix {
 
   createLights()
   {
-    this.directLight = new THREE.DirectionalLight( 0x505050, 0.9 );
+    this.directLight = new this.THREE.DirectionalLight( 0x505050, 0.9 );
     this.directLight.position.set(10 , 10, 15);
     this.scene.add( this.directLight );
-    this.ambience = new THREE.AmbientLight( 0xe65c00, 0.75 );
+    this.ambience = new this.THREE.AmbientLight( 0xe65c00, 0.75 );
     this.scene.add( this.ambience );
-    // const helper = new THREE.DirectionalLightHelper( this.directLight, 5 );
+    // const helper = new this.THREE.DirectionalLightHelper( this.directLight, 5 );
     // this.scene.add(helper);
   }
 
@@ -74,13 +72,13 @@ class rwxMatrix {
 
 	createCamera()
 	{
-		this.camera = new THREE.PerspectiveCamera( this.fov, this.bounds.width / this.bounds.height, this.nv, this.fv );
+		this.camera = new this.THREE.PerspectiveCamera( this.fov, this.bounds.width / this.bounds.height, this.nv, this.fv );
 		this.camera.position.z = 10;
 	}
 
 	createScene()
 	{
-		this.scene = new THREE.Scene();
+		this.scene = new this.THREE.Scene();
 	}
 
 	addToScene(mesh)
@@ -102,7 +100,7 @@ class rwxMatrix {
 
 	addShape(geo, mat, r=true)
 	{
-		let mesh = new THREE.Mesh( geo, mat );
+		let mesh = new this.THREE.Mesh( geo, mat );
 		const obj = {
 			rotate: r,
 			mesh: mesh
@@ -114,7 +112,7 @@ class rwxMatrix {
 
 	createRenderer()
 	{
-		this.renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+		this.renderer = new this.THREE.WebGLRenderer( { antialias: true, alpha: true } );
 		this.renderer.setSize( this.bounds.width, this.bounds.height );
 		this.renderer.setAnimationLoop( this.renderScene );
 		this.renderer.domElement.style.width = "100%";

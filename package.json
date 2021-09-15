@@ -47,8 +47,5 @@
     "sass-loader": "^11.1.1",
     "webpack": "^5.37.1",
     "webpack-cli": "^4.7.0"
-  },
-  "dependencies": {
-    "three": "^0.127.0"
   }
 }

@@ -29,4 +29,13 @@
 			}
 		}
 	}
+	&:not(.loaded)
+	{
+		@extend .rwx-loading !optional;
+		// min-height:400px;
+		img
+		{
+			visibility: hidden;
+		}
+	}
 }

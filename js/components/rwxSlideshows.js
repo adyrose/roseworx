@@ -18,7 +18,7 @@ class rwxSlideshows extends rwxCore {
 class rwxSlideshow extends rwxComponent {
   constructor(el)
   {
-    super({element: el, enableMouseTracking: true});
+    super({element: el, enableMouseTracking: true, enableResizeDebounce:true});
     this.slides = [...this.el.querySelectorAll('.slide')];
     if(this.slides.length == 0){return;}
     this.elFullSizeAbsolute();
@@ -126,18 +126,30 @@ class rwxSlideshow extends rwxComponent {
     this.el.removeEventListener('keyup', this.keyupevent);
   }
 
-  init()
+  init(firstblood=true)
   {
-    this.background.style.backgroundImage = `linear-gradient(to right,${this.backgroundColors.join(',')})`;
+    if(firstblood)
+    {
+      this.background.style.backgroundImage = `linear-gradient(to right,${this.backgroundColors.join(',')})`;
+      this.background.style.backgroundPosition = "0 0";
+      this.slidesContainer.style.width = `${this.slides.length*100}%`;
+      this.slideContents = [];
+    }
+
     this.background.style.backgroundSize = `${this.backgroundColors.length*this.width}px 100%`;
-    this.background.style.backgroundPosition = "0 0";
-    this.slidesContainer.style.width = `${this.slides.length*100}%`;
-    this.slideContents = [];
-    this.slides.map((slide)=>{
+
+    this.slides.map((slide, i)=>{
       this.addStyle(slide, 'width', `${this.width}px`);
-      const content = slide.querySelector('.slide-content');
-      const title = slide.querySelector('.slide-title');
-      this.slideContents.push({content,title, bounds:slide.getBoundingClientRect()});
+      if(firstblood)
+      {
+        const content = slide.querySelector('.slide-content');
+        const title = slide.querySelector('.slide-title');
+        this.slideContents.push({content,title, bounds:slide.getBoundingClientRect()});
+      }
+      else
+      {
+        this.slideContents[i].bounds = slide.getBoundingClientRect();
+      }
     });
   }
 
@@ -174,6 +186,12 @@ class rwxSlideshow extends rwxComponent {
     	s.style.transform = `translateX(${-(this.counter*100)}%) scale(${scale})`;
     	return;
   	});
+  }
+
+  resize()
+  {
+    this.width = this.el.getBoundingClientRect().width;
+    this.init(false);
   }
 }
 

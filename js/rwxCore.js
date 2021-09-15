@@ -27,7 +27,7 @@ class rwxCore {
 
 	getClassName()
 	{
-		return this.selector.replace('[', '').replace(']', '');
+		return this.selector ? this.selector.replace('[', '').replace(']', '') : null;
 	}
 
 	checkAttributeOrDefault(el, att, def)

@@ -25,9 +25,10 @@ class rwxSlideTicker extends rwxComponent {
 		super({element: el});
   	this.timeoutPerLetter = 200;
   	this.timeout = 2000;
+  	this.counter = 0;
+  	this.letters = [];
   	this.word = this.el.querySelector('.rwx-slide-ticker-value');
 		this.closeEarly = this.closeEarly.bind(this);
-		this.createKeyframe();
 	}
 
 	cleanUp()
@@ -35,8 +36,11 @@ class rwxSlideTicker extends rwxComponent {
 		rwxFade.cleanUp(this.el);
 	}
 
-	reset()
+	done()
 	{
+		rwxFade.fadeOut(this.el);
+		this.el.removeEventListener('click', this.closeEarly);
+		this.removeElements();
 		this.counter = 0;
 		this.letters = [];
 	}
@@ -48,11 +52,12 @@ class rwxSlideTicker extends rwxComponent {
 
 	tick()
 	{
+		this.createKeyframe();
 		this.el.addEventListener('click', this.closeEarly);
-		this.reset();
 		this.addStyle(this.word, 'display', 'none');
 		let letterArray = [...this.word.innerText];
 		let container, span, text;
+		let width = 0;
 		for(let letter of letterArray)
 		{
 			container = document.createElement('div');
@@ -61,11 +66,14 @@ class rwxSlideTicker extends rwxComponent {
 			text = document.createTextNode(letter);
 			span.appendChild(text);
 			container.appendChild(span);
-			container.style.transform = `translateX(${window.innerWidth}px)`;
 			this.addElement(this.el, container);
 			this.letters.push(container);
 		}
-		this.go();
+		window.requestAnimationFrame(()=>{
+			let width = this.letters.map((l)=>l.offsetWidth).reduce((ps, a) => ps + a,0);
+			this.letters.map((l)=>l.style.transform = `translateX(${width > window.innerWidth ? width : window.innerWidth}px)`);
+			this.go();
+		})
 	}
 
 	go()
@@ -78,8 +86,7 @@ class rwxSlideTicker extends rwxComponent {
 			{
 				clearInterval(interval);
 				setTimeout(()=>{
-					rwxFade.fadeOut(this.el);
-					this.el.removeEventListener('click', this.closeEarly);
+					this.done();
 				}, this.timeout);
 				return;
 			}
@@ -106,7 +113,6 @@ class rwxSlideTicker extends rwxComponent {
 			}
 		`;
 		style.innerHTML = keyframe;
-		// document.getElementsByTagName('head')[0].appendChild(style);
 		this.addElement(document.getElementsByTagName('head')[0], style)
 	}
 }

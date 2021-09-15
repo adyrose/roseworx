@@ -15,6 +15,10 @@ $rwx-slide-ticker-background-color: $orange !default;
 	& > &-item
 	{
 		font-size:6rem;
+		@include snap-down-from('md')
+		{
+			font-size: 3rem;
+		}
 		&.go
 		{
 			span

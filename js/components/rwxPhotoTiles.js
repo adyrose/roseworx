@@ -252,7 +252,7 @@ class rwxPhotoTile extends rwxComponent {
       }        
     }
     this.firstblood = false;    
-  // }
+  }
 
   calculateRandomTilePairing()
   {

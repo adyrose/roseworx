@@ -1,4 +1,4 @@
-require('../../scss/modules/rwx-preload.scss');
+require('../../scss/modules/rwxPreload.scss');
 
 import { rwxCore } from '../rwxCore';
 

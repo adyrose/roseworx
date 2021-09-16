@@ -1,7 +1,7 @@
 import {rwxAnimation} from './rwxAnimation';
 import rwxDOM from '../helpers/rwxDOMHelpers';
+require('../../scss/modules/rwxSkrollHighjack.scss');
 
-require('../../scss/modules/rwx-skroll-highjack.scss');
 class rwxSkrollHighjack {
 	constructor(navigation=true, ignore, scrollCallback)
 	{

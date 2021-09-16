@@ -356,6 +356,61 @@ $cards: (
   "hint": ("color": $yellow, "icon": 'hint', "sw":"25px"),
 );
 
+p.dismissable
+{
+  padding: 15px 70px 15px 70px !important;
+  .dismissable-button
+  {
+    position: absolute;
+    right:0px;
+    top:0px;
+    height:100%;
+    width:0px;
+    background:rgba($white, 0.7);
+    transition: all 0.5s $transition-slow-in;
+    &:focus
+    {
+      width:60px;
+      .card-close
+      {
+        opacity: 1;
+      }
+    }
+    .card-close
+    {
+      transition: all 0.2s $transition-base;
+      opacity: 0;
+      width:20px;
+      height:20px;
+      @include absolute-center;
+      background: icon('cross', $black, '50px');
+    }
+  }
+  &:hover
+  {
+    outline:none;
+    .dismissable-button
+    {
+      transition: all 0.5s $transition-slow-in;
+      width:60px;
+      .card-close
+      {
+        transition: all 0.5s $transition-fast-in;
+        opacity:1;
+      }
+    }
+  }
+  &.dismiss
+  {
+    transition: all 0.5s $transition-slow-in;
+    opacity:0;
+    height: 0px !important;
+    min-height: 0px !important;
+    margin: 0px !important;
+    padding: 0px !important;
+  }
+}
+
 @each $card, $deets in $cards
 {
   p.#{$card}

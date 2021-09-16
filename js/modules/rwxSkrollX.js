@@ -1,4 +1,4 @@
-require('../../scss/modules/rwx-skrollx.scss');
+require('../../scss/modules/rwxSkrollX.scss');
 import { rwxCore, rwxComponent } from '../rwxCore';
 
 class rwxSkrollX extends rwxCore {

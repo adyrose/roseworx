@@ -17,11 +17,16 @@ class rwxCore {
 		this.canHaveManualControl = canHaveManualControl;
 		window.addEventListener('load', ()=>{
 			if(!selector){this.execute();return;}
-			[...document.querySelectorAll(this.selector)].map((el) => {
-				window.requestAnimationFrame(()=>{
-					this.hook(el.id || rwxMisc.uniqueId(), el);
-				})
-			});
+			this.scanDOM();
+		});
+	}
+
+	scanDOM()
+	{
+		[...document.querySelectorAll(this.selector)].map((el) => {
+			window.requestAnimationFrame(()=>{
+				this.hook(el.id || rwxMisc.uniqueId(), el);
+			})
 		});
 	}
 
@@ -37,7 +42,7 @@ class rwxCore {
 
 	checkAttributeForBool(el, att)
 	{
-		return el.hasAttribute(att) ? el.getAttribute(att) === "false" ? false : true : false;
+		return checkAttributeForBool(el, att);
 	}
 
 	checkMap(el)
@@ -465,8 +470,12 @@ class rwxComponent {
 	}
 }
 
-const rwxError = (err, resource) =>{
+const rwxError = (err, resource) => {
 	console.warn(`[rwx] ${resource} - ${err}`)
 }
 
-export {rwxCore, rwxComponent, rwxError};
+const checkAttributeForBool = (el, att)=> {
+	return el.hasAttribute(att) ? el.getAttribute(att) === "false" ? false : true : false;
+}
+
+export {rwxCore, rwxComponent, rwxError, checkAttributeForBool};

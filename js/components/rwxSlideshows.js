@@ -53,6 +53,10 @@ class rwxSlideshow extends rwxComponent {
     rwxMisc.shuffleArray(this.backgroundColors);
     this.counter = 0;
 
+    // this.el.addEventListener('touchmove', (e)=>{
+    //   console.log(e);
+    // })
+
     this.init();
   }
 

@@ -14,14 +14,12 @@ class rwxMouseTracking {
 		this.parallaxmouse = {x:0,y:0};
 		this.velocity = {x:0,y:0};
 		this.node.addEventListener('mousemove', this.mousedEvent);
-		this.node.addEventListener('touchmove', this.mousedEvent);
 		window.addEventListener('deviceorientation', this.handleOrientation);
 	}
 
 	remove()
 	{
 		this.node.removeEventListener('mousemove', this.mousedEvent);
-		this.node.removeEventListener('touchmove', this.mousedEvent);
 		window.removeEventListener('deviceorientation', this.handleOrientation);
 	}
 
@@ -39,9 +37,9 @@ class rwxMouseTracking {
 	mousedEvent(e)
 	{
 		this.dimensions = this.node === window ? {top:0, left:0} : this.node.getBoundingClientRect();
-		let x = e.type=="touchmove" ? e.touches[0].clientX : e.clientX;
+		let x = e.clientX;
 		x = x-this.dimensions.left;
-		let y = e.type=="touchmove" ? e.touches[0].clientY : e.clientY;
+		let y = e.clientY;
 		y = y-this.dimensions.top;
 		this.mouse = {x, y};
 		this.velocity = {x: ((this.mouse.x - this.lastmouse.x)/2), y: ((this.mouse.y - this.lastmouse.y)/2)};

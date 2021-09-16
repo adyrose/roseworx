@@ -23,16 +23,7 @@ class rwxSlideshow extends rwxComponent {
     if(this.slides.length == 0){return;}
     this.elFullSizeAbsolute();
     this.addAttribute(this.el, 'tabindex', 0);
-    this.nextslide = this.nextslide.bind(this);
-    this.prevslide = this.prevslide.bind(this);
-    this.keyupevent = this.keyupevent.bind(this);
-
-    this.generateHTML();
-    
-    this.el.addEventListener('keyup', this.keyupevent);
-
-    this.width = this.el.getBoundingClientRect().width;
-
+  
     this.backgroundColors = [
       "#84fab0", 
       "#8fd3f4", 
@@ -49,15 +40,54 @@ class rwxSlideshow extends rwxComponent {
       "#fd868c", 
       "#fe9a8b" 
     ];
-
     rwxMisc.shuffleArray(this.backgroundColors);
     this.counter = 0;
+    this.prevx = false;
+    this.width = this.el.getBoundingClientRect().width;
 
-    // this.el.addEventListener('touchmove', (e)=>{
-    //   console.log(e);
-    // })
+    this.addEventListeners();
+
+    this.generateHTML();
 
     this.init();
+  }
+
+  addEventListeners()
+  {
+    this.nextslide = this.nextslide.bind(this);
+    this.prevslide = this.prevslide.bind(this);
+    this.keyupevent = this.keyupevent.bind(this);
+    this.touchstartevent = this.touchstartevent.bind(this);
+    this.touchendevent = this.touchendevent.bind(this);
+
+    this.el.addEventListener('keyup', this.keyupevent);
+    this.el.addEventListener('touchstart', this.touchstartevent);
+    this.el.addEventListener('touchend', this.touchendevent);
+  }
+
+  removeEventListeners()
+  {
+    this.el.removeEventListener('keyup', this.keyupevent);
+    this.el.removeEventListener('touchstart', this.touchstartevent);
+    this.el.removeEventListener('touchend', this.touchendevent);   
+  }
+
+  touchstartevent(e)
+  {
+    this.prevx = e.touches[0].clientX;
+  }
+
+  touchendevent(e)
+  {
+    if((Math.abs(this.prevx - e.changedTouches[0].clientX)<100))return;
+    if(this.prevx < e.changedTouches[0].clientX)
+    {
+      this.prevslide();
+    }
+    else
+    {
+      this.nextslide();
+    }
   }
 
   generateHTML()
@@ -91,11 +121,22 @@ class rwxSlideshow extends rwxComponent {
 
   moused(e)
   {
+    let x,y;
+    if(e.type === "deviceorientation")
+    {
+      x = this.mouseTrack.parallaxmouse.x;
+      y = this.mouseTrack.parallaxmouse.y;
+    }
+    else
+    {
+      x = this.mouseTrack.mouse.x;
+      y = this.mouseTrack.mouse.y;
+    }
     let c = this.slideContents[this.counter];
     let halfW = c.bounds.width/2;
     let halfH = c.bounds.height/2;
-    let degY = e.x>=halfW ? Math.abs(halfW-e.x) : -(halfW-e.x);
-    let degX = e.y>=halfH ? halfH-e.y : Math.abs(halfH-e.y);
+    let degY = x>=halfW ? Math.abs(halfW-x) : -(halfW-x);
+    let degX = y>=halfH ? halfH-y : Math.abs(halfH-y);
     if(c.content)c.content.style.transform = `rotateY(${degY/100}deg) rotateX(${degX/30}deg) translate(${degY/40}px, ${degX/30}px)`;
     if(c.title)c.title.style.transform = `rotateY(${degY/100}deg) rotateX(${degX/30}deg) translate(${degY/40}px, ${degX/30}px)`;
   }
@@ -127,7 +168,7 @@ class rwxSlideshow extends rwxComponent {
       this.el.appendChild(c);
       return false
     });
-    this.el.removeEventListener('keyup', this.keyupevent);
+    this.removeEventListeners();
   }
 
   init(firstblood=true)

@@ -1,4 +1,3 @@
-// have them move very slowly as a natural state like floating around and repulsed away from sides until mouse activated
 import { rwxComponent, rwxCore } from '../rwxCore';
 
 import {rwxParticle} from './rwxParticle';

@@ -23,15 +23,16 @@ class rwxMouseTracking {
 		window.removeEventListener('deviceorientation', this.handleOrientation);
 	}
 
-  handleOrientation(event)
+  handleOrientation(e)
   {
-    let alpha = event.alpha === null ? 0 : event.alpha;
-    let y = event.beta === null ? 0 : event.beta;
-    let x = event.gamma === null ? 0 : event.gamma;
+    let alpha = e.alpha === null ? 0 : e.alpha;
+    let y = e.beta === null ? 0 : e.beta;
+    let x = e.gamma === null ? 0 : e.gamma;
     if (x >  90) { x =  90};
     if (x < -90) { x = -90};
     this.parallaxmouse.x = (window.innerWidth*x/180)*4;
-    this.parallaxmouse.y = (window.innerHeight*y/225)*4;  
+    this.parallaxmouse.y = (window.innerHeight*y/525)*4;
+    this.moused(e);
   }
 
 	mousedEvent(e)

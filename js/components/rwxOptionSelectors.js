@@ -10,7 +10,8 @@ class rwxOptionSelectors extends rwxCore {
 
 	execute(el, mc)
 	{
-		return new rwxOptionSelector(el, mc);
+		const closeable = this.checkAttributeForBool(el, 'data-rwx-option-selector-closeable');
+		return new rwxOptionSelector(el, mc, closeable);
 	}
 
 	onSelected(id, cb)
@@ -21,7 +22,7 @@ class rwxOptionSelectors extends rwxCore {
 }
 
 class rwxOptionSelector extends rwxComponent {
-	constructor(el, manualControl)
+	constructor(el, manualControl, closeable)
 	{
 		super({element: el, enableScrollIntoView: !manualControl});
 		this.items = [];
@@ -41,6 +42,7 @@ class rwxOptionSelector extends rwxComponent {
 			this.buttons.map((b,i)=>i>=6&&this.el.removeChild(b));
 			this.buttons = this.buttons.filter((b,i)=>i<6);
 		}
+		this.closeable = closeable;
 		this.assignParentClass();
 		this.htmlDefinition();
 		this.elFullSizeAbsolute();
@@ -87,7 +89,11 @@ class rwxOptionSelector extends rwxComponent {
 	scrolledIntoView()
 	{
 		if(this.bail)return;
-		this.buttons.map((i)=>i.classList.add('active'));
+		this.buttons.map((i)=>{
+			i.removeAttribute('aria-hidden');
+			i.children[0].setAttribute('tabindex', 1);
+			i.classList.add('active')
+		});
 		this.stopScroll();
 	}
 
@@ -112,6 +118,8 @@ class rwxOptionSelector extends rwxComponent {
 			item.addEventListener('click', this.clickListener);
 			item.addEventListener('keydown', this.clickListener);
 			this.borders.push(new rwxAnimatedBorder(item.children[0]));
+			this.addAttribute(item, 'aria-hidden', true);
+			item.children[0].setAttribute('tabindex', -1);
 		}
 	}
 
@@ -119,10 +127,14 @@ class rwxOptionSelector extends rwxComponent {
 	{
 		if(ev.type === "keydown")
 		{
-  		if(ev.keyCode == 37 || ev.keyCode == 39 || ev.keyCode == 9)
+  		if(ev.keyCode === 37 || ev.keyCode === 39 || ev.keyCode === 9)
   		{
   			this.activeButton = this.activeButton == 0 ? 1 : 0;
   			this.buttons[this.activeButton].focus();
+  		}
+  		if(ev.keyCode === 27 && this.closeable)
+  		{
+				this.selected(false);
   		}
   		if(this.isKeyboardClick(ev))
   		{
@@ -142,18 +154,27 @@ class rwxOptionSelector extends rwxComponent {
 		return this.buttons.find((f)=>f===rwxDOM.hasAncestor(t, '.rwx-option-selector-item') || f===t);
 	}
 
+	setButtonsHidden()
+	{
+		this.buttons.map((b,i)=>{
+			b.classList.remove('remove', 'active');
+			this.addAttribute(b, 'aria-hidden', true);
+			b.children[0].setAttribute('tabindex', -1);
+			return false;
+		});
+	}
+
 	selected(val)
 	{
-		let value = val.getAttribute('data-rwx-option-selector-value') || val.children[0].innerText;
+		let value = false;
+		if(val)
+		{
+			value = val.getAttribute('data-rwx-option-selector-value') || val.children[0].innerText;
+		}
 		this.buttons.map(b=>b.classList.add('remove'));
-		this.callback && this.callback(value);
+		(value && this.callback) && this.callback(value);
 		setTimeout(()=>{
-			this.buttons.map((b,i)=>{
-				b.classList.remove('remove', 'active');
-				this.addAttribute(b, 'aria-hidden', true);
-				b.children[0].setAttribute('tabindex', -1);
-				return false;
-			});
+			this.setButtonsHidden();
 		}, 1000);
 	}
 }

@@ -15,11 +15,26 @@ const EasingFunctions = {
   easeInQuint: t => { return t*t*t*t*t },
   easeOutQuint: t => { return 1+(--t)*t*t*t*t },
   easeInOutQuint: t => { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t },
+  easeInElasticFriction: t => { return (.04 - .04 / t) * Math.sin(15 * t) + 1 },
   easeInElastic: t => { return (.04 - .04 / t) * Math.sin(25 * t) + 1 },
+  easeInElasticLoose: t => { return (.04 - .04 / t) * Math.sin(35 * t) + 1 },
+  easeOutElasticFriction: t => { return .04 * t / (--t) * Math.sin(15 * t) },
   easeOutElastic: t => { return .04 * t / (--t) * Math.sin(25 * t) },
+  easeOutElasticLoose: t => { return .04 * t / (--t) * Math.sin(35 * t) },
   easeInOutElastic: t => { return (t -= .5) < 0 ? (.02 + .01 / t) * Math.sin(50 * t) : (.02 - .01 / t) * Math.sin(50 * t) + 1 },
   easeOutBack: t=> {const c1 = 1.70158;const c3 = c1 + 1;return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);}
 }
+
+const EasingsGoPastZero = [
+  'easeInElasticFriction', 
+  'easeInElastic', 
+  'easeInElasticLoose',
+  'easeOutElasticFriction', 
+  'easeOutElastic', 
+  'easeOutElasticLoose',
+  'easeInOutElastic',
+  'easeOutBack'
+];
 
 const rwxAnimateHelpers = {
   easingFunction(easing, duration, variable) {
@@ -48,7 +63,7 @@ const rwxAnimate = {
   getEasingValue: function(id, easing, duration, cb) {
     if(!id)return;
     let val = rwxAnimateHelpers.easingFunction(easing, duration, `${id}Ease`, cb);
-    let c = (easing==="easeInElastic" || easing==="easeInOutElastic" || easing==="easeOutBack") ? val===1 : val>=1;
+    let c = EasingsGoPastZero.includes(easing) ? val===1 : val>=1;
     if(c)
     {
       cb && cb();

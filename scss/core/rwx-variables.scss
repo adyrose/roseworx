@@ -133,13 +133,6 @@ $fontsizes: null !default;
 	$fontsizes: $efontsizes;
 }
 
-
-//animation-easings
-$transition-slow-in: cubic-bezier(.09,1.08,.74,.95); 
-$transition-slow-in-slow-out: cubic-bezier(0,.44,1,.45);
-$transition-fast-in: cubic-bezier(1,.15,.72,.81); 
-$transition-base: cubic-bezier(.11,.82,.63,.94);
-
 //tables
 $table-color-base: $theme-color-base !default;
 $table-color-secondary: $theme-color-secondary !default;
@@ -178,3 +171,25 @@ $tabs-seperator-color: $theme-color-secondary !default;
 
 // Z's
 $top-layer-z: 9999;
+
+//transitions
+$transition-slow-in: cubic-bezier(.09,1.08,.74,.95); 
+$transition-slow-in-slow-out: cubic-bezier(0,.44,1,.45);
+$transition-fast-in: cubic-bezier(1,.15,.72,.81); 
+$transition-base: cubic-bezier(.11,.82,.63,.94);
+$transition-out-back: cubic-bezier(0.34, 0.37, 0.47, 1.63);
+$transition-out-back-fast: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+$transition-out-back-slow: cubic-bezier(0, 1.4, 1, 1);
+$transition-zip: cubic-bezier(0,1.01,.19,1);
+$transition-smooth: cubic-bezier(.44,.82,.47,.98);
+$transitions: (
+	"slow-in": $transition-slow-in,
+	"slow-in-out": $transition-slow-in-slow-out,
+	"fast-in": $transition-fast-in,
+	"base": $transition-base,
+	"out-back": $transition-out-back,
+	"out-back-fast": $transition-out-back-fast,
+	"out-back-slow": $transition-out-back-slow,
+	"zip": $transition-zip,
+	"smooth": $transition-smooth
+);

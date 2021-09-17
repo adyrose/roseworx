@@ -1,12 +1,19 @@
 @import '../core/rwx-variables';
-$rwxsx-distance: 30%;
+$rwxsx-distance: 33%;
 .rwxsx
 {
-	&-end
+	&-end:not(\.--elastic)
 	{
 		transform: translate(0, 0) !important;
 		opacity: 1 !important;
 		transition: all 0.63s $transition-slow-in;
+		@each $sel, $v in $transitions
+		{
+			&.\--#{$sel}
+			{
+				transition: all 0.63s $v;
+			}
+		}
 	}
 	&-start
 	{

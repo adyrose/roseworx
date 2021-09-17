@@ -29,6 +29,8 @@
     perspective:1000px;
     float:left;
     transition: all 1s ease;
+    padding-left:40px;
+    padding-right:40px;
     @include flex-center;
     flex-direction:column;
     &-title, &-content

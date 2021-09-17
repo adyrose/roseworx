@@ -1,5 +1,6 @@
 require('../../scss/modules/rwxSkrollX.scss');
 import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxAnimation } from './rwxAnimation';
 
 class rwxSkrollX extends rwxCore {
 	constructor()
@@ -71,8 +72,30 @@ class rwxSkrollXItem extends rwxComponent {
 	{
 		super({element:el, enableScrollIntoView: true});
 		trigger && this.setScrollTrigger(trigger);
+		this.elastic = this.el.classList.contains('--elastic');
+		this.elastic && this.createElasticity();
 		this.delay = delay;
 		this.doneFlag = 'rwxsx-end';
+	}
+
+	createElasticity()
+	{
+		this.animate = this.animate.bind(this);
+		const parsedMatrix = window.getComputedStyle(this.el).transform.replace('matrix(', '').replace(')','').split(',');
+		let tx = parsedMatrix[4].trim();
+		let ty = parsedMatrix[5].trim();
+		this.elasticity = new rwxAnimation({
+			from: [parseFloat(tx), parseFloat(ty), 0],
+			to: [0, 0, 1],
+			easing: ['easeInElasticFriction', 'easeInElasticFriction', 'linear'],
+			duration: 1000,
+			complete: () => {
+				this.el.style.transform = "";
+				this.el.style.opacity = "";
+				this.el.classList.add(this.doneFlag);
+				this.stopAnimation = true
+			}
+		});
 	}
 
 	cleanUp()
@@ -80,15 +103,37 @@ class rwxSkrollXItem extends rwxComponent {
 		this.el.classList.remove(this.doneFlag);
 	}
 
-	scrolledIntoView()
+	animate()
 	{
-		if(this.delay)
+		if(this.stopAnimation)return;
+		this.elasticity.animate((x, y, o)=>{
+			this.el.style.transform = `translate(${x}px, ${y}px)`;
+			this.el.style.opacity = o;
+		})
+		window.requestAnimationFrame(this.animate);
+	}
+
+	determineAnimateOrCSS()
+	{
+		if(this.elastic)
 		{
-			setTimeout(()=>{this.el.classList.add(this.doneFlag);}, this.delay*1000);
+			this.animate();
 		}
 		else
 		{
 			this.el.classList.add(this.doneFlag);
+		}
+	}
+
+	scrolledIntoView()
+	{
+		if(this.delay)
+		{
+			setTimeout(()=>this.determineAnimateOrCSS(), this.delay*1000);
+		}
+		else
+		{
+			this.determineAnimateOrCSS();
 		}
 		this.stopScroll();
 	}

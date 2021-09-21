@@ -92,7 +92,7 @@ const rwxAnimate = {
 }
 
 class rwxAnimation {
-  constructor({from, to, control, duration, easing, loop=false, complete=()=>{}})
+  constructor({from, to, control, duration, easing, loop=false, complete=()=>{}, prevto})
   {
     this.loop = loop;
     this.defaultDuration = 1000;
@@ -101,10 +101,10 @@ class rwxAnimation {
     this.progressCounter = 0;
     this.progressid = `progress${rwxMisc.uniqueId()}`
     this.duration = this.sanitizeDuration(duration);
-    this.parse(from, to , easing, control);
+    this.parse(from, to , easing, control, prevto);
   }
 
-  parse(f, t, e, c)
+  parse(f, t, e, c, pt)
   {
     this.animations = [];
     if(!Array.isArray(f)){f=[f]}
@@ -113,7 +113,7 @@ class rwxAnimation {
 
     f.map((from, i)=>{
       this.animations.push({
-        from,
+        from: from ==='prevto' ? ()=>pt[i].toUseTo : from,
         to: Array.isArray(t) ? t[i] === 'undefined' ? t[0] : t[i] : t,
         easing: this.sanitizeEasing(Array.isArray(e) ? e[i] || e[0] : e),
         control: c ? (Array.isArray(c) ? c[i] || c[0] : c) : null,
@@ -122,7 +122,7 @@ class rwxAnimation {
         isStarted: false,
         isComplete: false,
         cb: ()=>{this.complete();}
-      })
+      });
     });
   }
 
@@ -229,7 +229,10 @@ class rwxAnimationChain {
   {
     this.animations = [];
     seq.map((s,i)=>{
-      if(i>0 && s.from===undefined){s.from = seq[i-1].to}
+      if(i>0 && s.from===undefined){
+        s.from = "prevto";
+        s.prevto = this.animations[i-1].anime.animations;
+      }
       s.loop = false;
       let c = s.complete;
       s.complete = ()=>{

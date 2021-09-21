@@ -36,7 +36,7 @@ const EasingsGoPastZero = [
   'easeOutBack'
 ];
 
-const rwxAnimateHelpers = {
+const rwxAnimateEasing = {
   easingFunction(easing, duration, variable) {
     if(!this[variable])
     {
@@ -53,21 +53,33 @@ const rwxAnimateHelpers = {
     }  
   },
 
+  getVar(id) {
+    return `${id}Ease`;
+  },
+
+  setNow(id, now) {
+    this[this.getVar(id)] = now;
+  },
+
+  getNow(id){
+    return this[this.getVar(id)];
+  },
+
   deleteVars(id)
   {
-    delete this[`${id}Ease`];
+    delete this[this.getVar(id)];
   }
 }
 
 const rwxAnimate = {
   getEasingValue: function(id, easing, duration, cb) {
     if(!id)return;
-    let val = rwxAnimateHelpers.easingFunction(easing, duration, `${id}Ease`, cb);
+    let val = rwxAnimateEasing.easingFunction(easing, duration, rwxAnimateEasing.getVar(id), cb);
     let c = EasingsGoPastZero.includes(easing) ? val===1 : val>=1;
     if(c)
     {
       cb && cb();
-      rwxAnimateHelpers.deleteVars(id);
+      rwxAnimateEasing.deleteVars(id);
       return 1;
     }
     return val;
@@ -146,10 +158,32 @@ class rwxAnimation {
   {
     this.progressCounter = 0;
     this.isComplete = false;
-    this.animations.map((a)=>{
+    this.animations.map((a, i)=>{
+      if(i===0)
+      {
+        let n = rwxAnimateEasing.getNow(a.id);
+        if(n<performance.now())
+        {
+          this.timeTracker = n;
+        }
+      }
       a.isComplete=false;
       a.isStarted=false;
     });
+  }
+
+  stop()
+  {
+    this.easingTrackers = this.animations.map((a)=>rwxAnimateEasing.getNow(a.id));
+    this.timeTracker = performance.now();
+    this.stopNow = true;
+  }
+
+  start()
+  {
+    if(!this.timeTracker)return;
+    this.animations.map((a, i)=>rwxAnimateEasing.setNow(a.id, (performance.now()-(this.timeTracker-this.easingTrackers[i]))));
+    this.stopNow = false;
   }
 
   getProgress()
@@ -164,6 +198,7 @@ class rwxAnimation {
 
   animate(fn)
   {
+    if(this.stopNow)return;
     let vals = [];
     this.animations.map((anime)=>{
       if(!anime.isStarted)
@@ -191,7 +226,6 @@ class rwxAnimation {
       vals.push(toPush);
     });
 
-    // if(this.progressCounter<(this.duration/1000*60)){this.progressCounter+=1;}
     if(!this.isComplete){
       this.progressCounter = rwxAnimate.getEasingValue(this.progressid, 'linear', this.duration);
       if(fn) fn(...vals);
@@ -213,8 +247,15 @@ class rwxAnimationChain {
     this.parse(sequence);
   }
 
+  start()
+  {
+    this.animations.map((a)=>a.anime.start());
+    this.stopNow = false;
+  }
+
   stop()
   {
+    this.animations.map((a)=>a.anime.stop());
     this.stopNow=true;
   }
 
@@ -230,7 +271,7 @@ class rwxAnimationChain {
     this.animations = [];
     seq.map((s,i)=>{
       if(i>0 && s.from===undefined){
-        s.from = "prevto";
+        s.from = this.animations[i-1].anime.animations.map((m)=>"prevto");
         s.prevto = this.animations[i-1].anime.animations;
       }
       s.loop = false;
@@ -257,7 +298,7 @@ class rwxAnimationChain {
 
   animate(fnArr)
   {
-    if(this.stopNow){return;}
+    if(this.stopNow)return;
     if(this.delayCounter >= this.animations[this.seqCounter].delay)
     {
       this.animations[this.seqCounter].anime.animate(fnArr[this.seqCounter]);

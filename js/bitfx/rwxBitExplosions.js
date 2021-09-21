@@ -144,6 +144,7 @@ class rwxBitExplosion extends rwxComponent {
 		let cpx = rwxMath.randomInt(xbound[0],xbound[1]);
 
 		this.allParticles.map((p,i)=>{
+			p.report = i===0;
 			p.initialAnimation = new rwxAnimationChain({
 				sequence: [
 					{
@@ -163,7 +164,7 @@ class rwxBitExplosion extends rwxComponent {
 					}
 				],
 				complete: ()=>p.doneInit=true
-			})
+			});
 			if(p.isLetter)
 			{
 				p.flashAnimation = new rwxAnimationChain({

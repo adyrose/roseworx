@@ -68,6 +68,26 @@ const rwxMisc =
       g: parseInt(result[2], 16),
       b: parseInt(result[3], 16)
     } : null;
+  },
+
+  isKeyboardClick: (e) => {
+    return (e.keyCode == 13 || e.keyCode == 32);
+  },
+
+  // converts an element thats not a button to be accessible and act like a button
+  convertToButton: (el, event) => {
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', 0);
+    if(event)
+    {
+      el.addEventListener('keydown', (ev)=>{
+        if(rwxMisc.isKeyboardClick(ev))
+        {
+          ev.preventDefault();
+          event(ev);
+        }
+      });
+    }
   }
 }
 

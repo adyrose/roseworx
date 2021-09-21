@@ -1,6 +1,6 @@
 require('../../scss/components/rwxNumberSwitchers.scss');
 
-import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxCore, rwxAnimationComponent } from '../rwxCore';
 
 class rwxNumberSwitchers extends rwxCore {
 	constructor()
@@ -24,10 +24,10 @@ class rwxNumberSwitchers extends rwxCore {
 	}
 }
 
-class rwxNumberSwitcher extends rwxComponent {
+class rwxNumberSwitcher extends rwxAnimationComponent {
 	constructor(el, initialValue, stopAtZero)
 	{
-		super({element: el, enableCustomEvents: true, enableAnimationLoop: true});
+		super({element: el, enableAnimationLoop: true});
 		if(isNaN(initialValue)){this.error("Initial value needs to be number"); return}
 		this.stopAtZero = stopAtZero;
 		this.htmlDefinition();

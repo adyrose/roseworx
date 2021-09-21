@@ -1,6 +1,6 @@
 require('../../scss/components/rwxSlideshows.scss');
 
-import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxCore, rwxEnhancedComponent } from '../rwxCore';
 import rwxMisc from '../helpers/rwxMiscHelpers';
 
 class rwxSlideshows extends rwxCore {
@@ -15,7 +15,7 @@ class rwxSlideshows extends rwxCore {
 	}
 }
 
-class rwxSlideshow extends rwxComponent {
+class rwxSlideshow extends rwxEnhancedComponent {
   constructor(el)
   {
     super({element: el, enableMouseTracking: true, enableResizeDebounce:true});
@@ -96,13 +96,13 @@ class rwxSlideshow extends rwxComponent {
     this.background.classList.add('rwx-slideshow-background');
 
     const ps = document.createElement('span');
-    this.convertToButton(ps, this.prevslide);
+    rwxMisc.convertToButton(ps, this.prevslide);
     ps.classList.add('prev-slide');
     ps.addEventListener('click', this.prevslide);
     this.prevslidebutton = ps;
 
     const ns = document.createElement('span');
-    this.convertToButton(ns, this.nextslide);
+    rwxMisc.convertToButton(ns, this.nextslide);
     ns.classList.add('next-slide');
     ns.addEventListener('click', this.nextslide);
     this.nextslidebutton = ns;

@@ -1,4 +1,4 @@
-import { rwxComponent, rwxCore } from '../rwxCore';
+import { rwxCanvasComponent, rwxCore } from '../rwxCore';
 
 import {rwxParticle} from './rwxParticle';
 
@@ -39,7 +39,7 @@ class rwxBitSystems extends rwxBitFont {
 	}
 }
 
-class rwxBitSystem extends rwxComponent {
+class rwxBitSystem extends rwxCanvasComponent {
 
 	constructor(el, manualControl, bgColor, bitColor, shape, disableInit, nofill, joinShape)
 	{

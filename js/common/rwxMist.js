@@ -1,10 +1,9 @@
-import { rwxComponent } from '../rwxCore';
+import { rwxEnhancedComponent } from '../rwxCore';
 
-class rwxMist extends rwxComponent {
+class rwxMist extends rwxEnhancedComponent {
 	constructor(el)
 	{
-		super({enableResizeDebounce: true})
-		this.el = el;
+		super({element: el, enableResizeDebounce: true})
 		this.update = this.update.bind(this);
 		this.calculate();
 		this.addStyle(this.el, 'overflow', 'auto');

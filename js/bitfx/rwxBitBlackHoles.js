@@ -1,4 +1,4 @@
-import { rwxComponent } from '../rwxCore';
+import { rwxCanvasComponent } from '../rwxCore';
 
 import {rwxParticle} from './rwxParticle';
 
@@ -23,7 +23,7 @@ class rwxBitBlackHoles extends rwxBitFont {
   }
 }
 
-class rwxBitBlackHole extends rwxComponent {
+class rwxBitBlackHole extends rwxCanvasComponent {
   constructor(el, manualControl, bits, orientation, shape, color, bgcolor, sparecolor, disableTrail)
   {
     super({element: el, enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking: true});

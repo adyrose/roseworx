@@ -1,5 +1,5 @@
 require('../../scss/modules/rwxSkrollX.scss');
-import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxCore, rwxComponent, rwxEnhancedComponent } from '../rwxCore';
 import { rwxAnimation } from './rwxAnimation';
 
 class rwxSkrollX extends rwxCore {
@@ -32,7 +32,7 @@ class rwxSkrollX extends rwxCore {
 	}
 }
 
-class rwxParallaxItem extends rwxComponent {
+class rwxParallaxItem extends rwxEnhancedComponent {
 	constructor(el, direction, speed)
 	{
 		super({element: el, enableScrollTracking: true});

@@ -1,4 +1,4 @@
-import { rwxComponent } from '../rwxCore';
+import { rwxCanvasComponent } from '../rwxCore';
 
 import { rwxMath, rwxMisc, rwxGeometry } from '../helpers/rwxHelpers';
 
@@ -19,7 +19,7 @@ class rwxBitSwarms extends rwxBitFont {
 	}
 }
 
-class rwxBitSwarm extends rwxComponent {
+class rwxBitSwarm extends rwxCanvasComponent {
 	constructor(el, manualControl, bits, orientation, shape, color, bgcolor, nofill)
 	{
 		super({element: el, enableResizeDebounce: true, enableAnimationLoop: true, enableScrollIntoView: !manualControl, enableMouseTracking:true});

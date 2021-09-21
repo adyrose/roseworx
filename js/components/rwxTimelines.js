@@ -1,4 +1,4 @@
-import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxCore, rwxAnimationComponent } from '../rwxCore';
 import {rwxAnimationChain} from '../modules/rwxAnimation';
 
 class rwxTimelines extends rwxCore {
@@ -13,7 +13,7 @@ class rwxTimelines extends rwxCore {
 	}
 }
 
-class rwxTimeline extends rwxComponent {
+class rwxTimeline extends rwxAnimationComponent {
 	constructor(el, manualControl)
 	{
 		super({element: el, enableScrollIntoView: true, enableAnimationLoop:true});

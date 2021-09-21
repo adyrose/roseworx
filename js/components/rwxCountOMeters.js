@@ -1,4 +1,4 @@
-import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxCore, rwxCanvasComponent } from '../rwxCore';
 import rwxCanvas from '../helpers/rwxCanvasHelpers';
 import rwxMisc from '../helpers/rwxMiscHelpers';
 import {rwxAnimation} from '../modules/rwxAnimation';
@@ -19,7 +19,7 @@ class rwxCountOMeters extends rwxCore {
 	}
 }
 
-class rwxCountOMeter extends rwxComponent {
+class rwxCountOMeter extends rwxCanvasComponent {
 	constructor(el, value, manualControl)
 	{
 		super({element: el, enableAnimationLoop: true, enableResizeDebounce: true, enableScrollIntoView: !manualControl})

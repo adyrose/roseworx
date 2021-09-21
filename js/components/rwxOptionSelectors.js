@@ -1,6 +1,7 @@
 import { rwxCore, rwxComponent } from '../rwxCore';
 import rwxAnimatedBorder from '../common/rwxAnimatedBorder';
 import rwxDOM from '../helpers/rwxDOMHelpers';
+import rwxMisc from '../helpers/rwxMiscHelpers';
 
 class rwxOptionSelectors extends rwxCore {
 	constructor()
@@ -114,7 +115,7 @@ class rwxOptionSelector extends rwxComponent {
 		this.borders = [];
 		for(let item of this.buttons)
 		{
-			this.convertToButton(item.children[0]);
+			rwxMisc.convertToButton(item.children[0]);
 			item.addEventListener('click', this.clickListener);
 			item.addEventListener('keydown', this.clickListener);
 			this.borders.push(new rwxAnimatedBorder(item.children[0]));
@@ -136,7 +137,7 @@ class rwxOptionSelector extends rwxComponent {
   		{
 				this.selected(false);
   		}
-  		if(this.isKeyboardClick(ev))
+  		if(rwxMisc.isKeyboardClick(ev))
   		{
   			ev.preventDefault();
   			this.selected(this.buttons.find((f)=>f===rwxDOM.hasAncestor(ev.target, '.rwx-option-selector-item')));

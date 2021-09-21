@@ -1,4 +1,4 @@
-import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxCore, rwxCanvasComponent } from '../rwxCore';
 import rwxMath from '../helpers/rwxMathHelpers';
 import rwxMisc from '../helpers/rwxMiscHelpers';
 import rwxCanvas from '../helpers/rwxCanvasHelpers';
@@ -31,7 +31,7 @@ class rwxPhotoTiles extends rwxCore {
 	}
 }
 
-class rwxPhotoTile extends rwxComponent {
+class rwxPhotoTile extends rwxCanvasComponent {
   constructor(el, effect, auto, autoTimeout, noThumbnails)
   {
   	super({element: el, enableAnimationLoop: true, enableResizeDebounce: true});
@@ -121,9 +121,9 @@ class rwxPhotoTile extends rwxComponent {
   	this.container.classList.add('rwx-phototile-container');
     this.cloned = this.photos.map((img)=>img.cloneNode());
   	this.photos.map((img, i)=>{
-      this.convertToButton(img);
+      rwxMisc.convertToButton(img);
   		img.addEventListener('keydown', (ev)=>{
-  			if(this.isKeyboardClick(ev))
+  			if(rwxMisc.isKeyboardClick(ev))
   			{
           ev.preventDefault();
   				this.changeBackground(i+1, this.effectInit);

@@ -1,6 +1,7 @@
 import rwxMath from '../helpers/rwxMathHelpers';
+import rwxMisc from '../helpers/rwxMiscHelpers';
 
-import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxCore, rwxAnimationComponent } from '../rwxCore';
 import { rwxAnimation } from '../modules/rwxAnimation';
 import rwxAnimatedBorder from '../common/rwxAnimatedBorder';
 
@@ -27,7 +28,7 @@ class rwxLuckyDips extends rwxCore {
   }
 }
 
-class rwxLuckyDip extends rwxComponent {
+class rwxLuckyDip extends rwxAnimationComponent {
   constructor(el, manualControl, stopText, timeBeforeAutoStop, autoStop)
   {
   	super({element: el, enableScrollIntoView: !manualControl, enableAnimationLoop: true});
@@ -78,7 +79,7 @@ class rwxLuckyDip extends rwxComponent {
     this.addElement(this.el, this.stopNode);
     this.stopNode.addEventListener('click', this.stopSpin);
     this.button = new rwxAnimatedBorder(this.stopNode);
-    this.convertToButton(this.stopNode, this.stopSpin);
+    rwxMisc.convertToButton(this.stopNode, this.stopSpin);
     this.mask = this.items[0].cloneNode(true);
     this.container.appendChild(this.mask);
     this.height = this.container.getBoundingClientRect().height;

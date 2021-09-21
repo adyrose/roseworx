@@ -202,22 +202,11 @@ class rwxComponent {
 		this.addedElements = [];
 		this.addedStyles = [];
 		this.addedAttributes = [];
+
 		if(enableCustomEvents)
 		{
 			this.customEventsEnabled = true;
 			this.availableEvents = [];
-		}
-
-		if(enableAnimationLoop)
-		{
-			this.stopAnimation = true;
-			this.animateLoop = this.animateLoop.bind(this);
-		}
-
-		if(enableResizeDebounce)
-		{
-			rwxResizeTrack.add(()=>this.resizeEvent(), this.uniqueID);
-			this.resizeEvent = this.resizeEvent.bind(this);
 		}
 
 		if(enableScrollIntoView)
@@ -227,19 +216,6 @@ class rwxComponent {
 			this.setScrollTrigger(200);
 			this.scrollErrorReported = false;
 			window.requestAnimationFrame(this.scrollIntoViewEvent);
-		}
-
-		if(enableScrollTracking)
-		{
-			rwxScrollTrack.add(()=>this.scrollEvent(), this.uniqueID);
-			this.scrollEvent = this.scrollEvent.bind(this);
-			window.requestAnimationFrame(this.scrollEvent);
-		}
-
-		if(enableMouseTracking)
-		{
-			let fn = this.moused ? (e)=>{this.moused(e)} : ()=>{};
-			this.mouseTrack = new rwxMouseTrack(this.el.hasAttribute('rwx-mouse-track-use-window') ? window : this.el, fn);
 		}
 	}
 
@@ -287,8 +263,8 @@ class rwxComponent {
 	{
 		window.removeEventListener('resize', this.debounceEvent);
 		this.mouseTrack && this.mouseTrack.remove();
-		this.stopScroll();
-		this.stopResize();
+		this.stopScroll && this.stopScroll();
+		this.stopResize && this.stopResize();
 	}
 
 	declareEvent(name)
@@ -318,12 +294,6 @@ class rwxComponent {
 	setScrollTrigger(val)
 	{
 		this.scrollTriggerOffset = window.innerHeight - val;
-	}
-
-	stopResize()
-	{
-		this.hasResized = true;
-		window.rwx.resizeTracking && window.rwx.resizeTracking.remove(this.uniqueID);
 	}
 
 	stopScroll()
@@ -359,6 +329,100 @@ class rwxComponent {
 		}		
 	}
 
+	elFullSizeAbsolute(color)
+	{
+		const currentPosition = window.getComputedStyle(this.el.parentNode).position;
+		if(currentPosition!=="absolute" && currentPosition!=="fixed")
+		{
+			this.addStyle(this.el.parentNode, 'position', 'relative');
+		}
+		this.addStyle(this.el, 'position', 'absolute');
+		this.addStyle(this.el, 'top', '0px');
+		this.addStyle(this.el, 'left', '0px');
+		this.addStyle(this.el, 'right', '0px');
+		this.addStyle(this.el, 'bottom', '0px');
+		this.addStyle(this.el, 'width', '100%');
+		this.addStyle(this.el, 'height', '100%');
+		this.addStyle(this.el, 'overflow', 'hidden');
+		if(color)this.addStyle(this.el, 'backgroundColor', color);
+	}
+
+	error(msg)
+	{
+		rwxError(msg, `{Component} (${this.resourceName})`)
+	}
+}
+
+
+class rwxAnimationComponent extends rwxComponent {
+	constructor(props) {
+		super(props);
+		const {enableAnimationLoop} = props;
+		if(enableAnimationLoop)
+		{
+			this.stopAnimation = true;
+			this.animateLoop = this.animateLoop.bind(this);
+		}
+	}
+
+	startAnimation()
+	{
+		if(!this.stopAnimation)return;
+		this.stopAnimation = false;
+		this.animateLoop();
+	}
+
+	animateLoop()
+	{
+		console.log("not running");
+		if(!this.animate) {
+			this.error('No animate method (this.animate) defined on instance.');
+			return;			
+		}
+    if(!this.stopAnimation)
+    {
+      requestAnimationFrame(this.animateLoop);
+      (this.c && this.canvas && !this.dontClearRect) && this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			this.animate();    
+    }
+	}
+
+	addAnimation() {
+		// keep track off animations so when component is paused, you can loop through and pause all the animations.
+		// similiar to this.addElement
+	}
+}
+
+class rwxEnhancedComponent extends rwxAnimationComponent {
+	constructor(props) {
+		super(props);
+		const {enableResizeDebounce, enableScrollTracking, enableMouseTracking} = props;
+		if(enableResizeDebounce)
+		{
+			rwxResizeTrack.add(()=>this.resizeEvent(), this.uniqueID);
+			this.resizeEvent = this.resizeEvent.bind(this);
+		}
+
+		if(enableScrollTracking)
+		{
+			rwxScrollTrack.add(()=>this.scrollEvent(), this.uniqueID);
+			this.scrollEvent = this.scrollEvent.bind(this);
+			window.requestAnimationFrame(this.scrollEvent);
+		}
+
+		if(enableMouseTracking)
+		{
+			let fn = this.moused ? (e)=>{this.moused(e)} : ()=>{};
+			this.mouseTrack = new rwxMouseTrack(this.el.hasAttribute('rwx-mouse-track-use-window') ? window : this.el, fn);
+		}
+	}
+
+	stopResize()
+	{
+		this.hasResized = true;
+		window.rwx.resizeTracking && window.rwx.resizeTracking.remove(this.uniqueID);
+	}
+
 	scrollEvent() {
 		if(this.hasScrolled)return;
 		if(!this.scroll)
@@ -387,43 +451,11 @@ class rwxComponent {
 		this.resize();		
 	}
 
-	startAnimation()
-	{
-		if(!this.stopAnimation)return;
-		this.stopAnimation = false;
-		this.animateLoop();
-	}
+}
 
-	animateLoop()
-	{
-		if(!this.animate) {
-			this.error('No animate method (this.animate) defined on instance.');
-			return;			
-		}
-    if(!this.stopAnimation)
-    {
-      requestAnimationFrame(this.animateLoop);
-      (this.c && this.canvas && !this.dontClearRect) && this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
-			this.animate();    
-    }
-	}
-
-	elFullSizeAbsolute(color)
-	{
-		const currentPosition = window.getComputedStyle(this.el.parentNode).position;
-		if(currentPosition!=="absolute" && currentPosition!=="fixed")
-		{
-			this.addStyle(this.el.parentNode, 'position', 'relative');
-		}
-		this.addStyle(this.el, 'position', 'absolute');
-		this.addStyle(this.el, 'top', '0px');
-		this.addStyle(this.el, 'left', '0px');
-		this.addStyle(this.el, 'right', '0px');
-		this.addStyle(this.el, 'bottom', '0px');
-		this.addStyle(this.el, 'width', '100%');
-		this.addStyle(this.el, 'height', '100%');
-		this.addStyle(this.el, 'overflow', 'hidden');
-		if(color)this.addStyle(this.el, 'backgroundColor', color);
+class rwxCanvasComponent extends rwxEnhancedComponent {
+	constructor(props) {
+		super(props);
 	}
 
 	createCanvas()
@@ -442,32 +474,6 @@ class rwxComponent {
 		this.width = width;
 		this.height = height;
 	}
-
-	error(msg)
-	{
-		rwxError(msg, `{Component} (${this.resourceName})`)
-	}
-
-	convertToButton(el, event)
-	{
-		this.addAttribute(el, 'role', 'button');
-		this.addAttribute(el, 'tabindex', 0);
-		if(event)
-		{
-			el.addEventListener('keydown', (ev)=>{
-				if(this.isKeyboardClick(ev))
-				{
-					ev.preventDefault();
-					event(ev);
-				}
-			});
-		}
-	}
-
-	isKeyboardClick(ev)
-	{
-		return (ev.keyCode == 13 || ev.keyCode == 32)
-	}
 }
 
 const rwxError = (err, resource) => {
@@ -478,4 +484,4 @@ const checkAttributeForBool = (el, att)=> {
 	return el.hasAttribute(att) ? el.getAttribute(att) === "false" ? false : true : false;
 }
 
-export {rwxCore, rwxComponent, rwxError, checkAttributeForBool};
+export {rwxCore, rwxComponent, rwxCanvasComponent, rwxAnimationComponent, rwxEnhancedComponent, rwxError, checkAttributeForBool};

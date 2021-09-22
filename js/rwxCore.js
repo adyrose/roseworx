@@ -121,6 +121,7 @@ class rwxCore {
   	const IME = this.getIME(id);
   	if(IME)
   	{
+  		IME.pauseAnimations && IME.pauseAnimations();
   		IME.stopAnimation = true;
   	}
   }
@@ -136,6 +137,7 @@ class rwxCore {
   		}
   		else
   		{
+  			IME.playAnimations && IME.playAnimations();
   			IME.startAnimation();
   		}
   	}
@@ -360,6 +362,7 @@ class rwxAnimationComponent extends rwxComponent {
 		const {enableAnimationLoop} = props;
 		if(enableAnimationLoop)
 		{
+			this.animations = [];
 			this.stopAnimation = true;
 			this.animateLoop = this.animateLoop.bind(this);
 		}
@@ -374,7 +377,6 @@ class rwxAnimationComponent extends rwxComponent {
 
 	animateLoop()
 	{
-		console.log("not running");
 		if(!this.animate) {
 			this.error('No animate method (this.animate) defined on instance.');
 			return;			
@@ -387,9 +389,20 @@ class rwxAnimationComponent extends rwxComponent {
     }
 	}
 
-	addAnimation() {
-		// keep track off animations so when component is paused, you can loop through and pause all the animations.
-		// similiar to this.addElement
+	pauseAnimations() {
+		this.animations.map((a)=>a.pause());
+	}
+
+	playAnimations() {
+		this.animations.map((a)=>a.play());
+	}
+
+	addAnimation(a) {
+		this.animations.push(a);
+	}
+
+	resetAnimations() {
+		this.animations = [];
 	}
 }
 

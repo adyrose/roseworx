@@ -59,6 +59,7 @@ class rwxTimeline extends rwxAnimationComponent {
 		arr.push((t)=>this.blob.style.top = `${t}px`, (o)=>this.blob.style.opacity = o);
 		this.fnArr = arr;
 		this.blobAnimation = new rwxAnimationChain(obj);
+		this.addAnimation(this.blobAnimation);
 	}
 
 	addElements()

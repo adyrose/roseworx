@@ -165,6 +165,7 @@ class rwxBitExplosion extends rwxCanvasComponent {
 				],
 				complete: ()=>p.doneInit=true
 			});
+			this.addAnimation(p.initialAnimation);
 			if(p.isLetter)
 			{
 				p.flashAnimation = new rwxAnimationChain({

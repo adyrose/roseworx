@@ -61,6 +61,7 @@ class rwxBitSwarm extends rwxCanvasComponent {
 		}
 		else
 		{
+			this.resetAnimations();
 			this.mouseParticle.setRadius(letters[0].dimensions.bitSize);
 		}
 
@@ -68,6 +69,7 @@ class rwxBitSwarm extends rwxCanvasComponent {
 			if(firstblood)
 			{
 				this.letters.push(new rwxBitSwarmLetter(l.matrix, l.bitx, l.bity, l.dimensions.bitSize, l.dimensions.particleSize, this.bitColor, this.shape, this.c, this.canvas, this.width, this.height, `${this.uniqueID}letter${i}`, this.nofill));
+				this.trackAnimations(this.letters[i]);
 			}
 			else
 			{
@@ -79,9 +81,24 @@ class rwxBitSwarm extends rwxCanvasComponent {
 				this.letters[i].ypos = l.bity;
 				this.letters[i].width = this.width;
 				this.letters[i].height = this.height;
-				this.letters[i].createParticleData();				
+				this.letters[i].createParticleData();	
+				this.trackAnimations(this.letters[i]);			
 			}
 		});
+	}
+
+	trackAnimations(p)
+	{
+		p.matrixParticles.map((mp)=>{
+			this.addAnimation(mp.swarmAnimation);
+			this.addAnimation(mp.startAnimation);
+			this.addAnimation(mp.rejiggleAnimation);
+			this.addAnimation(mp.snakeAnimation);
+			this.addAnimation(mp.fireworxAnimation);
+			this.addAnimation(mp.dropAnimation);
+			this.addAnimation(mp.cycloneAnimation);
+			this.addAnimation(mp.explodeAnimation);
+		})
 	}
 
 	moused()

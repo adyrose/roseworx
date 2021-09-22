@@ -106,8 +106,9 @@ class rwxBitSystem extends rwxCanvasComponent {
 				duration: 1500,
 				easing: 'easeInOutQuint',
 				complete: ()=>p.lineDash=false
-			})
-				return false;
+			});
+			this.addAnimation(p.lineAnimation);
+			return false;
 		})
 	}
 
@@ -171,6 +172,7 @@ class rwxBitSystem extends rwxCanvasComponent {
 		  		}
 		  	}
 		  });
+		  this.addAnimation(p.chain);
 		  p.explodeAnimation = new rwxAnimation({
 		  	from: [()=>this.getCurrentCoordinates(i).x, ()=>this.getCurrentCoordinates(i).y],
 		  	to: [()=>this.getExplodeCoordinates(i).x, ()=>this.getExplodeCoordinates(i).y],
@@ -180,6 +182,7 @@ class rwxBitSystem extends rwxCanvasComponent {
 		  		p.implodeAnimation.reset();
 		  	}
 		  });
+		  this.addAnimation(p.explodeAnimation);
 		  p.implodeAnimation = new rwxAnimation({
 		  	from: [()=>this.getCurrentCoordinates(i).x, ()=>this.getCurrentCoordinates(i).y],
 		  	to: [finalx, finaly],
@@ -191,6 +194,7 @@ class rwxBitSystem extends rwxCanvasComponent {
 		  		p.explodeAnimation.reset();
 		  	}
 		  });
+		  this.addAnimation(p.implodeAnimation);
 		  p.setFill(this.disableInit && !this.nofill ? true : (!firstBlood && !this.nofill));
 		  p.setStroke(true);
 		  if(!firstBlood)
@@ -239,6 +243,7 @@ class rwxBitSystem extends rwxCanvasComponent {
   resize()
   {
 		this.sizeCanvas();
+		this.resetAnimations();
 		this.calculate(false);
 		if(this.joinShapes)
 		{

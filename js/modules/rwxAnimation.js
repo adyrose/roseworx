@@ -172,14 +172,14 @@ class rwxAnimation {
     });
   }
 
-  stop()
+  pause()
   {
     this.easingTrackers = this.animations.map((a)=>rwxAnimateEasing.getNow(a.id));
     this.timeTracker = performance.now();
     this.stopNow = true;
   }
 
-  start()
+  play()
   {
     if(!this.timeTracker)return;
     this.animations.map((a, i)=>rwxAnimateEasing.setNow(a.id, (performance.now()-(this.timeTracker-this.easingTrackers[i]))));
@@ -247,15 +247,15 @@ class rwxAnimationChain {
     this.parse(sequence);
   }
 
-  start()
+  play()
   {
-    this.animations.map((a)=>a.anime.start());
+    this.animations.map((a)=>a.anime.play());
     this.stopNow = false;
   }
 
-  stop()
+  pause()
   {
-    this.animations.map((a)=>a.anime.stop());
+    this.animations.map((a)=>a.anime.pause());
     this.stopNow=true;
   }
 

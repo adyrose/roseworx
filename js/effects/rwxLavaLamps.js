@@ -1,6 +1,6 @@
 require('../../scss/effects/rwxLavaLamps.scss');
 
-import { rwxCore, rwxComponent } from '../rwxCore';
+import { rwxCore, rwxAnimationComponent } from '../rwxCore';
 
 import {rwxAnimationChain} from '../modules/rwxAnimation';
 import rwxMisc from '../helpers/rwxMiscHelpers';
@@ -19,7 +19,7 @@ class rwxLavaLamps extends rwxCore {
   }
 }
 
-class rwxLavaLamp extends rwxComponent {
+class rwxLavaLamp extends rwxAnimationComponent {
   constructor(el, nob)
   {
     super({element:el, enableAnimationLoop:true})
@@ -77,6 +77,9 @@ class rwxLavaLamp extends rwxComponent {
       path.setAttribute("d", this.pathDefs[rwxMath.randomInt(0,this.pathDefs.length-1)]);
       this.svg.appendChild(path);
       this.bubbles.push(new Bubble(path));
+      this.addAnimation(this.bubbles[i].scaleXAnimation);
+      this.addAnimation(this.bubbles[i].scaleYAnimation);
+      this.addAnimation(this.bubbles[i].skewAnimation);
     }
   }
 
@@ -101,7 +104,7 @@ class Bubble {
 
     this.config();
     this.animate = this.animate.bind(this);
-    this.animations();
+    this.createAnimations();
     this.animate();
   }
 
@@ -137,7 +140,7 @@ class Bubble {
     this.speedy = yDirection === 1 ? this.speedy : -this.speedy;
   }
 
-  animations()
+  createAnimations()
   {
     this.scaleXAnimation = new rwxAnimationChain({
       sequence: [
@@ -160,7 +163,7 @@ class Bubble {
         }
       ],
       loop:true
-    })
+    });
 
     this.scaleYAnimation = new rwxAnimationChain({
       sequence: [
@@ -183,7 +186,7 @@ class Bubble {
         }
       ],
       loop:true
-    })
+    });
 
     this.skewAnimation = new rwxAnimationChain({
       sequence: [
@@ -206,7 +209,7 @@ class Bubble {
         }
       ],
       loop:true
-    })
+    });
   }
 
   animate()

@@ -139,6 +139,7 @@ class rwxBitBlackHole extends rwxCanvasComponent {
         duration: 5000,
         complete: ()=>p.doneInit=true
       })
+      this.addAnimation(p.initAnimation);
       radianCounter += radian;
       radianCounter2 -= radian;
       return;

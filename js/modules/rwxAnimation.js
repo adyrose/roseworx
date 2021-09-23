@@ -174,6 +174,7 @@ class rwxAnimation {
 
   pause()
   {
+    if(this.stopNow)return;
     this.easingTrackers = this.animations.map((a)=>rwxAnimateEasing.getNow(a.id));
     this.timeTracker = performance.now();
     this.stopNow = true;
@@ -181,7 +182,7 @@ class rwxAnimation {
 
   play()
   {
-    if(!this.timeTracker)return;
+    if(!this.stopNow)return;
     this.animations.map((a, i)=>rwxAnimateEasing.setNow(a.id, (performance.now()-(this.timeTracker-this.easingTrackers[i]))));
     this.stopNow = false;
   }

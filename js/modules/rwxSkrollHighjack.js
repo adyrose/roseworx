@@ -156,6 +156,7 @@ class rwxSkrollHighjack {
 		this.index = newIndex;
 		this.highjacked = true;
 		this.activeCounter();
+		this.isAnimating = true;
 		this.animate();
 	}
 
@@ -206,13 +207,41 @@ class rwxSkrollHighjack {
 			to: ()=>this.getTop(),
 			easing: 'easeOutQuad',
 			duration: 1000,
-			complete: ()=>{this.highjacked=false;}
+			complete: ()=>{
+				this.isAnimating=false;
+				if(!this.timeout)
+				{
+					this.highjacked=false;
+				}
+			}
 		});
+	}
+
+	setTimeout() {
+		this.timeout = setTimeout(()=>{
+			this.timeout = false;
+			if(!this.isAnimating)
+			{
+				this.highjacked=false;
+			}
+		}, 100);
 	}
 
 	scrolling(e)
 	{
-		if(this.highjacked || e.type!=="wheel"){return}
+		if(this.highjacked && e.type ==="wheel")
+		{
+			if(!this.timeout)
+			{
+				this.setTimeout();
+			}
+			else
+			{
+				clearTimeout(this.timeout);
+				this.setTimeout();
+			}
+		}
+		if(this.highjacked || e.type!=="wheel" || this.timeout){return}
 		if(this.ignore)
 		{
 			let toreturn = false;
@@ -239,8 +268,13 @@ class rwxSkrollHighjack {
 		}
 		this.highjacked = true;
 		this.activeCounter();
+		this.isAnimating = true;
 		this.animate();
 	}
 }
+
+//detect start of wheel. set timeout
+//if ran before timeout cancel the timeout and return
+// in timeout set highjacked to false
 
 export default rwxSkrollHighjack;

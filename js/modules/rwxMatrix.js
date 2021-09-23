@@ -1,11 +1,11 @@
 import rwxResizeTrack from '../common/rwxResizeTracking';
 
 class rwxMatrix {
-	constructor(parent=false, lights, fov=70, nv=0.1, fv=1000, THREE)
+	constructor({parent=false, lights, fov=70, nv=0.1, fv=1000, THREEInstance})
 	{
 		this.resize = this.resize.bind(this);
 		this.renderScene = this.renderScene.bind(this);
-		this.THREE = THREE;
+		this.THREE = THREEInstance;
 		this.fov = fov;
 		this.nv = nv;
 		this.fv = fv;

@@ -1,5 +1,6 @@
 require('../../scss/components/rwxSlideshows.scss');
 
+import rwxSwipeTracking from '../common/rwxSwipeTracking';
 import { rwxCore, rwxEnhancedComponent } from '../rwxCore';
 import rwxMisc from '../helpers/rwxMiscHelpers';
 
@@ -57,37 +58,26 @@ class rwxSlideshow extends rwxEnhancedComponent {
     this.nextslide = this.nextslide.bind(this);
     this.prevslide = this.prevslide.bind(this);
     this.keyupevent = this.keyupevent.bind(this);
-    this.touchstartevent = this.touchstartevent.bind(this);
-    this.touchendevent = this.touchendevent.bind(this);
-
     this.el.addEventListener('keyup', this.keyupevent);
-    this.el.addEventListener('touchstart', this.touchstartevent);
-    this.el.addEventListener('touchend', this.touchendevent);
+    this.swipeTrack = new rwxSwipeTracking(this.el, this.swiped.bind(this));
+  }
+
+  swiped(direction)
+  {
+    if(direction==="left")
+    {
+      this.nextslide();
+    }
+    else if(direction==="right")
+    {
+      this.prevslide();
+    }
   }
 
   removeEventListeners()
   {
     this.el.removeEventListener('keyup', this.keyupevent);
-    this.el.removeEventListener('touchstart', this.touchstartevent);
-    this.el.removeEventListener('touchend', this.touchendevent);   
-  }
-
-  touchstartevent(e)
-  {
-    this.prevx = e.touches[0].clientX;
-  }
-
-  touchendevent(e)
-  {
-    if((Math.abs(this.prevx - e.changedTouches[0].clientX)<100))return;
-    if(this.prevx < e.changedTouches[0].clientX)
-    {
-      this.prevslide();
-    }
-    else
-    {
-      this.nextslide();
-    }
+    this.swipeTrack.cleanUp();  
   }
 
   generateHTML()

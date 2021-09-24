@@ -1,5 +1,6 @@
 import {rwxAnimation} from './rwxAnimation';
 import rwxDOM from '../helpers/rwxDOMHelpers';
+import rwxSwipeTracking from '../common/rwxSwipeTracking';
 require('../../scss/modules/rwxSkrollHighjack.scss');
 
 class rwxSkrollHighjack {
@@ -29,6 +30,8 @@ class rwxSkrollHighjack {
 		
 		window.addEventListener('beforeunload', this.unloadEvent);
 		
+		this.swipeTrack = new rwxSwipeTracking(window, this.swiped.bind(this));
+
 		this.closeNavEvent = this.closeNavEvent.bind(this);
 		this.hasNavigation && document.addEventListener('click', this.closeNavEvent);
 		
@@ -227,6 +230,24 @@ class rwxSkrollHighjack {
 		}, 100);
 	}
 
+	swiped(direction, e)
+	{
+		if(this.highjacked)return;
+		if(this.ignore)
+		{
+			if(this.determineIgnore(e.target))return;
+		}
+		if(direction==="up")
+		{
+			this.index+=1;
+		}
+		if(direction==="down")
+		{
+			this.index-=1;
+		}
+		this.highjacking();
+	}
+
 	scrolling(e)
 	{
 		if(this.highjacked && e.type ==="wheel")
@@ -244,18 +265,9 @@ class rwxSkrollHighjack {
 		if(this.highjacked || e.type!=="wheel" || this.timeout){return}
 		if(this.ignore)
 		{
-			let toreturn = false;
-			this.ignore.filter((sc)=>(sc.scrollHeight > sc.offsetHeight || sc.scrollWidth > sc.offsetWidth)).map((i)=>{
-				if(e.target === i || i.contains(e.target))
-				{
-					toreturn=true;
-				}
-				return false;
-			})
-			if(toreturn)return;
+			if(this.determineIgnore(e.target))return;
 		}
 
-		this.animation.reset();
 		if(event.deltaY < 0)
 		{
 			if(this.index===0){return;}
@@ -266,15 +278,30 @@ class rwxSkrollHighjack {
 			if(this.index===this.m.length){return;}
 			this.index +=1;
 		}
+		this.highjacking();
+	}
+
+	determineIgnore(target)
+	{
+		let toreturn = false;
+		this.ignore.filter((sc)=>(sc.scrollHeight > sc.offsetHeight || sc.scrollWidth > sc.offsetWidth)).map((i)=>{
+			if(target === i || i.contains(target))
+			{
+				toreturn=true;
+			}
+			return false;
+		});
+		return toreturn;
+	}
+
+	highjacking()
+	{
+		this.animation.reset();
 		this.highjacked = true;
 		this.activeCounter();
 		this.isAnimating = true;
 		this.animate();
 	}
 }
-
-//detect start of wheel. set timeout
-//if ran before timeout cancel the timeout and return
-// in timeout set highjacked to false
 
 export default rwxSkrollHighjack;

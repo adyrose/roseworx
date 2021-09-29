@@ -62,7 +62,7 @@ class rwxParallaxItem extends rwxEnhancedComponent {
 		const bounds = this.el.getBoundingClientRect();
 		let inView = ((window.innerHeight-bounds.top)>0 && (bounds.top+bounds.height)>0);
 		if(!inView)return;
-		let val = ((((window.innerHeight/2)-(bounds.top+bounds.height/2))*(this.isReverse ? -1 : 1))/this.parallaxMultiplier);
+		let val = ((((window.innerHeight/2)-(bounds.top+(bounds.height/2)))*(this.isReverse ? -1 : 1))/this.parallaxMultiplier);
 		this.el.style.transform = `translate3d(${this.isX ? val : 0}px, ${!this.isX ? val : 0}px, 0px)`;
 	}
 }

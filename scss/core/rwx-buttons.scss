@@ -70,7 +70,9 @@ button, .rwx-button
 	padding-right: $button-padding;
 	transition: all 0.7s $transition-base;
 	border-radius:4px;
-	@include h6;
+	font-size: rem($button-font-size);
+	line-height: rem($button-font-size) rem(4px);
+	font-weight: bold;
 	@include onAccessible(true)
 	{
 		outline:none;

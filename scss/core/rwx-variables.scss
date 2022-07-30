@@ -40,7 +40,7 @@ $ecolors: ('black':$black,
 $colors: null !default;
 @if $colors
 {
-	$colors: map-merge($colors, $ecolors);
+	$colors: map-merge($ecolors, $colors);
 }
 @else
 {
@@ -90,7 +90,7 @@ $espacings: ("no": 0, "sm": $small-spacing, "md": $medium-spacing, "lg": $large-
 $spacings: null !default;
 @if $spacings
 {
-	$spacings: map-merge($spacings, $espacings);
+	$spacings: map-merge($espacings, $spacings);
 }
 @else
 {
@@ -126,7 +126,7 @@ $efontsizes: (
 $fontsizes: null !default;
 @if $fontsizes
 {
-	$fontsizes: map-merge($fontsizes, $efontsizes);
+	$fontsizes: map-merge($efontsizes, $fontsizes);
 }
 @else
 {

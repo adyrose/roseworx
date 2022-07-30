@@ -126,7 +126,7 @@ $efontsizes: (
 $fontsizes: null !default;
 @if $fontsizes
 {
-	$fontsizes: map-merge($efontsizes, $fontsizes);
+	$fontsizes: map-merge($efontsizes, $fontsizes); 
 }
 @else
 {

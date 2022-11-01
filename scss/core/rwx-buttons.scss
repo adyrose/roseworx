@@ -1,144 +1,118 @@
-@mixin button($color)
-{
-	@if $color == white
-	{
-		$color: $button-color-white;
-	}
+// box-shadow: 0px 0px 30px -10px $color !important
+// transform: translate3d( 0,-4px, 0);
 
-	color: $color;
-	border: 1px solid $color;
-	box-shadow: 2px 2px $color;
-	background-color:transparent;
+// all buttons except disabled, even no-decoration get hover as above and include onAccessible focus ring
+// remove all button rules from basecamp to do with hover and focus states
 
-	&:not(:disabled)
-	{
-		@include onAccessible(true)
-		{
-			background-color:$color;
-			box-shadow:none;
-			border: 1px solid $color;
-			color:$white;
-		}
-	}
-
-	&.\--lift {
-		@include onAccessible(true) {
-			transform: translate3d( 0,-4px, 0);
-			box-shadow: none;
-			background-color: $color;
-			@if $color == white {
-				color: $button-color-white;
-			}
-			@else {
-				border: 1px solid $color;
-				color:$color;
-				box-shadow: 2px 2px $color;
-				background-color: transparent;
-			}
-		}
-	}
-}
-
-@mixin invertedButton($color)
-{
+@mixin button($color) {
+	background-color: $color;
 	@if $color == white
 	{
 		color: $button-color-white;
+	}
+	@else
+	{
+		color: $white;
+	}
+	&:hover {
+		@include hoverStyle($color);
+	}
+}
+
+@mixin invertedButton($color) {
+	background-color: $white;
+	@if $color == white
+	{
 		border: 1px solid $button-color-white;
+		color: $button-color-white;
 	}
 	@else
 	{
 		border: 1px solid $color;
-		color:$white;
+		color: $color;
 	}
-	background-color:$color;
-	box-shadow:none;
-	&:not(:disabled)
-	{
-		@include onAccessible(true)
+	&:hover {
+		@include hoverStyle($color);
+		@include hoverStyleInverted($color);
+	}
+}
+
+@mixin hoverStyle($color) {
+	&:not(:disabled) {
+		transform: translate3d( 0,-4px, 0);
+		transition: all 0.7s $transition-slow-in;
+		@if $color == white
 		{
-			@if $color == white
-			{
-				color: $button-color-white;
-				box-shadow: 2px 2px $button-color-white;
-			}
-			@else
-			{
-				color: $color;
-				box-shadow: 2px 2px $color;
-				border: 1px solid $color;
-			}
-			background-color: transparent;
+			box-shadow: 0px 0px 30px -10px $button-color-white;
 		}
-	}
-	&.\--lift {
-		@include onAccessible(true) {
-			transform: translateY(-4px) scale(1.03);
-			box-shadow: none;
-			background-color: $color;
-			@if $color == white {
-				color: $button-color-white;
-				border: 1px solid $button-color-white;
-			}
-			@else {
-				border: 1px solid $color;
-				color:$white;
-				box-shadow: none;
-			}
+		@else
+		{
+			box-shadow: 0px 0px 30px -10px $color;
 		}
 	}
 }
 
-button, .rwx-button
-{
+@mixin hoverStyleInverted($color) {
+	&:not(:disabled) {
+		background-color: $color;
+		@if $color == white
+		{
+			color: $button-color-white;
+		}
+		@else
+		{
+			color: $white;
+		}	
+	}
+}
+
+button, .rwx-button {
 	cursor:pointer;
-}
 
-.rwx-button:not(.no-decoration):not(.rwx-link), button:not(.no-decoration):not(.rwx-link)
-{
-	@include flex-center;
-	display:inline-flex;
-	min-height:$button-size;
-	padding-left: $button-padding;
-	padding-right: $button-padding;
-	transition: all 0.7s $transition-base;
-	border-radius:4px;
-	font-size: rem($button-font-size);
-	line-height: rem($button-font-size + 4);
-	font-weight: bold;
-	@include onAccessible(true)
-	{
-		outline:none;
-		transition: all 1s $transition-base;
+	@include onAccessible(false) {
+		@include focus-ring;
 	}
 
-	&.\--bullet
-	{
-		border-radius:$button-padding*2;
-	}
-	
-	@include button($button-color-base);
-
-	&.\--inverted
-	{
-		@include invertedButton($button-color-base);	
+	&:disabled {
+		opacity:0.7;
 	}
 
-	@each $modifier, $color in $colors
-	{
-		&.\--#{$modifier}
+	&:not(.no-decoration):not(.rwx-link) {
+		@include flex-center;
+		display:inline-flex;
+		min-height:$button-size;
+		padding-left: $button-padding;
+		padding-right: $button-padding;
+		transition: all 0.7s $transition-smooth;
+		font-size: rem($button-font-size);
+		line-height: rem($button-font-size + 4);
+		font-weight: bold;
+		border:none;
+		outline: none;
+
+		&.\--bullet
 		{
-			@include button($color);
-			&.\--inverted
+			border-radius:$button-padding*2;
+		}
+
+		@include button($button-color-base);
+
+		&.\--inverted
+		{
+			@include invertedButton($button-color-base);
+		}
+
+		@each $modifier, $color in $colors
+		{
+			&.\--#{$modifier}
 			{
-				@include invertedButton($color);
+				@include button($color);
+				&.\--inverted
+				{
+					@include invertedButton($color);
+				}
 			}
 		}
-	}
-
-	&:disabled
-	{
-		opacity:0.5;
 	}
 }
 

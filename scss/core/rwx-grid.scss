@@ -59,11 +59,13 @@ $grid-classes:
 
 	&.explicit
 	{
-		@extend %grid-padding;
+		padding-right:$grid-item-gutter*0.5;
+		padding-left:$grid-item-gutter*0.5;
 		@include snap-down-from('md')
 		{
 			padding-left: $grid-item-gutter;
 			padding-right: $grid-item-gutter;
+			width:100% !important;
 		}
 		&.align
 		{

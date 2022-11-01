@@ -238,7 +238,7 @@
 
 @mixin onAccessible($hover, $extraClass:false)
 {
-	&:focus-visible, &:active
+	&:focus-visible
 	{
 		@content;
 	}

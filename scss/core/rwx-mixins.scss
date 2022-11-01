@@ -98,7 +98,7 @@
 }
 
 @mixin change-input-color($color, $color2) {
-	input,select
+	input, select, textarea
 	{
 		border:1px solid $color;
 		color:$color;

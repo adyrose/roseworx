@@ -1,10 +1,11 @@
+@import '../core/rwx-variables';
 $indent: 15px;
 
 .rwx-number-switcher {
 	display:inline-flex;
 	align-items:center;
 	border-radius: $indent;
-	padding:10px;
+	padding:$small-spacing;
 	font-weight:bold;
 	.value
 	{
@@ -38,7 +39,7 @@ $indent: 15px;
 	span:not(.value)
 	{
 		transform:rotate(-30deg);
-		padding:5px;
+		padding:$extra-small-spacing;
 		text-align:center;
 	}
 	&.pulsate

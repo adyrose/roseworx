@@ -161,7 +161,9 @@ strong.impact
 
 p, strong
 {
-  margin-bottom:1.1rem;
+  &:not(:last-child) {
+    margin-bottom: $small-spacing;
+  }
 }
 
 sup, p.small, strong.small, span.small, li.small
@@ -223,20 +225,23 @@ a, .rwx-link
   }
 }
 
+$ul-size: 8px;
 ul
 {
   &:not(.no-decoration)
   {
-    margin-bottom: 1.5rem;
-    padding-left:0.8rem;
+    margin-bottom: $small-spacing;
+    padding-left: $extra-small-spacing;
     li
     {
       position:relative;
-      margin-bottom:0.75rem;
-      padding-left: 25px;
+      padding-left: $ul-size + $extra-small-spacing;
+      &:not(:last-child) {
+        margin-bottom:$extra-small-spacing;
+      }
       ul
       {
-        margin-top:16px;
+        margin-top:$small-spacing;
       }
       &:before {
         position:absolute;
@@ -248,7 +253,7 @@ ul
     &:not(.\--numbered)
     {
       li:before {
-        width:10px;
+        width:$ul-size;
         height:2px;
         background: $list-item-counter-color;
       }
@@ -258,24 +263,23 @@ ul
       li:before
       {
         border-radius:100%;
-        width:8px;
-        height:8px;
+        width:$ul-size;
+        height:$ul-size;
         top:9px;
       }
     }
+    // add rule for last P no margin
     &.\--numbered
     {
       counter-reset: ulnumbered;
       li {
-        min-height:30px;
-        padding-left: 50px;
-        padding-top:3px;
+        padding-left: $h6-size + $extra-small-spacing;
       }
       li:before {
         counter-increment: ulnumbered;
         content: counter(ulnumbered)".";
         color: $list-item-counter-color;
-        @include h3;
+        @include h6;
         top:0px;
       }
     }
@@ -285,11 +289,11 @@ ul
       flex-wrap:wrap;
       li
       {
-        margin-right: 50px;
+        margin-right: $extra-large-spacing;
         &:before
         {
-          height:8px !important;
-          width:8px !important;
+          height:$ul-size !important;
+          width:$ul-size !important;
           top:9px;
           background: $list-item-counter-color;
           border-radius:100%;
@@ -358,7 +362,7 @@ $cards: (
 
 p.dismissable
 {
-  padding: 15px 70px 15px 70px !important;
+  padding: $small-spacing 70px $small-spacing 70px !important;
   .dismissable-button
   {
     position: absolute;
@@ -368,7 +372,7 @@ p.dismissable
     width:0px;
     background:rgba($white, 0.7);
     transition: all 0.5s $transition-slow-in;
-    &:focus
+    @include onAccessible(false)
     {
       width:60px;
       .card-close
@@ -416,7 +420,7 @@ p.dismissable
   p.#{$card}
   {
     text-align:left;
-    padding: 15px 10px 15px 70px;
+    padding: $small-spacing $small-spacing $small-spacing 70px;
     position:relative;
     background-color: $card-background-color;
     box-shadow: 1px 1px 2px $card-border-color;

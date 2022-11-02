@@ -3,7 +3,7 @@
 	&:after
 	{
 		content:"*";
-		padding-left:8px;
+		padding-left:$extra-small-spacing;
 	}
 }
 
@@ -14,7 +14,7 @@
 	{
 		display:flex;
 		flex-direction:column;
-		margin-bottom:$large-spacing;
+		margin-bottom:$medium-spacing;
 		textarea, select[multiple]
 		{
 			height:$form-item-size*2;
@@ -34,7 +34,7 @@
 					margin-bottom:0px;
 					flex-basis:100 - $form-inline-input-size;
 					word-break:break-word;
-					padding-right: 24px;
+					padding-right: $medium-spacing;
 				}
 				&.invalid
 				{
@@ -50,7 +50,7 @@
 		{
 			color:$form-color-base;
 			display:block;
-			margin-bottom:10px;
+			margin-bottom:$extra-small-spacing;
 			order:1;
 		}
 		select
@@ -66,8 +66,8 @@
 		{
 			order:2;
 			color: $form-color-base;
-			padding-left:16px;
-			padding-right:16px;
+			padding-left:$small-spacing;
+			padding-right:$small-spacing;
 			width:100%;
 			border:1px solid $form-color-secondary;
 			transition: 0.5s border $transition-base;
@@ -115,7 +115,7 @@
 		{
 			color: $form-color-invalid;
 			order: 3;
-			margin-top:5px;
+			margin-top:$extra-small-spacing;
 			@extend .small;
 			display:none;
 		}
@@ -242,8 +242,8 @@
 	}
 	&-radio-group
 	{
-		padding-top:16px;
-		padding-bottom:16px;
+		padding-top:$small-spacing;
+		padding-bottom:$small-spacing;
 		&.\--inline
 		{
 			@include snap-up-from('sm')
@@ -259,7 +259,7 @@
 				{
 					&:not(:nth-of-type(3n))
 					{
-						padding-right:24px;
+						padding-right:$medium-spacing;
 					}
 					flex-basis:33%;
 					label

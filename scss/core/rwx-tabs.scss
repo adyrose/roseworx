@@ -24,8 +24,8 @@
 	}
 	& > &-container
 	{
-		padding: 10px 20px;
-		margin-bottom: 40px;
+		padding: $extra-small-spacing $small-spacing;
+		margin-bottom: $large-spacing;
 		display:flex;
 		align-items:flex-end;
 		border-bottom: 2px solid $tabs-seperator-color;
@@ -38,7 +38,7 @@
 			border-top: 2px solid $tabs-seperator-color;
 			border-bottom: 2px solid $tabs-seperator-color;
 			border-radius: 10px;
-			padding: 10px;
+			padding: $extra-small-spacing;
 			cursor:pointer;
 			color: $tabs-title-color;
 			font-size: $tabs-title-size;
@@ -57,7 +57,7 @@
 			}
 			&:not(:last-child)
 			{
-				margin-right: 40px;
+				margin-right: $large-spacing;
 			}
 		}
 		.bullet
@@ -74,8 +74,8 @@
 	{
 		.rwx-tabs-container
 		{
-			padding-left:30px;
-			padding-right:30px;
+			padding-left:$medium-spacing;
+			padding-right:$medium-spacing;
 			border-bottom: 1px solid $tabs-seperator-color;
 			button
 			{

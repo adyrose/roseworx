@@ -33,10 +33,10 @@
 		  top: 50%;
 		  left: 50%;
 		  transform: translate(-50%, -50%);
-		  font-size: 20px;
 		  text-align: center;
 		  background: rgba(0, 0, 0, 0.75);
-		  padding: 10px;
+		  padding: $small-spacing;
+		  margin-bottom: 0px;
 		  color: white;
 		  &.vertical
 		  {
@@ -54,7 +54,7 @@
 		  right: 0;
 		  bottom: 0;
 		  left: 0;
-		  background-color:#f47740;
+		  background-color:$orange;
 		  background-size: cover;
 		  background-position:center;		
 		}

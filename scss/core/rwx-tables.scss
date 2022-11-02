@@ -48,7 +48,7 @@ $emphasis-line:	2px solid $table-color-base;
 		{
 			word-break:break-word;
 			margin-bottom:0px;
-			padding: 0.8rem;
+			padding: $small-spacing;
 			flex:1;
 			&.\--x2
 			{
@@ -154,7 +154,6 @@ $emphasis-line:	2px solid $table-color-base;
 		{
 			border-top: $normal-line !important;
 			border-left: $normal-line !important;
-			padding-left: 20px;
 			&:last-child
 			{
 				border-right: $normal-line;

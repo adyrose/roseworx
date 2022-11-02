@@ -34,15 +34,15 @@ $slidedowntime: 0.5s;
 		@include change-animated-border($black, $white);
 		.text
 		{
-			font-size: 1.52rem;
-	    line-height: 2.07rem;
+			@include h4;
+			font-family: $font-base;
 		}
 	}
 
 	& > &-container
 	{
 		box-shadow: 4px 4px 0px 7px rgba($rwx-lucky-dips-color, 0.7);
-		border-radius:15px;
+		border-radius:16px;
 		overflow:hidden;
 		height:$item-height;
 		min-width:400px;
@@ -50,8 +50,8 @@ $slidedowntime: 0.5s;
 
   .rwx-lucky-dip-item
   {
-  	padding-left: 20px;
-  	padding-right: 20px;
+  	padding-left: $medium-spacing;
+  	padding-right: $medium-spacing;
   	word-break:break-word;
     height:100%;
     width:100%;
@@ -59,8 +59,7 @@ $slidedowntime: 0.5s;
     flex-direction:column;
     span
     {
-			font-size: 2.28rem;
-  		line-height: 2.83rem;
+			@include h4;
   		font-weight:bold;
   		color:$rwx-lucky-dips-item-color;
     }

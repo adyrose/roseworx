@@ -28,23 +28,35 @@ $directions: ("left": "l", "right": "r", "top" :"t", "bottom": "b");
 	{
 		.rwxs-#{$selector}
 		{
-			&-#{$size}-rsp
-			{
-				@include snap-down-from('md')
-				{
-					#{$property}: $unit !important;
-				}
-			}
-			&-#{$size}-rsp-sm
-			{
-				@include snap-down-from('sm')
-				{
-					#{$property}: $unit !important;
-				}
-			}
 			&-#{$size}-rsp-lg
 			{
 				@include snap-down-from('lg')
+				{
+					#{$property}: $unit !important;
+				}
+			}
+			@each $direction, $dselector in $directions
+			{
+				&-#{$dselector}-#{$size}-rsp-lg
+				{
+					@include snap-down-from('lg')
+					{
+						#{$property}-#{$direction}: $unit !important;
+					}
+				}
+			}
+		}
+	}	
+}
+
+@each $size, $unit in $spacings {
+	@each $property, $selector in $spacingtypes
+	{
+		.rwxs-#{$selector}
+		{
+			&-#{$size}-rsp
+			{
+				@include snap-down-from('md')
 				{
 					#{$property}: $unit !important;
 				}
@@ -58,16 +70,28 @@ $directions: ("left": "l", "right": "r", "top" :"t", "bottom": "b");
 						#{$property}-#{$direction}: $unit !important;
 					}
 				}
+			}
+		}
+	}	
+}
+
+@each $size, $unit in $spacings {
+	@each $property, $selector in $spacingtypes
+	{
+		.rwxs-#{$selector}
+		{
+			&-#{$size}-rsp-sm
+			{
+				@include snap-down-from('sm')
+				{
+					#{$property}: $unit !important;
+				}
+			}
+			@each $direction, $dselector in $directions
+			{
 				&-#{$dselector}-#{$size}-rsp-sm
 				{
 					@include snap-down-from('sm')
-					{
-						#{$property}-#{$direction}: $unit !important;
-					}
-				}
-				&-#{$dselector}-#{$size}-rsp-lg
-				{
-					@include snap-down-from('lg')
 					{
 						#{$property}-#{$direction}: $unit !important;
 					}

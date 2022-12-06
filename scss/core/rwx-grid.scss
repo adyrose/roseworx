@@ -10,17 +10,27 @@ $grid-classes:
   "fifth-x3" 60%,
   "fifth-x4" 80%;
 
-%grid-padding {
-	padding-right:$grid-item-gutter*0.5;
-	padding-left:$grid-item-gutter*0.5;
-	@include snap-down-from('md')
+@mixin grid-item($size) {
+	@include snap-down-from('#{$size}')
 	{
-		padding-top:$grid-item-gutter-vertical*0.5;
-		padding-bottom:$grid-item-gutter-vertical*0.5;
-		padding-left:0px;
-		padding-right:0px;
+		padding-left: $grid-item-gutter;
+		padding-right: $grid-item-gutter;
 		width:100% !important;
-	} 	
+	}
+	@each $selector, $value in $grid-classes
+	{
+		.rwx-split-#{$selector}
+		{
+			@include snap-down-from('#{$size}')
+			{
+				padding-top:$grid-item-gutter-vertical*0.5;
+				padding-bottom:$grid-item-gutter-vertical*0.5;
+				padding-left:0px;
+				padding-right:0px;
+				width:100% !important;
+			}
+		}
+	}
 }
 
 .rwx-split
@@ -28,32 +38,22 @@ $grid-classes:
 	display:flex;
 	flex-wrap:wrap;
 
-	&.explicit.no-wrap
-	{
-		padding-left: $grid-item-gutter*0.5;
-		padding-right: $grid-item-gutter*0.5;	
-		@each $selector, $value in $grid-classes
-		{
-			> .rwx-split-#{$selector}
-			{
-				@include snap-down-from('md')
-				{
-					padding-right:$grid-item-gutter*0.5;
-					padding-left:$grid-item-gutter*0.5;
-				}
-			}
-		}
-	}
-
 	&.no-wrap
 	{
 		flex-wrap:nowrap;
-		@each $selector, $value in $grid-classes
-		{
-			> .rwx-split-#{$selector}
-			{
-				width: #{$value} !important;
-			}
+	}
+
+	&.wrap-sm {
+		flex-wrap:nowrap;
+		@include snap-down-from('sm') {
+			flex-wrap: wrap;
+		}
+	}
+
+	&.wrap-lg {
+		flex-wrap: nowrap;
+		@include snap-down-from('lg') {
+			flex-wrap: wrap;
 		}
 	}
 
@@ -61,20 +61,38 @@ $grid-classes:
 	{
 		padding-right:$grid-item-gutter*0.5;
 		padding-left:$grid-item-gutter*0.5;
-		@include snap-down-from('md')
-		{
-			padding-left: $grid-item-gutter;
-			padding-right: $grid-item-gutter;
-			width:100% !important;
-		}
 		&.align
 		{
-				padding-left:0px;
-				padding-right:0px;
+			padding-left:0px;
+			padding-right:0px;
 			@include snap-up-from('md')
 			{
 				margin-left: -$grid-item-gutter*0.5;
 				margin-right: -$grid-item-gutter*0.5;
+			}
+		}
+
+		&:not(.no-wrap):not(.wrap-sm):not(.wrap-lg) {
+			@include grid-item('md');
+		}
+
+		&.wrap-sm:not(.no-wrap):not(.wrap-lg) {
+			@include grid-item('sm');
+		}
+
+		&.wrap-lg:not(.no-wrap):not(.wrap-sm) {
+			@include grid-item('lg');
+		}
+
+		@each $selector, $value in $grid-classes
+		{
+			.rwx-split-#{$selector}
+			{
+				word-break:break-word;
+				width: #{$value};
+				position:relative;
+				padding-right:$grid-item-gutter*0.5;
+				padding-left:$grid-item-gutter*0.5;
 			}
 		}
 	}
@@ -155,17 +173,6 @@ $grid-classes:
 		@include snap-up-from('xl')
 		{
 			max-width: map-get($breakpoints, 'xl');
-		}
-	}
-
-	@each $selector, $value in $grid-classes
-	{
-		&-#{$selector}
-		{
-			word-break:break-word;
-			width: #{$value};
-			position:relative;
-			@extend %grid-padding;
 		}
 	}
 }

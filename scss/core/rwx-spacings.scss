@@ -28,18 +28,46 @@ $directions: ("left": "l", "right": "r", "top" :"t", "bottom": "b");
 	{
 		.rwxs-#{$selector}
 		{
-			@include snap-down-from('md')
+			&-#{$size}-rsp
 			{
-				&-#{$size}-rsp
+				@include snap-down-from('md')
+				{
+					#{$property}: $unit !important;
+				}
+			}
+			&-#{$size}-rsp-sm
+			{
+				@include snap-down-from('sm')
+				{
+					#{$property}: $unit !important;
+				}
+			}
+			&-#{$size}-rsp-lg
+			{
+				@include snap-down-from('lg')
 				{
 					#{$property}: $unit !important;
 				}
 			}
 			@each $direction, $dselector in $directions
 			{
-				@include snap-down-from('md')
+				&-#{$dselector}-#{$size}-rsp
 				{
-					&-#{$dselector}-#{$size}-rsp
+					@include snap-down-from('md')
+					{
+						#{$property}-#{$direction}: $unit !important;
+					}
+				}
+				&-#{$dselector}-#{$size}-rsp-sm
+				{
+					@include snap-down-from('sm')
+					{
+						#{$property}-#{$direction}: $unit !important;
+					}
+				}
+				&-#{$dselector}-#{$size}-rsp-lg
+				{
+					@include snap-down-from('lg')
 					{
 						#{$property}-#{$direction}: $unit !important;
 					}

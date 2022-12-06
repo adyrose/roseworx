@@ -352,6 +352,11 @@ $weights: ("light": 200, "normal": 400, "semi-bold":500, "bold": 700, "extra-bol
   text-align:right !important;
 }
 
+.rwxt-text-left
+{
+  text-align:left !important;
+}
+
 $cards: ( 
   "help": ("color": $orange, "icon": 'help-fill', "sw":"1px"),
   "feature": ("color": $light-green, "icon": 'star', "sw":"33px"),

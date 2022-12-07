@@ -19,7 +19,7 @@ $grid-classes:
 	}
 	@each $selector, $value in $grid-classes
 	{
-		.rwx-split-#{$selector}
+		> .rwx-split-#{$selector}
 		{
 			@include snap-down-from('#{$size}')
 			{
@@ -63,8 +63,8 @@ $grid-classes:
 		padding-left:$grid-item-gutter*0.5;
 		&.align
 		{
-			padding-left:0px;
-			padding-right:0px;
+			padding-left:0px !important;
+			padding-right:0px !important;
 			@include snap-up-from('md')
 			{
 				margin-left: -$grid-item-gutter*0.5;

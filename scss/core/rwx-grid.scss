@@ -86,7 +86,7 @@ $grid-classes:
 
 		@each $selector, $value in $grid-classes
 		{
-			.rwx-split-#{$selector}
+			> .rwx-split-#{$selector}
 			{
 				word-break:break-word;
 				width: #{$value};

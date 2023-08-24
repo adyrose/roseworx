@@ -65,6 +65,13 @@ $grid-classes:
 		{
 			padding-left:0px !important;
 			padding-right:0px !important;
+			&.wrap-sm {
+				@include snap-up-from('sm')
+				{
+					margin-left: -$grid-item-gutter*0.5;
+					margin-right: -$grid-item-gutter*0.5;
+				}				
+			}
 			@include snap-up-from('md')
 			{
 				margin-left: -$grid-item-gutter*0.5;
